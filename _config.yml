@@ -9,11 +9,11 @@
 title: 四月与一月的博客
 name: 四月与一月
 email: 20016069@qq.com
-# link: aprilandjan.org
+# link: aprilandjan.com
 description: > # this means to ignore newlines until "baseurl:"
   Keep On Learning!
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "http://blog.aprilandjan.com" # the base hostname & protocol for your site
+url: "" # the base hostname & protocol for your site
 github_username:  aprilandjan
 
 locals:
