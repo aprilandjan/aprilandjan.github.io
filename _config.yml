@@ -11,10 +11,9 @@ name: 四月与一月
 #email: 20016069@qq.com
 # link: aprilandjan.com
 description: > # this means to ignore newlines until "baseurl:"
-  Keep On Learning!
-baseurl: "/" # the subpath of your site, e.g. /blog
-url: "http://aprilandjan.im" # the base hostname & protocol for your site
-#github_username:  aprilandjan
+  Keep Learning!
+baseurl: "" # the subpath of your site, e.g. /blog
+url: "" # the base hostname & protocol for your site
 
 locals:
 tags: 标签
@@ -22,7 +21,7 @@ about: 关于
 active: 技术
 
 port: 4321
-auto: true
+#auto: true
 
 # Build settings
 markdown: kramdown
