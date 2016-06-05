@@ -6,12 +6,12 @@
 # 'jekyll serve'. If you change this file, please restart the server process.
 
 # Site settings
-title: 四月与一月的博客
-name: 四月与一月
+title: aprilandjan's blog
+name: aprilandjan
 #email: 20016069@qq.com
 # link: aprilandjan.com
 description: > # this means to ignore newlines until "baseurl:"
-  Keep Learning!
+  Concentration!
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site
 
