@@ -1,0 +1,38 @@
+---
+layout: post
+title:  "使用Babun"
+date:   2016-07-23 23:10:16 +0800
+categories: Babun Terminal
+---
+
+一直以来使用的是 windows 系统自带的命令行工具。后来接触了一些 linux 的命令，windows terminal 对此并不能很好的兼容。网上搜了一下很多人推荐使用 Babun，做为萌新的我也尝试了一下。
+
+### 下载安装
+
+Babun 是 Github 上的开源项目，前往项目主页 [babun.github.io/](http://babun.github.io/) 点击 Download, 下载安装包。居然有200M+之大，也是费解啊，印象中一个命令行工具了不起应该也就几兆吧？
+下载完毕之后，解压到任意目录，然后运行安装脚本 `install.bat`。 等待安装完毕之后，会自动打开一个 Babun 命令行窗口。
+
+### 功能初探
+
+Babun 已经帮我们在右键菜单里添加了在当前目录打开 Babun 命令行窗口的功能 `Open babun here`。可以输入常用的 linux 命令以及 Babun 自身的包管理工具 `pact`, 甚至 python, perl, git, svn 等等工具都已经预装了。
+
+### 在Jetbrains IDE中使用 Babun
+
+Jetbrains IDE（我使用的是 Webstorm, Jetbrains 的其他产品应该也是一样的）有一个很好用的功能——内置 Terminal。默认的情况下该功能会开启系统默认的终端。那么是否可以修改成默认开启 Babun 呢？
+所幸 IDE 提供了这个配置：`File -> Settings` 打开配置窗口，选中 `Tools -> Terminal`。这里输入 Babun Terminal 的可以执行文件路径。如果是默认安装的情况下，路径应该是 `C:\Users\{USERNAME}\.babun\cygwin\bin\bash.exe`。
+保存配置之后通过 IDE 打开 `Terminal` 输入 `ls -l`, 果然打印出了目录列表。大功告成！
+
+.....等等，好像还是不对！虽然现在开启了 Babun, 但是当前的工作目录不对，处于 `C:\Users\{USERNAME}\` 之下，没有能自动切换到当前的项目目录。要知道使用这个内置 Terminal 的目的就是为了快速打开当前项目目录下的命令行啊！
+解决办法：打开 `C:\Users\{USERNAME}\.babun\cygwin\etc\bash.bashrc`, 在文件末尾添加一行 `cd $OLDPWD`，保存文件并重新开启 Terminal，这时才大功告成！
+ 
+### 使用git
+
+和往常一样，在 Babun 里键入 `git clone git@github.com:some-project.git`, 从　github　上 clone 某项目。之前已经在本机安装过 git 并配置好 ssh, 并且正常使用；但是现在却提示 permission denied，操作失败。
+经查，原来是 Babun 自带了另外一个 git，这个 git　在没有配置 ssh 的情况下，自然是无法通过 ssh 验证了！解决办法有二：
+
+- 在　Babun 内运行　ssh-keygen 重新生成公私钥，然后在 github　上添加该私钥；
+- 复制之前的位于 `C:\Users\{USERNAME}\` 的配置文件夹　`.ssh` 到　Babun 用户配置路径 `C:\Users\{USERNAME}\.babun\cygwin\home\{USERNAME}\` 之下，并给予相关文件读写权限，例如：
+```
+$chmod 600 config
+$chmod 600 id_rsa.pub
+```
