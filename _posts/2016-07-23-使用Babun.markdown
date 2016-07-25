@@ -9,7 +9,7 @@ categories: Babun Terminal
 
 ### 下载安装
 
-Babun 是 Github 上的开源项目，前往项目主页 [babun.github.io/](http://babun.github.io/) 点击 Download, 下载安装包。居然有200M+之大，也是费解啊，印象中一个命令行工具了不起应该也就几兆吧？
+Babun 是 Github 上的开源项目，前往项目主页 [babun.github.io](http://babun.github.io/) 点击 Download, 下载安装包。居然有200M+之大，也是费解啊，印象中一个命令行工具了不起应该也就几兆吧？
 下载完毕之后，解压到任意目录，然后运行安装脚本 `install.bat`。 等待安装完毕之后，会自动打开一个 Babun 命令行窗口。
 
 
