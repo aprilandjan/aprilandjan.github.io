@@ -1,27 +1,45 @@
-# Welcome to Jekyll!
-#
-# This config file is meant for settings that affect your whole blog, values
-# which you are expected to set up once and rarely need to edit after that.
-# For technical reasons, this file is *NOT* reloaded automatically when you use
-# 'jekyll serve'. If you change this file, please restart the server process.
-
 # Site settings
-title: aprilandjan's blog
 name: aprilandjan
-#email: 20016069@qq.com
-# link: aprilandjan.com
-description: > # this means to ignore newlines until "baseurl:"
-  Concentration!
-baseurl: "" # the subpath of your site, e.g. /blog
-url: "" # the base hostname & protocol for your site
+title:       aprilandjan's blog
+email:       youremail@example.com
+author:      aprilandjan
+description: ""
+baseurl:     ""
+url:         "/"
 
-locals:
-tags: 标签
-about: 关于
-active: 技术
+#Duoshuo short Name / 多说的shortname
+duoshuo:
 
-port: 4321
-#auto: true
+#Baidu analytics / 百度统计(异步的js码，注意使用异步版本的)
+baidu_analyze:
+
+# Google analytics
+google_analytics:
+
+# Optional features
+animated:           false
+show_related_posts: false
+show_post_footers:  false
+
+# Social icons
+show_social_icons: false
+github_username:
+twitter_username:
+google_plus_id:
+linkedin_username:
+bitcoin_url:
+paypal_url:
+flattr_button:
 
 # Build settings
-markdown: kramdown
+markdown:     kramdown
+permalink:    pretty
+paginate:     5
+sass:
+  compressed: true
+
+# Gems
+gems: [jekyll-paginate]
+
+# dev
+port: 4321

@@ -1,32 +1,26 @@
-<footer class="site-footer">
-
-  <div class="wrapper">
-
-    <!--<h2 class="footer-heading">{{ site.title }}</h2>-->
-
-    <div class="footer-col-wrapper">
-      <div class="footer-col footer-col-1">
-        <ul class="contact-list">
-          <li>{{ site.title }}</li>
-          <!--<li><a href="mailto:{{ site.email }}">{{ site.email }}</a></li>-->
-        </ul>
-      </div>
-
-      <div class="footer-col footer-col-2">
-        <ul class="social-media-list">
-          {% if site.github_username %}
-          <li>
-            {% include icon-github.html username=site.github_username %}
-          </li>
-          {% endif %}
-        </ul>
-      </div>
-
-      <div class="footer-col footer-col-3">
-        <p>{{ site.description }}</p>
-      </div>
+<footer class="footer">
+  <div class="p2 wrap">
+    <div class="measure mt1 center">
+      <!--<small>-->
+	<!--<a href="https://github.com/ee0703/pixyll-zh-cn">Pixyll中文版</a> -->
+	<!--汉化 by <a href="https://github.com/ee0703">EE</a><br>-->
+        <!--Crafted with &lt;3 by <a href="http://johnotander.com">John Otander</a> (<a href="https://twitter.com/4lpine">@4lpine</a>).<br>-->
+        <!--&lt;/&gt; available on <a href="https://github.com/johnotander/pixyll">Github</a>.-->
+      <!--</small>-->
+        @{{site.name}}
     </div>
-
   </div>
-
 </footer>
+
+{% if site.google_analytics %}
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', '{{ site.google_analytics }}', 'auto');
+ga('send', 'pageview');
+
+</script>
+{% endif %}

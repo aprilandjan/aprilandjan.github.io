@@ -6,7 +6,6 @@ categories: chrome extension qrcode
 ---
 
 chrome 扩展程序市场里有很多二维码插件，点一下就能生成当前页面的二维码，非常方便。
-
 但是平时开发的时候很多情况下以 localhost 生成的二维码就不正确了，无法在其他设备上直接访问，所以尝试改进了一下。
 
 很简单，首先确定浏览器端的源生JS是可以获取IP([stackoverflow](http://stackoverflow.com/questions/18572365/get-local-ip-of-a-device-in-chrome-extension)), 然后找到二维码插件的源码，发现是通过 chrome 提供的 tab 获取当前页面 url, 再通过QR转换类库生成对应 url 的 qrcode。于是很简单的，判断当前页面 url 是否是 localhost，如果是就把它替换成 localhost IP 地址, 再生成二维码就OK了。
