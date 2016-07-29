@@ -1,0 +1,30 @@
+---
+layout: post
+title:  "用ES6规范运行nodejs"
+date:   2016-07-29 22:00:00 +0800
+categories: ES6 nodejs
+---
+
+在自己的VPS上搭建了一个nodejs服务器，使用了ES6的语法规范。为了免去ES6转ES5，也可以通过如下方式直接运行ES6规范的程序:
+
+1. 安装babel相关依赖：
+
+```node
+npm install --save babel babel-preset-es2015 babel-register
+```
+
+2. 假如原入口文件为 `index.js`，那么为了结构清晰，可以新建一个文件(此处命名为 `babel-index.js`)作为入口, 文件内容如下：
+
+```javascript
+require('babel-register')({
+    presets: [ 'es2015' ]
+});
+
+require('./index.js');
+```
+
+3. 运行该入口文件:
+
+```node
+node babel-index
+```
