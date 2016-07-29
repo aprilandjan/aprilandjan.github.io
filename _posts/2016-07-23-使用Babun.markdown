@@ -36,10 +36,10 @@ Jetbrains IDE（我使用的是 Webstorm, Jetbrains 的其他产品应该也是�
 - 在　Babun 内运行　ssh-keygen 重新生成公私钥，然后在 github　上添加该公钥；
 - 复制之前的位于 `C:\Users\{USERNAME}\` 的配置文件夹　`.ssh` 到　Babun 用户配置路径 `C:\Users\{USERNAME}\.babun\cygwin\home\{USERNAME}\` 之下，并给予相关文件读写权限，例如：
 
-```bash
-$chmod 600 config
-$chmod 600 id_rsa
-```
+    ```bash
+    $chmod 600 config
+    $chmod 600 id_rsa
+    ```
 
 ### 使用 gem/jekyll
 
