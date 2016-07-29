@@ -47,13 +47,22 @@ Jetbrains IDE（我使用的是 Webstorm, Jetbrains 的其他产品应该也是�
 大概是因为 Babun　默认路径与系统用户路径不一致的关系，之前通过 ruby 安装的　gem/jekyll 的路径识别均出现错误！ 显示　`No such file or directory -- /cygdrive/d/Program/Ruby/Ruby22-x64/bin/gem (LoadError)`。
 可以看到其实　`/cygdrive/` 后面指向的路径其实是对的，只不过应该是绝对路径。好在这个也是可以通过配置文件来解决。打开 `C:\Users\{USERNAME}\.babun\cygwin\etc\bash.bashrc`, 在文件末尾添加
 
-```
-alias gem=gem.bat
-alias jekyll=jekyll.bat
-```
+    ```
+    alias gem=gem.bat
+    alias jekyll=jekyll.bat
+    ```
 
 相当于每次打开 Babun 都设置了这两个命令的执行文件配置，故而得以解决问题。好在我这里也只用到了这两个 ruby 包，如果有别的，也得相应的自己添加上去。
 
+### 使用 egret
+
+egret 是之前用 EgretEngine 安装的，结果也无法识别全局命令了。查看了下 node 全局安装的包路径 `C:\Users\{USERNAME}\AppData\Roaming\npm`，有 egret 留下的 egret.cmd, 于是参考上面 ruby 包的方式，
+同样在 `C:\Users\{USERNAME}\.babun\cygwin\etc\bash.bashrc` 在文件末尾添加相关的 alias 即可:
+
+    ```
+    alias egret=egret.cmd
+    ```
+
 ## 总结
 
-其实也没用到　Babun 的那么多功能。如果是纯净安装的话，倒是可以只装　Babun　然后其他的都自带了。 
+活着就是折腾，只是为了换个稍微舒心一点点的命令行，出现一堆问题...... 难怪大家都说做开发，windows 不如 mac! 
