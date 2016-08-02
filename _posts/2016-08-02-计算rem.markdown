@@ -52,7 +52,7 @@ rem 是根元素的字体大小(font size of Root Element), 如果以它作为�
 </html>
 ```
 
-可以看到, '正方形'的内容区域刚好占据浏览器视场区域宽度(window.innerWidth)的一半。也就是说, 通过 window.innerWidth / window.innerHeight, 可以获取市视场区域的宽高的*像素*值。
+可以看到, '正方形'的内容区域刚好占据浏览器视场区域宽度(window.innerWidth)的一半。也就是说, 通过 window.innerWidth / window.innerHeight, 可以获取视场区域的宽高的*像素*值。
 
 ### 初步计算 rem
 
