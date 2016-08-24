@@ -1,0 +1,206 @@
+---
+layout: post
+title:  webpack-babel-scss-template
+date:   2016-08-24 20:58:00 +0800
+categories: webpack
+---
+
+自从习惯了使用 es6 以后, 强烈的需求把各个分离的小功能放在不同的文件内, 需要的时候 import 进来, 然后又能自动处理互相的依赖注入关系, 最终便捷的打包发布。
+
+于是整理了一份 webpack 配置, 使用 babel/scss
+
+### 项目目录
+
+    -- Project
+        |-- css
+            |-- style.scss      //  css 入口
+        |-- src
+            |-- app.js  //  js 入口
+        |-- static
+        |-- index.html  //  html 入口
+
+### webpack.config.json
+
+```javascript
+var path = require('path');
+var webpack = require('webpack');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
+var ExtractTextPlugin = require("extract-text-webpack-plugin");
+
+module.exports = {
+    //  入口文件
+    entry: './src/app.js',
+    //  输入目录
+    output: {
+        path: path.resolve(__dirname, './dist'),
+        publicPath: '/',
+        filename: 'bundle.js'
+    },
+    //  resolves
+    resolve: {
+        extensions: ['', '.js'],
+        fallback: [path.join(__dirname, './node_modules')],
+        alias: {
+            'src': path.resolve(__dirname, './src'),
+            'components': path.resolve(__dirname, './src/components'),
+            'static': path.resolve(__dirname, './static')
+        }
+    },
+    resolveLoader: {
+        fallback: [path.join(__dirname, './node_modules')]
+    },
+    module: {
+        loaders: [
+            {
+                test: /\.js$/,
+                exclude: /node_modules|libs/,
+                loader: 'babel'
+            },
+            {
+                test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+                //  file-loader will not convert images to base64
+                //  url-loader with limit=0 will convert all images to base64
+                loader: 'file',
+                query: {
+                    // limit: 0,
+                    name: 'static/[name].[ext]' //  导出目录
+                }
+            },
+            {
+                test: /\.json$/,
+                loader: 'json'
+            }
+        ]
+    },
+
+    //  babel编译需要
+    babel: {
+        presets: ['es2015'],
+        plugins: ['transform-runtime']
+    },
+
+    //  devServer需要
+    devServer: {
+        historyApiFallback: true,
+        hot: false,     //  不需要实时更新，禁用
+        // contentBase: '/dist/',  //   内容的基本路径
+        host: '0.0.0.0',  //  添加之后可以外部访问
+        noInfo:false,    //  去掉编译过程中的输出信息
+        // lazy: true     //   no watching, compile on request
+    }
+};
+
+console.log("================= " +  process.env.NODE_ENV + " ==================");
+switch(process.env.NODE_ENV){
+    case 'dev':
+        module.exports.devtool = '#source-map';
+        module.exports.module.loaders = (module.exports.module.loaders || []).concat([
+            {
+                test: /\.scss$/,
+                loader: 'style!css!sass'
+            }
+        ]);
+        module.exports.plugins = (module.exports.plugins || []).concat([
+            new webpack.DefinePlugin({
+                '__ENV__': '"dev"',
+                'process.env': '"dev"'
+            }),
+            new webpack.optimize.OccurenceOrderPlugin(),
+            new HtmlWebpackPlugin({
+                filename: 'index.html',
+                template: 'index.html',
+                inject: true
+            }),
+        ]);
+        break;
+    case 'build':
+        module.exports.output.publicPath = './';
+        module.exports.module.loaders = (module.exports.module.loaders || []).concat([
+            {
+                test: /\.scss$/,
+                loader: ExtractTextPlugin.extract('style', 'css', 'sass')
+            }
+        ]);
+        module.exports.plugins = (module.exports.plugins || []).concat([
+            new webpack.DefinePlugin({
+                '__ENV__': 'publish',
+                'process.env': 'publish'
+            }),
+            //  压缩JS
+            new webpack.optimize.UglifyJsPlugin({
+                compress: {
+                    warnings: false
+                }
+            }),
+            //  注入HTML
+            new webpack.optimize.OccurenceOrderPlugin(),
+            new ExtractTextPlugin("style.[hash:7].css", {allChunks: true}),
+            new HtmlWebpackPlugin({
+                filename: 'index.html',
+                template: 'index.html',
+                inject: true,
+                // minify: {
+                //     removeComments: true,
+                //     collapseWhitespace: true,
+                //     removeAttributeQuotes: true
+                //     // more options:
+                //     // https://github.com/kangax/html-minifier#options-quick-reference
+                // }
+            })
+        ]);
+        break;
+}
+```
+
+### package.json
+
+所需要用到的包依赖
+
+```javascript
+{
+  "name": "webpack-babel-template",
+  "version": "1.0.0",
+  "description": "webpack-babel-template",
+  "main": "app.js",
+  "scripts": {
+    "dev": "cross-env NODE_ENV=dev webpack-dev-server",
+    "build": "cross-env NODE_ENV=build webpack",
+    "publish": "cross-env NODE_ENV=build webpack"
+  },
+  "author": "aprilandjan",
+  "license": "ISC",
+  "dependencies": {
+    "babel-core": "^6.0.0",
+    "babel-loader": "^6.0.0",
+    "babel-plugin-transform-runtime": "^6.0.0",
+    "babel-preset-es2015": "^6.0.0",
+    "babel-preset-stage-2": "^6.0.0",
+    "babel-runtime": "^6.0.0",
+    "cross-env": "^2.0.0",
+    "css-loader": "^0.21.0",
+    "extract-text-webpack-plugin": "^1.0.1",
+    "file-loader": "^0.8.5",
+    "gulp": "^3.9.1",
+    "gulp-webpack": "^1.5.0",
+    "html-webpack-plugin": "^2.19.0",
+    "json-loader": "^0.5.4",
+    "node-sass": "^3.4.2",
+    "run-sequence": "^1.2.1",
+    "sass-loader": "^3.2.3",
+    "style-loader": "^0.13.1",
+    "url-loader": "^0.5.7",
+    "webpack": "^1.13.0",
+    "webpack-dev-server": "^1.14.1"
+  }
+}
+```
+
+### TIPS
+
+- 在 npm run 命令里使用 ```NODE_ENV=dev``` 注入命令进程的环境变量
+
+- 在 webpack.config.json 里通过 ```process.env.NODE_ENV``` 获取注入的环境变量
+
+- 在 webpack.config.json 里使用 webpack.DefinePlugin 定义注入到 bundle.js 里的环境变量
+
+- 在 bundle.js 里直接访问以上环境变量并做相应的配置
