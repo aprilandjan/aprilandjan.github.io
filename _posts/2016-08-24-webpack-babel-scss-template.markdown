@@ -9,15 +9,22 @@ categories: webpack
 
 于是整理了一份 webpack 配置, 使用 babel/scss
 
+### Updates
+
+2016/9/1: 根据实际项目修正了一些配置错误。添加 gulpfile 用来处理包括 dev/build/publish/upload 等前前后后的问题
+
 ### 项目目录
 
     -- Project
         |-- css
             |-- style.scss      //  css 入口
         |-- src
-            |-- app.js  //  js 入口
-        |-- static
-        |-- index.html  //  html 入口
+            |-- app.js      //  js 入口
+        |-- static          //  图片等静态资源
+        |-- index.html      //  html 入口
+        |-- gulpfile.js     //  gulp 脚本文件
+        |-- config.json     //  gulp里的关于upload的一些上传的配置 
+        |-- favicon.ico     //  页面 favicon
 
 ### webpack.config.json
 
@@ -34,7 +41,7 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, './dist'),
         publicPath: '/',
-        filename: 'bundle.js'
+        filename: 'bundle.[hash:7].js'
     },
     //  resolves
     resolve: {
@@ -57,13 +64,25 @@ module.exports = {
                 loader: 'babel'
             },
             {
+                test: /\.html$/,
+                loader: 'html',
+                query: {
+                    minimize: false
+                }
+            },
+            {
                 test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
-                //  file-loader will not convert images to base64
-                //  url-loader with limit=0 will convert all images to base64
+                loader: 'url',
+                query: {
+                    limit: 10000,
+                    name: 'static/[name].[hash:7].[ext]' //  导出目录
+                }
+            },
+            {
+                test: /\.(ico)(\?.*)?$/,
                 loader: 'file',
                 query: {
-                    // limit: 0,
-                    name: 'static/[name].[ext]' //  导出目录
+                    name: 'static/[name].[hash:7].[ext]' //  导出目录
                 }
             },
             {
@@ -83,14 +102,15 @@ module.exports = {
     devServer: {
         historyApiFallback: true,
         hot: false,     //  不需要实时更新，禁用
-        // contentBase: '/dist/',  //   内容的基本路径
+        // contentBase: './',  //   内容的基本路径
         host: '0.0.0.0',  //  添加之后可以外部访问
-        noInfo:false,    //  去掉编译过程中的输出信息
+        // noInfo:true,    //  去掉编译过程中的输出信息
         // lazy: true     //   no watching, compile on request
     }
 };
 
 console.log("================= " +  process.env.NODE_ENV + " ==================");
+var compress = process.env.NODE_ENV == 'publish'
 switch(process.env.NODE_ENV){
     case 'dev':
         module.exports.devtool = '#source-map';
@@ -101,11 +121,8 @@ switch(process.env.NODE_ENV){
             }
         ]);
         module.exports.plugins = (module.exports.plugins || []).concat([
-            new webpack.DefinePlugin({
-                '__ENV__': '"dev"',
-                'process.env': '"dev"'
-            }),
             new webpack.optimize.OccurenceOrderPlugin(),
+            new webpack.NoErrorsPlugin(),
             new HtmlWebpackPlugin({
                 filename: 'index.html',
                 template: 'index.html',
@@ -114,17 +131,23 @@ switch(process.env.NODE_ENV){
         ]);
         break;
     case 'build':
-        module.exports.output.publicPath = './';
+    case 'publish':
+        module.exports.output.publicPath = '//cdn.***REMOVED***.com/share/assets/rugu_homepage/';
         module.exports.module.loaders = (module.exports.module.loaders || []).concat([
             {
                 test: /\.scss$/,
-                loader: ExtractTextPlugin.extract('style', 'css', 'sass')
+                loader: ExtractTextPlugin.extract(
+                    'style', // backup loader when not building .css file
+                    'css!sass' // loaders to preprocess CSS
+                )
             }
         ]);
         module.exports.plugins = (module.exports.plugins || []).concat([
+            //  定义环境变量
             new webpack.DefinePlugin({
-                '__ENV__': 'publish',
-                'process.env': 'publish'
+                'process.env': {
+                    NODE_ENV: '"production"'
+                }
             }),
             //  压缩JS
             new webpack.optimize.UglifyJsPlugin({
@@ -138,18 +161,104 @@ switch(process.env.NODE_ENV){
             new HtmlWebpackPlugin({
                 filename: 'index.html',
                 template: 'index.html',
+                favicon: 'favicon48.ico',
                 inject: true,
-                // minify: {
-                //     removeComments: true,
-                //     collapseWhitespace: true,
-                //     removeAttributeQuotes: true
-                //     // more options:
-                //     // https://github.com/kangax/html-minifier#options-quick-reference
-                // }
+                minify: {
+                    removeComments: compress,
+                    collapseWhitespace: compress,
+                    removeAttributeQuotes: compress
+                }
             })
         ]);
         break;
 }
+```
+
+### gulpfile.js
+
+```javascript
+var path = require('path');
+var gulp = require('gulp');
+var oss = require('gulp-oss');
+// var dom = require('gulp-dom');
+var clean = require('gulp-clean');
+var imagemin = require('gulp-imagemin');
+var pngquant = require('imagemin-pngquant');
+var tinypng = require('gulp-tinypng')
+var runSequence = require('run-sequence');
+var webpack = require('gulp-webpack')
+
+var config = require('./config.json');
+
+var publishDir = 'dist';
+var publishPath = path.join(__dirname, publishDir);
+
+//  clear directory
+gulp.task('clean', function() {
+    return gulp.src(publishDir)
+        .pipe(clean({read: false}));
+})
+
+//  webpack
+gulp.task('webpack', function() {
+    return gulp.src('src/entry.js')
+        .pipe(webpack(require('./webpack.config.js')))
+        .pipe(gulp.dest('dist/'));
+});
+
+//  上传资源
+gulp.task('upload-cdn', function(){
+    var ossConfig = config.oss;
+    ossConfig.prefix += (config.project + '/')
+
+    return gulp.src([publishPath + "/**/*", "!" + publishPath + "/**/*.html", "!" + publishPath + "/rev-manifest.json"])
+        .pipe(oss(ossConfig, {
+            // gzippedOnly: true,
+            headers: {
+                Bucket: ossConfig.bucket,
+                CacheControl: 'max-age=315360000',
+                ContentDisposition: '',
+                Expires: new Date().getTime() + 365 * 24 * 60 * 60 * 1000
+            },
+            uploadPath: ossConfig.prefix
+        }));
+});
+
+//  压缩图片等资源
+gulp.task("minify-image", function(){
+    return gulp.src([publishPath + "/**/*.jpg", publishPath + "/**/*.png"])
+        .pipe(imagemin({
+            progressive:true,
+            use:[pngquant({quality: '65-80', speed: 4})]
+        }))
+        .pipe(gulp.dest(path.join(publishPath)));
+});
+
+//  tinypng
+gulp.task('tinypng', function() {
+    return gulp.src('static/**/*.png')
+        .pipe(tinypng(config.tinypng.key))
+        .pipe(gulp.dest('static'))
+})
+
+//  仅发布
+gulp.task('build', function(callback){
+    runSequence(
+        ['clean'],
+        ['webpack'],
+        callback
+    )
+});
+
+//  发布、压缩图片、上传CDN
+gulp.task('publish', function(callback){
+    runSequence(
+        ['build'],
+        ['minify-image'],
+        ['upload-cdn'],
+        callback
+    )
+});
 ```
 
 ### package.json
@@ -160,12 +269,13 @@ switch(process.env.NODE_ENV){
 {
   "name": "webpack-babel-template",
   "version": "1.0.0",
-  "description": "webpack-babel-template",
+  "description": "just test",
   "main": "app.js",
   "scripts": {
     "dev": "cross-env NODE_ENV=dev webpack-dev-server",
-    "build": "cross-env NODE_ENV=build webpack",
-    "publish": "cross-env NODE_ENV=build webpack"
+    "build": "cross-env NODE_ENV=build gulp build",
+    "publish": "cross-env NODE_ENV=publish gulp publish",
+    "tinypng": "gulp tinypng"
   },
   "author": "aprilandjan",
   "license": "ISC",
@@ -181,15 +291,22 @@ switch(process.env.NODE_ENV){
     "extract-text-webpack-plugin": "^1.0.1",
     "file-loader": "^0.8.5",
     "gulp": "^3.9.1",
+    "gulp-clean": "^0.3.2",
+    "gulp-dom": "^0.9.0",
+    "gulp-imagemin": "^3.0.3",
+    "gulp-oss": "^0.1.1",
+    "gulp-tinypng": "^1.0.2",
     "gulp-webpack": "^1.5.0",
-    "html-webpack-plugin": "^2.19.0",
+    "html-loader": "^0.4.3",
+    "html-webpack-plugin": "^2.22.0",
+    "imagemin-pngquant": "^5.0.0",
     "json-loader": "^0.5.4",
     "node-sass": "^3.4.2",
-    "run-sequence": "^1.2.1",
+    "run-sequence": "^1.2.2",
     "sass-loader": "^3.2.3",
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.7",
-    "webpack": "^1.13.0",
+    "webpack": "^1.13.2",
     "webpack-dev-server": "^1.14.1"
   }
 }
@@ -204,3 +321,5 @@ switch(process.env.NODE_ENV){
 - 在 webpack.config.json 里使用 webpack.DefinePlugin 定义注入到 bundle.js 里的环境变量
 
 - 在 bundle.js 里直接访问以上环境变量并做相应的配置
+
+- 在 webpack HtmlWebpackPlugin 里可以通过字段 `favicon` 配置注入页面 favicon
