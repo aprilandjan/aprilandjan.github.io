@@ -1,0 +1,29 @@
+---
+layout: post
+title:  1 - 一张白纸: Canvas
+date:   2016-09-18 10:30:00 +0800
+categories: canvas
+---
+
+### 简介    
+    
+&lt;canvas&gt; 是HTML5标准里新增的一个元素标签。它是一张空白的画布, 为了在画布上进行创作, 通过`canvas.getContext()`访问特定绘图环境提供的一系列 API。 
+可以实现以下功能, 主要包含: 
+    
+- Image/Canvas元素的填充绘制 `drawImage`
+- 矩形区域绘制 `fillRect`
+- 路径绘制 `beginPath` `moveTo` `lineTo` `endPath` `arc` `bezierCurveTo`
+- 文本绘制 `fillText`
+- 线条及填充 `beginStroke`, `beginFill`, `stroke`, `fill`
+- 混合模式, 用来决定接下来的绘制内容如何与当前画布上已有内容相叠加
+
+以上内容可以在 [MDN](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Basic_usage) 详细查看
+    
+### 宽、高与二维坐标体系
+    
+画布的宽 `canvas.width`、高 `canvas.height` 决定了画布的绘图范围大小。画布的样式宽 `canvas.style.width`、高 `canvas.style.height` 决定了画布显示在页面上的大小。它们之间没有必然的对应关系;
+只是如果画布的 `宽高比` 与其 `样式宽高比`一致, 那么画布内容不会变形; 否则会失去应有的长款比, 导致方不方、圆不圆。这一点和 &lt;img&gt; 标签是类似的。
+
+画布左上角是坐标轴原点(0, 0)。水平方向是 x 轴并且向右是 x 轴正方向; 垂直方向是 y 轴并且向下是 y 轴正方向。如果某绘制元素部分或者完全不在这一块矩形区域内, 不影响其定位或计算, 仅仅是超出的内容不绘制而已。
+
+![](https://mdn.mozillademos.org/files/224/Canvas_default_grid.png)

@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  fe-share-canvas
-date:   2016-09-09 22:53:00 +0800
+title:  3 - "动"画的实现: requestAnimationFrame
+date:   2016-09-18 16:30:00 +0800
 categories: canvas
 ---
 
