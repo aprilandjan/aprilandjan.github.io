@@ -43,5 +43,74 @@ y += (tarY - y) * ease
 缓动系数越大, 就越快接近目标。如果把缓动系数设置为1, 那么就相当于上例的立即到达的效果; 如果设置为0, 那么就相当无法响应位置追随了。
 通常在60FPS下的缓动系数设置不宜超过0.2, 否则太快了, 缓动效果显得不明显。
 
-### 用比例来处理缓动
-//Todo 
+### 比例缓动
+
+已知起始点和目标点, 现在用另外一个方式来处理逼近。以下是一个数值映射的方法, 作用是把某值从相对于范围[a, b]的比例, 投影到另外一个范围[c, d]:
+
+```javascript
+var mapping = function (val, inputMin, inputMax, outputMin, outputMax) {
+    return ((outputMax - outputMin) * ((val - inputMin) / (inputMax - inputMin))) + outputMin
+}
+```
+
+例如, 把数字0.5从[0, 1] 映射到[100, 200], 得到的值是150, 在此变换中, 相对于各自的值域的比例程度不变。
+把它用在以上的例子当中, 有一下修改:
+
+- 点击时, 记录起始点(initX, initY), 目标点(tarX, tarY), 重置比例为 0
+    
+    ```
+        tarX = x
+        tarY = y
+        initX = children[0].x
+        initY = children[0].y
+        p = 0
+    ```
+
+- 每帧事件里, 让比例系数增加, 靠近完成比例 1 
+
+    ```
+    Ticker.on(() => {
+        children.forEach(child => {
+            child.move()
+        })
+    
+        p += 0.01
+    })
+    ```
+
+- 物体运动方法 `move` 里, 根据比例系数获取应该的坐标
+
+    ```
+    this.move = function () {
+            if (!this.canMove || p > 1) {
+                return
+            }
+    
+            this.x = mapping(p, 0, 1, initX, tarX)
+            this.y = mapping(p, 0, 1, initY, tarY)
+    
+            this.deg += this.vDeg
+            var rad = Math.PI * this.deg / 180
+            // this.offsetX = this.r * Math.cos(rad)
+            this.offsetY = this.r * Math.sin(rad)
+        }
+    ```
+
+- 如果 p 是每帧匀速递增的, 就没有缓动效果(linear); 为了应用缓动效果, 我们可以使用一些缓动函数对 p 做数值映射。
+例如 `p = Math.sin(p * Math.PI/2)`(sineOut), 经过变换, 0 依然是 0, 1 依然是 1, 仅仅是中间的过程不同。
+
+```
+var EaseFunctions = {
+    linear (p) {
+        return p
+    },
+
+    sineOut (p) {
+        return Math.sin(p * Math.PI / 2)
+    }
+}
+...
+var ease = EaseFunctions.linear
+```
+
+完整代码和示例: [jsfiddle](https://jsfiddle.net/aprilandjan/6x827dne/)。可以通过扩展更多的缓动方程来获取更多的缓动效果。
