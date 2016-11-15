@@ -1,0 +1,67 @@
+---
+layout: post
+title:  Vue2.0 SSR and PreRender
+date:   2016-11-14 10:30:00 +0800
+categories: vue
+---
+
+Vue2.0 提供了SSR, 网上的示例和介绍还不太多。[官网](https://vuejs.org/v2/guide/ssr.html) 以及 [Vue Hacker News](https://github.com/vuejs/vue-hackernews-2.0) 均是较好的示例。
+但是我等码工基础不够的情况下, 各种配置理解调试起来, 还是颇为吃力的。
+
+### Tips
+
+- vue2.0 hacker news 使用的webpack 版本是2.0+, 在webpack 2+中, `loaders` 变成了 `rules`
+
+- 在一些只有浏览器端才能用的方法和属性(window, document等), 注意不能在同构的地方(例如 created 钩子里)使用, 而只能在 mounted 钩子里使用。[ref](https://github.com/yyx990803/vue-ssr-demo/issues/3)
+
+- sass 配置, 依然是要先 `npm install --save-dev sass-loader node-sass`, 然后在 webpack 的配置里写入:
+
+    ```javascript
+    vue: {
+        loaders: {
+          css: 'vue-style-loader!css-loader',
+          // postcss: 'vue-style-loader!css-loader',
+          // less: 'vue-style-loader!css-loader!less-loader',
+          sass: 'vue-style-loader!css-loader!sass-loader?indentedSyntax',
+          scss: 'vue-style-loader!css-loader!sass-loader',
+          // stylus: 'vue-style-loader!css-loader!stylus-loader',
+          // styl: 'vue-style-loader!css-loader!stylus-loader'
+        }
+      }
+    ```
+    
+    要使用 ExtractTextPlugin 提取 css, 需要如下配置:
+    
+    ```javascript
+    vue: {
+        loaders: {
+            css: ExtractTextPlugin.extract('css'), // 'vue-style-loader!css-loader',
+            scss: ExtractTextPlugin.extract('vue-style-loader', 'css!sass'), // 'vue-style-loader!css-loader!sass-loader'
+        }
+    }
+    ```
+    
+    以上属于是加载/提取 vue 中的样式部分, 之外的部分仍需在 `loaders` 里添加相应的加载器
+
+- webpack 配置的一些知识可以参考: [ref](https://github.com/magicdawn/magicdawn/issues/7#issuecomment-229655801)
+
+- 在 server-entry 里, 是无法访问 window/document 等浏览器环境下才有的对象和方法的。因此如果需要某个地方存储公共数据, 可以使用 vuex
+
+- 用 vuex 存储公共数据, 并通过它实现条件渲染。比如这里使用 vuex 存储了一个全局变量 `device`, 用以判断移动端/PC端的显示。在获取请求后, server 会创建一个 vm 实例, 并把具体条件变量写入 store 和 html string里, renderer 据此渲染出对应的 html;
+client 需要先读取写到 window 里的初始条件变量, 并使用 `store.replaceState` 应用初始条件, 最终 client 端的 `virtual dom` 和实际的 `rendered string` 完全匹配。
+
+### 另一种选择: PreRender
+
+通过以上的摸索可以看出 ssr 还是不方便的。如果只是为了首屏内容抓取, 也许用 [PreRender](https://github.com/chrisvfritz/prerender-spa-plugin) 会是个更好的选择。
+    
+其原理是用 phantomjs 打开 spa 并把前端生成的 dom 结构再置入 HTML 内——虽然有一种多此一举的感觉, 但也的确是快速解决前端渲染页面 SEO 问题的有效办法。使用方法很简单, 向 webpack 里写入以下代码即可:
+
+```webpack.prod.conf.js
+var PrerenderSpaPlugin = require('prerender-spa-plugin')
+module.exports.plugins.push(new PrerenderSpaPlugin(
+                                  path.join(__dirname, '../dist'),
+                                  [ '/' ]
+                                ))
+```
+
+这样在发布生成 spa 最后会找到这个页面进行一次 prerender, 并最终替换到发布的 html 里。注意仍需保证 spa root element 能够被正确找到。
