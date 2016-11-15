@@ -5,10 +5,12 @@ date:   2016-11-14 10:30:00 +0800
 categories: vue
 ---
 
-Vue2.0 提供了SSR, 网上的示例和介绍还不太多。[官网](https://vuejs.org/v2/guide/ssr.html) 以及 [Vue Hacker News](https://github.com/vuejs/vue-hackernews-2.0) 均是较好的示例。
-但是我等码工基础不够的情况下, 各种配置理解调试起来, 还是颇为吃力的。
+有空研究一下 vue2.0 server-side-rendering 相关的东西, 也许以后会用到。
 
-### Tips
+### Vue Server Rendering
+
+Vue2.0 提供了SSR, 网上的示例和介绍还不太多。[官网](https://vuejs.org/v2/guide/ssr.html) 以及 [Vue Hacker News](https://github.com/vuejs/vue-hackernews-2.0) 均是较好的示例。
+但是各种配置理解调试起来, 还是颇为吃力的。但是配置好之后, 完全同构的代码会很爽。
 
 - vue2.0 hacker news 使用的webpack 版本是2.0+, 在webpack 2+中, `loaders` 变成了 `rules`
 
@@ -65,3 +67,5 @@ module.exports.plugins.push(new PrerenderSpaPlugin(
 ```
 
 这样在发布生成 spa 最后会找到这个页面进行一次 prerender, 并最终替换到发布的 html 里。注意仍需保证 spa root element 能够被正确找到。
+
+### What's more
