@@ -69,3 +69,5 @@ module.exports.plugins.push(new PrerenderSpaPlugin(
 这样在发布生成 spa 最后会找到这个页面进行一次 prerender, 并最终替换到发布的 html 里。注意仍需保证 spa root element 能够被正确找到。
 
 ### What's more
+
+这些方式需要页面是因果的, 即由相同的条件能够生成相同的结果, 否则dom树就有可能不匹配了。
