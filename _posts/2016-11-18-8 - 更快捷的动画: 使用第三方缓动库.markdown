@@ -49,7 +49,7 @@ categories: canvas
     ```javascript
     var config = {  
         //  当该缓动序列有属性值变更时调用
-        onChange: function () { console.log(this.state) },
+        onChange: function () { console.log(p.x, p.y) },
         //  是否覆盖之前的全部缓动, 避免同一个对象的多个缓动实例之间的干扰
         override: true,
         //  缓动是否循环
