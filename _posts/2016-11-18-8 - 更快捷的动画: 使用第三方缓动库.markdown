@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  8 - 更快捷的动画: 使用第三方缓动库
+title:  8 - 更快捷的动画:使用第三方缓动库
 date:   2016-11-18 11:30:00 +0800
 categories: canvas
 ---
