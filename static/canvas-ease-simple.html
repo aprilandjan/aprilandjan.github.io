@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        * {
+            margin: 0;
+            width: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        canvas {
+            /*width: 300px;*/
+            /*height: 300px;*/
+            width: 100%;
+            height: 100%;
+        }
+
+        .slider {
+            width: 300px;
+            margin: 0 auto;
+        }
+
+        input {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<canvas></canvas>
+<script>
+    var Ticker = (function() {
+        var _callbacks = []
+        var _count = 0
+        var _tick = function () {
+            _callbacks.forEach(cbArr => {
+                var callback = cbArr[0]
+                var scope = cbArr[1]
+                callback.call(scope, _count)
+            })
+
+            _count++
+            window.requestAnimationFrame(_tick)
+        }
+        var _raf = window.requestAnimationFrame(_tick)
+
+        var instance = {}
+
+        instance.on = function (callback, scope) {
+            var result = _callbacks.filter(cbArr => {
+                return callback == cbArr[0] && scope == cbArr[1]
+            })
+
+            if(!result.length){
+                _callbacks.push([callback, scope])
+            }
+        }
+
+        instance.off = function (callback, scope) {
+            for (var cbArr of _callbacks) {
+                if(cbArr[0] == callback || cbArr[1] == scope){
+                    _callbacks.splice(_callbacks.indexOf(cbArr), 1)
+                }
+            }
+        }
+
+        return instance
+    })()
+
+    var canvas = document.querySelector('canvas')
+
+    canvas.width = window.innerWidth
+    canvas.height = window.innerHeight
+    canvas.style.cssText = 'position: absolute'
+    var ctx = canvas.getContext('2d')
+
+    var tarX = window.innerWidth / 2
+    var tarY = window.innerHeight / 2
+    var ease = 0.1
+
+    var div = document.createElement('div')
+    div.classList.add('slider')
+    div.innerHTML = '缓动系数: <input type="range" value="0.1" min="0" max="1" step="0.01" id="slider">ease=<span id="sliderValue">0.1</span>'
+    document.body.appendChild(div)
+    div.style.cssText = 'position:absolute'
+
+    document.getElementById('slider').addEventListener('input', e => {
+        document.getElementById('sliderValue').innerText = e.target.value
+        ease = +e.target.value
+    })
+
+    function preload (list) {
+        var cdn = 'https://raw.githubusercontent.com/aprilandjan/aprilandjan.github.io/master/img/'
+        var loaded = 0
+        var total = list.length
+        for (var i = 0; i < total; i++) {
+            var img = new Image()
+            img.src = cdn + list[i]
+            imgList.push(img)
+            img.onload = (e) => {
+                loaded ++
+                if(loaded == total){
+                    start()
+                }
+            }
+        }
+    }
+
+    function start() {
+        var config = {
+            frameRate: 6,
+            frames: [
+                {regX:52, regY:44, image:null},
+                {regX:48, regY:40, image:null}
+            ]
+        }
+
+        config.frames.forEach((frame, index) => {
+            frame.image = imgList[index]
+        })
+
+
+        for (var i = 0; i < 2; i++) {
+            var sp = new Sprite(config)
+            sp.x = canvas.width >> 1
+            sp.y = canvas.height >> 1
+            sp.id = i
+            children.push(sp)
+        }
+    }
+
+    var preloadList = [
+        'frame0.png',
+        'frame1.png'
+    ]
+    var imgList = []
+
+    preload(preloadList)
+
+    var children = []
+
+    var Sprite = function (config) {
+        this.x = 0
+        this.y = 0
+
+        this.regX = 0
+        this.regY = 0
+
+        this.image = null
+        this.frameRate = config.frameRate
+        this.frameInterval = Math.ceil(60 / this.frameRate)
+
+        //  总的帧数
+        this.totalFrames = config.frames.length
+        //  当前帧数
+        this.currentFrame = 0
+
+        var updateFrame = tickCount => {
+            if(tickCount % this.frameInterval == 0) {
+                this.currentFrame = (this.currentFrame + 1) % this.totalFrames
+                var frame = config.frames[this.currentFrame]
+                this.image = frame.image
+                this.regX = frame.regX
+                this.regY = frame.regY
+            }
+        }
+        updateFrame(0)
+        Ticker.on(updateFrame)
+
+        this.canMove = true
+        this.deg = 0
+        this.vDeg = 4
+        this.r = 10
+        this.offsetX = 0
+        this.offsetY = 0
+
+        this.draw = function () {
+            ctx.drawImage(this.image, this.x - this.regX + this.offsetX, this.y - this.regY + this.offsetY)
+        }
+
+        this.move = function () {
+            if (!this.canMove) {
+                return
+            }
+
+            this.x += (tarX - this.x) * ease
+            this.y += (tarY - this.y) * ease
+
+            this.deg += this.vDeg
+            var rad = Math.PI * this.deg / 180
+            // this.offsetX = this.r * Math.cos(rad)
+            this.offsetY = this.r * Math.sin(rad)
+        }
+    }
+
+    Ticker.on(() => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
+        children.forEach(child => {
+            child.draw()
+        })
+    })
+
+    function onCursorMove (e) {
+        if (e.type == 'touchmove') {
+            e = e.changedTouches[0]
+        }
+
+        var rect = canvas.getBoundingClientRect()
+        var x = e.clientX - rect.left   //  px
+        var y = e.clientY - rect.top    //  px
+
+        //  location
+        x *= canvas.width / canvas.offsetWidth
+        y *= canvas.height / canvas.offsetHeight
+        tarX = x
+        tarY = y
+    }
+
+    canvas.addEventListener('mousemove', onCursorMove)
+    canvas.addEventListener('touchmove', onCursorMove)
+
+    Ticker.on(() => {
+        children.forEach(child => {
+            child.move()
+        })
+    })
+</script>
+</body>
+</html>
