@@ -2,62 +2,102 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title></title>
+    <title>Learning Flex Box</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            text-align: center;
+            background-color: #ccc;
+            font-family: Helvetica, Arial, sans-serif;
+            color: midnightblue;
+        }
+
+        header {
+            padding: 10px;
+            height: 50px;
+            background-color: white;
+        }
+
+        main {
+            display: flex;
+            align-items: stretch;
+            width: 768px;
+            margin: 0 auto;
+        }
+
+        .nav-left {
+            width: 20%;
+            background-color: bisque;
+            flex-shrink: 0;
+        }
+
+        .content {
+            width: auto;
+            height: 500px;
+            flex-grow: 1;
+            background-color: cadetblue;
+        }
+
+        .nav-right {
+            width: 20%;
+            background-color: cornflowerblue;
+            flex-shrink: 0;
+        }
+
+        footer {
+            padding: 10px;
+            height: 50px;
+            background-color: white;
+        }
+
+        @media (max-width: 768px) {
+            main {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .nav-left {
+                width: 100%;
+            }
+
+            .nav-right {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
-<div>
-    <p>标量速度</p>
-    <label>vx<input value="1" id="inputVx"></label>
-    <label>vy<input value="0" id="inputVy"></label>
-</div>
-<div>
-    <p>矢量速度</p>
-    <label>v<input value="0" id="inputV"></label>
-    <label>rad<input value="0" id="inputRad"></label>
-</div>
-<script>
-    var input = {
-        vx: document.getElementById('inputVx'),
-        vy: document.getElementById('inputVy'),
-        v: document.getElementById('inputV'),
-        rad: document.getElementById('inputRad')
-    }
+<header>
+    Navigation Here
+</header>
 
-    var velocity = {
-        vx: 1,
-        vy: 0,
-        v: 0,
-        rad: 0
-    }
+<main>
+    <nav class="nav-left">
+        Left Nav
+    </nav>
+    <article class="content">
+        <h2>Content</h2>
+        <article>
+            Smecasthsa lecaots waksq Smecasthsa lecaots waksqSmecasthsa lecaots waksqSmecasthsa lecaots waksqSmecasthsa lecaots waksqSmecasthsa lecaots
+            1asSmecasthsa l1ecaots waksqSmecasthsa lecaots waksqSmecasthsa lecaots waksq
+            s  Smescasthsa lecaots waksq1as 123s
+            sda Smecasthsa lecaots waksq s
+            as  Smecasthsa lecaots waksqSmecasthsa lecaots waksqSmecasthsa lecaots waksqSmecasthsa lecaots waksq
+            waksqSmecasthsa lecaots waksqSmecasthsa lecaots waksqSmecasthsa lecaots waksqSmecasthsa lecaots waksq
+        </article>
+    </article>
+    <aside class="nav-right">
+        Right Nav
+    </aside>
+</main>
 
-    function updateVxVy(v, rad) {
-        input.vx.value = velocity.vx = v * Math.cos(rad)
-        input.vy.value = velocity.vy = v * Math.sin(rad)
-    }
-    function updateVRad (vx, vy) {
-        velocity.rad = Math.atan2(vy, vx)
-        input.rad.value = velocity.rad * 180 / Math.PI
-        input.v.value = velocity.v = Math.sqrt(vx * vx + vy * vy)
-    }
-
-    function onInputChange (e) {
-        var el = e.currentTarget
-        var name = el.name
-        console.log('change name', name)
-        velocity[name] = +el.value
-        if(el == input.vx || el == input.vy) {
-            updateVRad(velocity.vx, velocity.vy)
-        } else {
-            updateVxVy(velocity.v, velocity.rad * Math.PI / 180)
-        }
-    }
-
-    for(var key in input) {
-        input[key].name = key
-        input[key].addEventListener('input', onInputChange)
-    }
-
-    updateVRad(velocity.vx, velocity.vy)
-</script>
+<footer>
+    Page Footer
+</footer>
 </body>
 </html>
