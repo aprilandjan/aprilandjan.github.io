@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        canvas {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .ui {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            pointer-events: none;
+        }
+
+        label {
+            margin: 0 10px;
+        }
+
+        input {
+            min-width: 300px;
+        }
+
+        button {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <canvas></canvas>
+    <div class="ui">
+        <p>速度: <label>vx<input value="0" id="inputVx" disabled></label>
+            <label>vy<input value="0" id="inputVy" disabled></label>
+        </p>
+        <div>
+            <button id='reset'>RESET</button>
+        </div>
+    </div>
+</div>
+<script>
+    var input = {
+        vx: document.getElementById('inputVx'),
+        vy: document.getElementById('inputVy')
+    }
+
+    var velocity = {
+        vx: 0,
+        vy: 0,
+        ax: 0,
+        ay: 0
+    }
+
+    var g = 0.5
+    var bounce = -0.7
+    var impulse = -10
+
+    function onInputChange (e) {
+        var el = e.currentTarget
+        var name = el.name
+        velocity[name] = +el.value
+    }
+
+    for(var key in input) {
+        input[key].name = key
+        input[key].addEventListener('input', onInputChange)
+    }
+
+    function updateInputs () {
+        input.vx.value = velocity.vx
+        input.vy.value = velocity.vy
+    }
+
+    var Ticker = (function() {
+        var _callbacks = []
+        var _count = 0
+        var _tick = function () {
+            _callbacks.forEach(cbArr => {
+                var callback = cbArr[0]
+                var scope = cbArr[1]
+                callback.call(scope, _count)
+            })
+
+            _count++
+            window.requestAnimationFrame(_tick)
+        }
+        var _raf = window.requestAnimationFrame(_tick)
+
+        var instance = {}
+
+        instance.on = function (callback, scope) {
+            var result = _callbacks.filter(cbArr => {
+                return callback == cbArr[0] && scope == cbArr[1]
+            })
+
+            if(!result.length){
+                _callbacks.push([callback, scope])
+            }
+        }
+
+        instance.off = function (callback, scope) {
+            for (var cbArr of _callbacks) {
+                if(cbArr[0] == callback || cbArr[1] == scope){
+                    _callbacks.splice(_callbacks.indexOf(cbArr), 1)
+                }
+            }
+        }
+
+        return instance
+    })()
+
+    var canvas = document.querySelector('canvas')
+
+    canvas.width = window.innerWidth
+    canvas.height = window.innerHeight
+    var ctx = canvas.getContext('2d')
+    var bird
+
+    function preload (list) {
+        var cdn = 'https://raw.githubusercontent.com/aprilandjan/aprilandjan.github.io/master/img/'
+        var loaded = 0
+        var total = list.length
+        for (var i = 0; i < total; i++) {
+            var img = new Image()
+            img.src = cdn + list[i]
+            imgList.push(img)
+            img.onload = (e) => {
+                loaded ++
+                if(loaded == total){
+                    start()
+                }
+            }
+        }
+    }
+
+    function start() {
+        var config = {
+            frameRate: 6,
+            frames: [
+                {regX:52, regY:44, image:null},
+                {regX:48, regY:40, image:null}
+            ]
+        }
+
+        config.frames.forEach((frame, index) => {
+            frame.image = imgList[index]
+        })
+
+        var sp = new Sprite(config)
+        sp.x = canvas.width >> 1
+        sp.y = 30
+        children.push(sp)
+        bird = sp
+    }
+
+    var preloadList = [
+        'frame0.png',
+        'frame1.png'
+    ]
+    var imgList = []
+
+    preload(preloadList)
+
+    var children = []
+
+    var Sprite = function (config) {
+        this.x = 0
+        this.y = 0
+
+        this.regX = 0
+        this.regY = 0
+
+        this.image = null
+        this.frameRate = config.frameRate
+        this.frameInterval = Math.ceil(60 / this.frameRate)
+
+        //  总的帧数
+        this.totalFrames = config.frames.length
+        //  当前帧数
+        this.currentFrame = 0
+
+        var updateFrame = tickCount => {
+            if(tickCount % this.frameInterval == 0) {
+                this.currentFrame = (this.currentFrame + 1) % this.totalFrames
+                var frame = config.frames[this.currentFrame]
+                this.image = frame.image
+                this.regX = frame.regX
+                this.regY = frame.regY
+            }
+        }
+        updateFrame(0)
+        Ticker.on(updateFrame)
+
+        this.r = 10
+        this.offsetX = 0
+        this.offsetY = 0
+
+        this.draw = function () {
+            ctx.drawImage(this.image, this.x - this.regX + this.offsetX, this.y - this.regY + this.offsetY)
+        }
+
+        this.move = function () {
+            velocity.vx += velocity.ax
+            velocity.vy += velocity.ay
+            velocity.vy += g
+            this.x += velocity.vx
+            this.y += velocity.vy
+
+            if (this.y > canvas.height) {
+                this.y = canvas.height
+                velocity.vy *= bounce
+            }
+
+            updateInputs()
+        }
+    }
+
+    Ticker.on(() => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
+        children.forEach(child => {
+            child.draw()
+        })
+    })
+
+    Ticker.on(() => {
+        children.forEach(child => {
+            child.move()
+        })
+    })
+
+    document.getElementById('reset').addEventListener('click', function(e) {
+        velocity.vx = 0
+        velocity.vy = 0
+        bird.x = canvas.width / 2
+        bird.y = 30
+    })
+
+    canvas.addEventListener('click', function(e) {
+        velocity.vy = impulse
+    })
+</script>
+</body>
+</html>
