@@ -67,7 +67,7 @@ categories: canvas
 easeIn 代表动画开始时有较明显的缓动效果, easeOut 代表结束时较明显的缓动效果, easeInOut 代表开始和结束时均有较明显的缓动效果。
 可以在 createjs 官网上的[这个例子](http://www.createjs.com/demos/tweenjs/tween_sparktable) 直观的感受不同的缓动方程带来的运动效果。
 
-![](../img/visualize-ease.png)
+![](/img/visualize-ease.png)
 
 ### 总结
 

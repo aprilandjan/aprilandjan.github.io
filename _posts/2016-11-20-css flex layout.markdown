@@ -176,4 +176,4 @@ MDN上的[文档](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Flexible_
 </html>
 ```
 
-页面在[这里](../static/holy-grail-by-flex-layout.html)
+页面在[这里](/static/holy-grail-by-flex-layout.html)
