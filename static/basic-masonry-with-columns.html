@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .box {
+            columns: 4;
+            column-gap: 0;
+        }
+
+        .cell {
+            display: inline-block;
+            width: 100%;
+            border: 1px solid;
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+
+    </div>
+
+    <script>
+        var $ = function (selector) {
+            return document.querySelector(selector)
+        }
+        var randomInt = function (a, b) {
+            return Math.floor((b - a) * Math.random() + a)
+        }
+        var randomColor = function () {
+            return `rgb(${randomInt(0, 256)}, ${randomInt(0, 256)}, ${randomInt(0, 256)})`
+        }
+
+        var box = $('.box')
+        for(var i = 0; i < 30; i++) {
+            var div = document.createElement('div')
+            box.appendChild(div)
+            var height = randomInt(30, 200);
+            div.innerText = `${i},h=(${height})`
+            div.classList.add('cell')
+            div.style.cssText = `
+                        height:${height}px;
+                        background-color: ${randomColor()}
+                        `
+        }
+    </script>
+</body>
+</html>

@@ -66,7 +66,21 @@ MDN上的[文档](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Flexible_
 
 - align-self: 拥有该属性的子项会覆盖掉容器的 align-item 给它的定位。值与 `align-item` 完全一样
 
-#### 实践
+经测试, 容器的 `display: flex` 也可以和 `position: relative` 一并生效, 很灵活。
+
+#### 实践: 水平&垂直居中
+
+利用主轴上内容分布位置 `justify-content` 以及交叉轴上内容分布位置 `align-items` 实现。比 transform 居中法稍微方便那么一点点; 比 `display: table;` 要好很多, 因为 tabel-cell 宽高身不由己。
+
+```style
+.box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+```
+
+#### 实践: 圣杯布局
 
 配合媒体查询, 小小的实现一下 MDN 上的圣杯布局。可见 flex layout 的确是非常好用的。页面代码如下:
 
