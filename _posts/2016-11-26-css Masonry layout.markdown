@@ -34,7 +34,7 @@ categories: css
 
 用 column 的方式, 实现起来非常简单。唯一需要注意的是, 子元素必须得设置 `display: inline-block; width: 100%;`, 否则子元素可能被拆成多个块。
 
-```stylesheet
+```style
 .parent {
     columns: 2;
     column-gap: 0;
@@ -59,6 +59,7 @@ categories: css
 ```
 
 但是期望达成的是水平方向填充满了,再换到下一行(每个元素高度不固定, 宽度可以固定):
+
 ```
 1 | 2 | 3
 4 | 5 | 6
