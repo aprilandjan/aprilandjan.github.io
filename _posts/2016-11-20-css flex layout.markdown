@@ -191,3 +191,138 @@ MDN上的[文档](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Flexible_
 ```
 
 页面在[这里](/static/holy-grail-by-flex-layout.html)
+
+### 网格系统
+
+用 flex 做一个类似于 bootstrap 里的 `row` `col` 的网格系统还是蛮容易的, 相比于浮动的方式, 可以直接做网格嵌套、自动宽度单元格。以下仿照 bootstrap 的命名方式简单的实现了一下网格系统,
+并测试了嵌套、未填满、填满溢出、偏移、自动填充等场景。关键点在于 flex-shrink, flex-grow 以及 align-items 的设置。
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Grid System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        h3 {
+            padding: 10px;
+            border-top: 1px solid black;
+            margin-top: 10px;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            flex-shrink: 0;
+            flex-grow: 0;
+            align-items: flex-start;
+        }
+
+        .cell {
+            border: 1px solid black;
+            background-color: #888888;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .col-1 {
+            width: 8.33%;
+        }
+
+        .col-2 {
+            width: 16.66%;
+        }
+
+        .col-3 {
+            width: 25%;
+        }
+
+        .col-4 {
+            width: 33.33%;
+        }
+
+        .col-6 {
+            width: 50%;
+        }
+
+        .col-offset-2 {
+            margin-left: 16.66%;
+        }
+
+        .col-offset-3 {
+            margin-left: 25%;
+        }
+
+        .col-auto {
+            flex: 1;
+            background-color: burlywood;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h3>nested</h3>
+        <div class="row">
+            <div class="col-1 cell"></div>
+            <div class="col-2 cell"></div>
+            <div class="col-3 cell"></div>
+            <div class="col-6 cell row">
+                <div class="col-1 cell"></div>
+                <div class="col-3 cell"></div>
+            </div>
+        </div>
+        <h3>unfulfilled</h3>
+        <div class="row">
+            <div class="col-1 cell">
+                <p>和子由渑池怀旧</p>
+                <article>
+                    人生到处知何似,应似飞鸿踏雪泥。
+                </article>
+            </div>
+            <div class="col-2 cell">
+                文字
+            </div>
+            <div class="col-3 cell">
+                <article>
+                    壬戌之秋，七月既望，苏子与客泛舟游于赤壁之下。清风徐来，水波不兴，举酒属客，诵明月之诗，歌窈窕之章。少焉，月出于东山之上，徘徊于斗牛之间，白露横江，水光接天；纵一苇之所如，凌万顷之茫然。浩浩乎如冯虚御风，而不知其所止；飘飘乎如遗世独立，羽化而登仙。
+                </article>
+            </div>
+            <div class="col-4 cell"></div>
+        </div>
+
+        <h3>overflowed</h3>
+        <div class="row">
+            <div class="col-2 cell"></div>
+            <div class="col-4 cell"></div>
+            <div class="col-6 cell"></div>
+            <div class="col-2 cell"></div>
+        </div>
+
+        <h3>offset</h3>
+        <div class="row">
+            <div class="col-1 col-offset-3 cell"></div>
+            <div class="col-2 col-offset-2 cell"></div>
+            <div class="col-3 cell"></div>
+        </div>
+
+        <h3>autofilled</h3>
+        <div class="row">
+            <div class="col-2 cell"></div>
+            <div class="col-auto cell"></div>
+            <div class="col-6 cell"></div>
+        </div>
+    </div>
+
+    <script>
+    </script>
+</body>
+</html>
+```
+页面在[这里](/static/grid-system-by-flex-layout.html)
