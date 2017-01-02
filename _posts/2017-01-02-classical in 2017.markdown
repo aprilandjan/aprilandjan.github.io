@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  Classical in 2017
+title:  classical in 2017
 date:   2017-01-02 15:12:00 +0800
 categories: mac
 ---
