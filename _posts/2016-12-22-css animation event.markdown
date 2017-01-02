@@ -16,6 +16,7 @@ categories: javascript
 可以看到, webkit 以及 ms 的时间名特立独行, 单词首字母用大写——这点很重要, 因为写小写的话并不会触发这个事件。安卓微信内的X5也是同样的, 实测需要监听 webkitAnimationEnd 才可以触发事件。
 
 以下是一种兼容的事件侦听方法:
+
 ```javascript
 var pfx = ['webkit', 'moz', 'MS', 'o', ''];
 function prefixedEventListener(element, type, callback) {
