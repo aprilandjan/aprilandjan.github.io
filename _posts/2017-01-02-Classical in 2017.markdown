@@ -17,8 +17,3 @@ categories: mac
 解决方式也比较简单: 在命令行里执行 `sudo killall coreaudiod` 就好了, 这时重开播放器也是一切正常的了。至于系统没声音了, 那就让它没声音吧, 反正也不听它的 =w=
 
 My Cello, My Piano, My Bach-Beethoven-Brahms, I'm back in 2017!
-
----
-
-##### 参考
-- [How to Capture CSS3 Animation Events in JavaScript](https://www.sitepoint.com/css3-animation-javascript-event-handlers/)
