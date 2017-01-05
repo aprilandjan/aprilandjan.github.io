@@ -7,6 +7,14 @@ categories: vue
 
 一直没用 Vue2.0 做过什么正经项目, 所以也没有仔细研究新版本有哪些不一样的地方。所以用这篇文章来纪录在实际项目中使用 2.0 的一些要点。
 
+### 路由
+
+路由使用 router-link 实现跳转, 如果是具名路由跳转是要加上 `:to="{name: page1}"` 形式的参数。
+
+### Proxy
+
+具体规则可以参看 [这里](https://github.com/chimurai/http-proxy-middleware)
+
 ### 事件
     
 vm 对象派发事件变更为 `$emit` 方法。父容器监听事件的方式不再是定义 `events` 对象, 而是可以像 dom 元素一样, 使用 `v-on:my-event="myEventHandler"` 的方式 (同样可以使用 `@` 简化 `v-on`) 定义事件回调

@@ -11,6 +11,6 @@ categories: css
 
 如果用 margin 给页面的内容增加一个主要内容的下边距, 虽然在 PC 端(模拟器) 看是生效的, 但是在很多手机上这部分下边距消失了, 只有用 padding 才是正道。
 
-### <main></main>
+### &lt;main&gt;&lt;/main&gt;
 
 IE 11 不支持该标签(默认显示成了内联元素)
