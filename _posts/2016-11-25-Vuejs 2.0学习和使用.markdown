@@ -18,3 +18,20 @@ categories: vue
 ### 事件
     
 vm 对象派发事件变更为 `$emit` 方法。父容器监听事件的方式不再是定义 `events` 对象, 而是可以像 dom 元素一样, 使用 `v-on:my-event="myEventHandler"` 的方式 (同样可以使用 `@` 简化 `v-on`) 定义事件回调
+
+### vuex
+
+用 vuex 一般也只是想有个公共数据存储点并且这个存储点也可以拿去做数据绑定。最简单还是直接全局注入 store, 然后每个组件里按需取。如果要实现双向绑定的话, 是可以用 computed 属性的 get / set 方法的:
+
+```javascript
+computed: {
+    desc: {
+        get () {
+            return this.$store.state.desc
+        },
+        set (value) {
+            this.$store.state.desc = value
+        }
+    }
+}
+```
