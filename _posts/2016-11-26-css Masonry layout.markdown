@@ -66,4 +66,105 @@ categories: css
 7 | 8
 ```
 
-似乎这和 column 并无关联了, 问题又回到了起点。网上搜了一下, 似乎并没有一种纯CSS的实现方法。当然, 通过JS计算, 是可以做到的, 这里就不继续实践了...
+似乎这和 column 并无关联了, 问题又回到了起点。网上搜了一下, 似乎并没有一种纯CSS的实现方法。当然, 通过JS计算, 是可以做到的。以下是一段实现 marsonry layout
+
+```javascript
+const map = new Map()
+
+function getElement (el) {
+  if (typeof el === 'string') {
+    el = document.querySelector(el)
+  }
+
+  return el
+}
+
+function getColumnDistribution (num) {
+  var arr = []
+  for (var i = 0; i < num; i++) {
+    arr.push(Math.floor(100 * i / num).toFixed(3) + '%')
+  }
+  return arr
+}
+
+function getHeightDistribution (num) {
+  var arr = []
+  for (var i = 0; i < num; i++) {
+    arr.push(0)
+  }
+  return arr
+}
+
+/**
+ * 实现 masonry layout
+ */
+class Masonry {
+  static init (box, config) {
+    box = getElement(box)
+    var instance = map.get(box)
+    if (!instance) {
+      instance = new Masonry(box, config)
+      map.set(box, instance)
+    }
+    return instance
+  }
+
+  /**
+   *
+   * slot: 槽选择器
+   * columnCount: 列数
+   * columnDistribution: 列分布
+   *
+   * @param config
+     */
+  constructor (box, config) {
+    //  容器
+    this.box = box
+    //  槽选择器
+    this.slotSelector = config.slot
+    //  列数
+    this.columnCount = config.columnCount
+    //  列分布
+    this.columnDistribution = config.columnDistribution || getColumnDistribution(this.columnCount)
+    //  高度分布
+    this.heightDistribution = getHeightDistribution(this.columnCount)
+    //  当前最低的那个槽的序号
+    this.minIndex = 0
+    //  当前处理了的序号
+    this.arragedIndex = 0
+  }
+
+  /**
+   * 重新布局
+   */
+  resetLayout () {
+    this.arragedIndex = 0
+    this.heightDistribution = getHeightDistribution(this.columnCount)
+    this.minIndex = 0
+
+    this.updateLayout()
+  }
+
+  /**
+   * 如果 slots 数量变化了, 只布局新增的 slot
+   */
+  updateLayout () {
+    var slots = this.box.querySelectorAll(this.slotSelector)
+    var total = slots.length
+    for (var i = this.arragedIndex; i < total; i++) {
+      let slot = slots[i]
+      let rect = slot.getBoundingClientRect()
+      slot.style.cssText = `left: ${this.columnDistribution[this.minIndex]}; top: ${this.heightDistribution[this.minIndex]}px;`
+      this.heightDistribution[this.minIndex] += rect.height
+      let min = Math.min.apply(Math, this.heightDistribution)
+      this.minIndex = this.heightDistribution.indexOf(min)
+      this.arragedIndex ++
+    }
+
+    let max = Math.max.apply(Math, this.heightDistribution)
+    this.box.style.cssText = `height:${max}px;`
+  }
+}
+
+export default Masonry
+```
