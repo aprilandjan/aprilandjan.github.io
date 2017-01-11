@@ -11,9 +11,17 @@ categories: css
 
 如果用 margin 给页面的内容增加一个主要内容的下边距, 虽然在 PC 端(模拟器) 看是生效的, 但是在很多手机上这部分下边距消失了, 只有用 padding 才是正道。
 
+
 ### &lt;main&gt;&lt;/main&gt;
 
 IE 11 不支持该标签(默认显示成了内联元素)
+
+
+### mobile tap highlight
+
+在移动设备上按下时希望实现触碰元素的高亮效果, 可以给这个元素加 `-webkit-tap-highlight-color`; 但是有时需要别的效果, 这个时候可以使用 `:active` 伪类来实现——然而还是不够, 在 iOS safari 上如此设置仍然没有效果。
+后来参考了 weui 的 demo, 发现它给 body 添加了一个空的事件 `ontouchbegin`, 配合 `active` 伪类, 成功的达成目标!
+
 
 ### click delay
 
@@ -24,10 +32,12 @@ import fastclick from 'fastclick'
 fastclick.attach(document.body)
 ```
 
+
 ### height of inline-block with `overflow:hidden`
 
 给某 inline-block 添加溢出文本 ellipsis 的时候出现的问题, 发现如果加了 `overflow:hidden` 会平白无故的让父级容器变高一些。
 解决办法是给这个 inline-block 添加 `vertical-align: top`, 原理在[这里](http://stackoverflow.com/questions/20310690/overflowhidden-on-inline-block-adds-height-to-parent)
+
 
 ### ios webview 无法动态改变 title
 
@@ -51,6 +61,7 @@ function setTitle (t) {
   }, 0)
 }
 ```
+
 
 ### webview 右划返回历史纪录上一条
 
