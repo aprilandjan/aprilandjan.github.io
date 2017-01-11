@@ -14,3 +14,17 @@ categories: css
 ### &lt;main&gt;&lt;/main&gt;
 
 IE 11 不支持该标签(默认显示成了内联元素)
+
+### click delay
+
+在移动设备上, 进行点击操作通常有300MS的延迟, 这300MS的延迟带来的操作体验大打折扣。看了weui的代码, 才发现还有 [`fastclick`](https://www.npmjs.com/package/fastclick) 这样一个方便的工具。使用方式如下:
+
+```javascript
+import fastclick from 'fastclick'
+fastclick.attach(document.body)
+```
+
+### height of inline-block with `overflow:hidden`
+
+给某 inline-block 添加溢出文本 ellipsis 的时候出现的问题, 发现如果加了 `overflow:hidden` 会平白无故的让父级容器变高一些。
+解决办法是给这个 inline-block 添加 `vertical-align: top`, 原理在[这里](http://stackoverflow.com/questions/20310690/overflowhidden-on-inline-block-adds-height-to-parent)
