@@ -28,3 +28,26 @@ fastclick.attach(document.body)
 
 给某 inline-block 添加溢出文本 ellipsis 的时候出现的问题, 发现如果加了 `overflow:hidden` 会平白无故的让父级容器变高一些。
 解决办法是给这个 inline-block 添加 `vertical-align: top`, 原理在[这里](http://stackoverflow.com/questions/20310690/overflowhidden-on-inline-block-adds-height-to-parent)
+
+### ios webview 无法动态改变 title
+
+有时会通过JS改变页面的 title, 但是据开发说 IOS WEBVIEW 可能需要一个加载动作来触发再次重命名TITLE, 实测IOS 微信中是这样的。以下是一种实现方式:
+
+```javascript
+function setTitle (t) {
+  setTimeout(() => {
+    document.title = t
+    const iframe = document.createElement('iframe')
+    iframe.style.visibility = 'hidden'
+    iframe.style.width = '1px'
+    iframe.style.height = '1px'
+    iframe.src = '/favicon.ico' // 这里
+    iframe.onload = () => {
+      setTimeout(() => {
+        document.body.removeChild(iframe)
+      }, 0)
+    }
+    document.body.appendChild(iframe)
+  }, 0)
+}
+```
