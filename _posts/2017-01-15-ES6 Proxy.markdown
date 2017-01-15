@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  isolate git branch
+title:  ES6 Proxy
 date:   2017-01-15 21:34:00 +0800
 categories: javascript
 ---
