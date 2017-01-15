@@ -1,0 +1,124 @@
+---
+layout: post
+title:  isolate git branch
+date:   2017-01-15 21:34:00 +0800
+categories: javascript
+---
+
+ES6使用已有很长一段时间了, 最常用到的大概有以下特性: 箭头函数、模块与类、Promise、模版字符串、解构等。今天了解了一下较少用到的 Proxy, 感觉用好它, 能对对象的操作拥有更大的自由和可能。
+
+### Proxy
+
+顾名思义, Proxy 是对`对象`的一个操作处理器。通过 `new Proxy(target, handler)` 来把 `target` 的相关对象操作代替到返回来的 `proxy` 对象上执行, 而具体的执行语句, 通过参数 `handler` 来定义。
+
+对于一个 javascript 对象, 最普通的, 读取某键值使用点操作符:
+
+```javascript
+var obj = {x: 100, y: 200}
+console.log(obj.a)
+```
+
+如果键名是变量, 也会采用中括号的形式取值:
+
+```javascript
+var obj = {x: 100, y: 200}
+console.log(obj['a'])
+```
+
+现在, 如果我们想更改 `obj.prop` 或者 `obj['key']` 的取值方式, 譬如在取值的时候打印一句 "Try to aceess prop in obj", 有什么办法呢? 第一时间想到的解决方式是利用 ES5 里加入的 `Object.defineProperty` 定义相应的 getter 方法。 例如:
+
+```javascript
+function createObject(x, y) {
+    Object.defineProperty(this, 'x', {
+        get: function () {  
+            console.log('try to access x in obj')
+            return x 
+        }
+    })
+    Object.defineProperty(this, 'y', {
+        get: function () {
+            console.log('try to access y in obj')
+            return y
+        }
+    })
+}
+
+var obj = new createObj(100, 200)
+console.log(obj.x, obj['y'])
+```
+
+可见, 通过 `defineProperty` 可以给指定的属性添加寄存器方法, 达到限制或者修改访问的目的。但是这种方式必须预先对想要处理的 key 做预处理, 并不是一个通用的方法。现在利用 ES6 的 Proxy, 我们有了更好的处理方法。
+
+### 实例: 任意深度的对象树
+
+假设有某对象 `a`, 要访问它的 `b` 属性下的 `c` 属性, 是这样写: `a.b.c` —— 前提是 `a` 的 `b` 属性存在且为对象; 否则运行时会抛出错误, 告知"无法访问 undefined 的 c 属性"。
+利用 Proxy 可以巧妙的给 `a` 自动补全访问到的节点属性, 从而避免这样的报错。代码如下:
+
+```javascript
+var handler = {
+    get: function (target, key, receiver) {
+        //  如果目标没有该键值, 给它的该键值创建一个子代理对象
+        if (!(key in target)) {
+            target[key] = Tree()
+        }
+        console.log('try get:', key)
+        //  https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Reflect/get
+        // return Reflect.get(target, key, receiver);
+        return target[key]
+    }
+}
+
+var Tree = function () {
+    return new Proxy({}, handler)
+}
+var tree = new Tree()
+tree.a.b.c = 'Im fine'
+```
+
+这段代码的关键在于 `handler` 中的 `get` 方法。通过 `proxy`, 每当访问对象的属性的时候, 首先执行到 `get` 方法处。如果目标没有访问的键值, 那么给它的该键值创建一个子代理对象, 然后返回的也是这个子代理对象。
+代码中返回的是 `target[key]`, 这里也可以用 ES6 里的 [`Reflect.get(target, key, receiver`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Reflect/get), 效果是一样的。
+当访问 `tree.a.b.c` 的时候, 先找 `tree.a`, 它未定义, 于是令它为一个新的子代理对象; 再执行 `tree.a.b`, 也是未定义, 以此类推。这样我们就实现了一个可以任意访问深度的对象树。
+
+可见, 通过 Proxy, 我们抓住了在对象存取属性等操作实施的上一个行为, 并可自定义为自己所用。
+
+### 实例: 不可变(immutable)对象
+
+所谓不可变对象, 是指这个对象声明之后, 无法通过赋值语句改变它的属性值。ES5 里定义了 `Object.freeze()` 方法, 利用它可以把一个对象属性锁定; ES6 里声明关键字 `const` 会令后续的对变量的赋值操作失败, 抛出异常。
+但是这两种方式都只是浅层不可变, 当对象拥有多层级深度时, 仍然可以修改子对象的属性。与上例类似, 用 Proxy 可以很方便的达成这个目标, 代码如下:
+
+```javascript
+var handler = {
+    set: function () {
+        throw new Error(`Can't modify immutable object`)
+    },
+    get: function (target, key, receiver) {
+        //  判断对象是否是 immutable
+        // var result = Reflect.get(target, key, receiver)
+        var result = target[key]
+        //  这个对象是否是代理对象
+        if (Object(result) === result) {
+            return immutable(result)
+        }
+        return result
+    }
+}
+
+
+//  create an immutable instance
+var immutable = function (target) {
+    return new Proxy(target, handler)
+}
+
+var instance = new immutable({x: 0, y: 0, z: {m: 1, n: 1}})
+instance.x = 1 // throw error: Can't modify immutable object
+instance.z.m = 2 // throw error: Can't modify immutable object
+```
+
+这段代码里, Proxy 代理了赋值`set`操作, 用来禁止修改对象的属性值; 也代理了访问 `get` 操作, 当要访问的属性是对象且不是 immutable 代理对象的时候, 创建一个新的 immutable 代理对象并返回, 这样便实现了深层不可变。
+
+### What's more
+
+写到这里, 本人早已按耐不住使用它的冲动, 也许可以用它来实现默认属性的对象、具有自我校验属性是否合法的对象、一些快捷操作的需要使用寄存器方法达到数据绑定的对象等等! 想象一下是不是能带来很大便利呢。具体的应用还留待日后补充。
+
+值得注意的是, 代理句柄 (handler) 对象拥有多达[14种方法](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Proxy#Methods_of_the_handler_object), 和 JS 中对象原型的方法是
+完全对应的, 也就是说代理可以从语法层面就完全控制一个对象的全部行为, 从此对象操作真正是拥有更大的自由和可能。
