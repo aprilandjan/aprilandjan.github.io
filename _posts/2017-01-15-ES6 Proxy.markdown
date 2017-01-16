@@ -76,7 +76,7 @@ tree.a.b.c = 'Im fine'
 ```
 
 这段代码的关键在于 `handler` 中的 `get` 方法。通过 `proxy`, 每当访问对象的属性的时候, 首先执行到 `get` 方法处。如果目标没有访问的键值, 那么给它的该键值创建一个子代理对象, 然后返回的也是这个子代理对象。
-代码中返回的是 `target[key]`, 这里也可以用 ES6 里的 [`Reflect.get(target, key, receiver`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Reflect/get), 效果是一样的。
+代码中返回的是 `target[key]`, 这里也可以用 ES6 里的 [`Reflect.get(target, key, receiver`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Reflect/get) 来访问语法的源生行为, 效果在此处是一样的。
 当访问 `tree.a.b.c` 的时候, 先找 `tree.a`, 它未定义, 于是令它为一个新的子代理对象; 再执行 `tree.a.b`, 也是未定义, 以此类推。这样我们就实现了一个可以任意访问深度的对象树。
 
 可见, 通过 Proxy, 我们抓住了在对象存取属性等操作实施的上一个行为, 并可自定义为自己所用。
