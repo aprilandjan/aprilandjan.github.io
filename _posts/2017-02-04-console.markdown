@@ -1,0 +1,13 @@
+---
+layout: post
+title:  console
+date:   2017-01-15 21:34:00 +0800
+categories: javascript
+---
+
+JS 里的 console 除了 `log` `warn` `error` 之外，还有很多别的方法， 虽说较少用到，但是如果用的话也会有不少的便利。
+
+### 计时
+
+- 使用 `console.time(taskName)` 开启记时
+- 使用 `console.timeEnd(taskName)` 结束记时。此时会打印出此任务的运行时长。 
