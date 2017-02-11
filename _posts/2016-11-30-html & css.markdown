@@ -1,11 +1,19 @@
 ---
 layout: post
-title:  html 的坑
+title:  html & css
 date:   2016-11-30 10:30:00 +0800
 categories: css
 ---
 
-罗列一些做样式的时候遇到的坑...
+此文收集一些 html & css 相关的内容
+
+### 阻止IOS Safari默认解析电话号码
+
+添加如下 meta 即可
+
+```html
+<meta name="format-detection" content="telephone=no">
+```
 
 ### 页面内容下边距
 
