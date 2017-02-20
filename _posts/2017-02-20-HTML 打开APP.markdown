@@ -1,0 +1,47 @@
+---
+layout: post
+title:  HTML打开APP
+date:   2017-02-16 16:47:00 +0800
+categories: javascript
+---
+
+最近遇到一个需求，给用户发短信，并附带上一串链接，用户点击链接跳转到html页面之后，如果安装了app，要求`自动`跳转到应用内的对应页面。通过HTML打开APP, 前端通常需要用到 URL Schema
+
+### url schema
+
+URL schema 可以理解成 app 自定义的跳转协议，使用方式也极其简单，通常访问网站, 输入它的url，例如 `https://www.google.com`, 在 `://` 之前的 `https` 就是协议，后面的 `www.google.com` 是协议接纳的参数，组合起来就是访问网络上某地址的资源。
+类似的，url schema 是属于 app 的地址，如果系统有安装此应用、可以识别它，那就通过它跳转到应用并访问 app 的资源。
+
+例如：`myapp://some-extra-infomation`。其中，`myapp` 需要app在开发过程中预先定义好, 是属于这个 app 的识别名；`some-extra-information` 是一些其它的app内自定义、自解析的参数，一般和网络上的资源路径类似。
+
+### 通用做法
+
+有了 url schema, 可以让一个 `a` 标签指向这个地址，或者是手动修改 `window.location` 跳转, 都是可行的。但是网上很多的做法是往文档里插入一个 `iframe`， 然后指定其 `src` 为特定的 `url-schema`，延迟一定时间后从 html 中移除 `iframe`，并跳转到下载链接。代码如下：
+
+```javascript
+function openApp (schema) {
+  var iframe = document.createElement('iframe')
+  iframe.style = 'display: none;'
+  document.body.appendChild(iframe)
+  iframe.src = schema
+  window.setTimeout(function () {
+    document.body.removeChild(iframe)
+    window.location = 'http://your-app-download-url'
+  }, 2000)
+}
+```
+
+这个方法在 `ios safari` / `android uc browser` / `android qq browser` 都是可以并且可以`“自动”`跳转的。`a` 标签也可以自动跳, 让它“点击”以下即调用`a.click()` 即可。
+
+但是在 android chrome 内，以上这些尝试自动跳转的方法都不起作用。查阅了相关文档，均表示: __打开页面自跳转到 app 是一种用户体验`非常差`的行为__。有鉴于此，在 android chrome 会阻止非用户交互触法的自动跳转，
+无论是 `iframe.src` 还是 `window.location` 还是 `a.click()` 还是 `clickTarget.dispatchEvent(fakeMouseEvent)`。
+
+仔细想想，由用户选择是否要打开 app 确实是较为合理的用户体验。之前在 ios safari 里打开一些来自知乎、贴吧的页面，自动跳转到 app 内打开了，结果经常切换回 safari 仍然自动跳转一次，很恼人。
+
+###
+
+##### reference
+
+- [https://developer.chrome.com/multidevice/android/intents](https://developer.chrome.com/multidevice/android/intents)
+
+- [https://paul.kinlan.me/deep-app-linking-on-android-and-chrome/](https://paul.kinlan.me/deep-app-linking-on-android-and-chrome/) 
