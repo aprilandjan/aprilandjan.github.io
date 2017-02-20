@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  HTML打开APP
-date:   2017-02-16 16:47:00 +0800
+date:   2017-02-20 11:47:00 +0800
 categories: javascript
 ---
 
@@ -36,7 +36,7 @@ function openApp (schema) {
 但是在 android chrome 内，以上这些尝试自动跳转的方法都不起作用。查阅了相关文档，均表示: __打开页面自跳转到 app 是一种用户体验`非常差`的行为__。有鉴于此，在 android chrome 会阻止非用户交互触法的自动跳转，
 无论是 `iframe.src` 还是 `window.location` 还是 `a.click()` 还是 `clickTarget.dispatchEvent(fakeMouseEvent)`。
 
-仔细想想，由用户选择是否要打开 app 确实是较为合理的用户体验。之前在 ios safari 里打开一些来自知乎、贴吧的页面，自动跳转到 app 内打开了，结果经常切换回 safari 仍然自动跳转一次，很恼人。
+仔细想想，由用户选择是否要打开 app 确实是较为合理的用户体验。之前在 ios safari 里打开一些来自知乎、贴吧的页面，自动跳转到 app 内打开了，结果只要切换回 safari 仍然自动跳转一次，很恼人。
 
 ###
 
