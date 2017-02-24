@@ -42,7 +42,7 @@ MDN上的[文档](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Flexible_
     - space-around: 子项具有相等的周围间隔, 包括主轴上第一个以及最后一个
     - space-evenly: MDN上有这个值, 但是在chrome上测试此值无效
     
-- align-item: 子项沿着交叉轴(cross axis, 主轴垂线方向)的分布方式。类似于 `vertical-align`, 对单独的一行内的元素起作用。 可以定义以下值: 
+- align-items: 子项沿着交叉轴(cross axis, 主轴垂线方向)的分布方式。类似于 `vertical-align`, 对单独的一行内的元素起作用。 可以定义以下值: 
 
     - flex-start: 子项靠着交叉轴开始处
     - flex-end: 子项靠着交叉轴结束处
