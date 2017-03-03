@@ -21,6 +21,10 @@ vm 对象派发事件变更为 `$emit` 方法。父容器监听事件的方式�
 
 组件的 `created` 生命周期方法调用时，dom元素都还没有被渲染，所以此时取不到 `$el`, `$refs` 等值；可以在 `mounted` 生命周期方法里去取 dom 元素。
 
+### directives & filter
+
+指令仿佛并不能搭配 filter 一并工作，至少对于 `v-html` 是这样；对于这种情况，需要用 computed 处理。
+
 ## VueRouter
 
 ### 路由跳转
