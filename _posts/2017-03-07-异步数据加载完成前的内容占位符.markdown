@@ -7,13 +7,14 @@ categories: css
 
 一个在前端通过接口拉取数据再渲染的页面，比如我们用 `vue` + `webpack` 打包做的各种应用，一般来说有两段等待时间：
 
-## “打开页面”到“加载完入口JS”的时间
+### “打开页面”到“加载完入口JS”的时间
 
 这段时间页面可能只有一个 `<div id="app"></div>`作为启动的根节点，或者干脆直接挂载在 `document.body`上。因为我们所有的页面内容都是由js去生成、插入到页面中的，所以除了已经在 `head` 里先加载好的样式，文档树里可能什么都没有。而如果我们用了各种类库模块打包进了入口js, 会导致 js 体积变大，这段加载等待的空白时间就会变久。因此为了提高用户的体验，比如说加一个加载动画条之类的效果，可能不得不把这段节点放在入口文件之外——也就是原本的 `index.html` 之中。
 
 首先制作一段纯 css 的加载动画“转菊花”，让它固定在屏幕中间，并且保持最高层级不致被覆盖。加载动画的样式使用 sass 里的 for 循环简化了各个写法：
 
-> html:
+`html`:
+
 ```html
 <div class="loading" id="loading">
   <div class="m-loading">
@@ -33,7 +34,8 @@ categories: css
 </div>
 ```
 
-> loading.scss:
+`loading.scss`:
+
 ```css
 .loading {
   position: fixed;
@@ -86,7 +88,8 @@ categories: css
 接下来，在入口 js 文件或者根组件的样式中引用该样式文件——样式部分最终会提取、合并打包成一个单独的样式文件，并插入到页面 `head` 里先行加载，再把 `html` 的部分放在文档的 `body` 中。
 然后，入口 js 里通过选择器找到 `loading` 节点，并隐藏或者删除，或者写一些控制它隐藏／展示的方法以达到复用的目的， 例如：
 
-> loading.js
+`loading.js`:
+
 ```javascript
 var el = document.querySelector('#loading')
 var isLoading = true
@@ -126,7 +129,8 @@ export default {
 
 参考文章 [facebook-content-placeholder-deconstruction](http://cloudcannon.com/deconstructions/2014/11/15/facebook-content-placeholder-deconstruction.html)。文中的 css 可能有点杂乱，因为它的目的是让那些占位区块的背景色具有进度条一般的动画效果，不得不用镂空的办法实现。明白了其策略之后，我们也可以自己实现一个类似的、稍微灵活一些的占位显示。以下是我用 `vue(1.0)` 制作的一个占位区域组件：
 
-> Placeholder.vue
+`Placeholder.vue`:
+
 ```html
 <template>
   <div class="placeholder">
