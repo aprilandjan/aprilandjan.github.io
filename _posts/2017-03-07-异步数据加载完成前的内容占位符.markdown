@@ -1,0 +1,274 @@
+---
+layout: post
+title:  异步数据加载完成前的内容占位符
+date:   2017-03-07 14:57:00 +0800
+categories: css
+---
+
+一个在前端通过接口拉取数据再渲染的页面，比如我们用 `vue` + `webpack` 打包做的各种应用，一般来说有两段等待时间：
+
+## “打开页面”到“加载完入口JS”的时间
+
+这段时间页面可能只有一个 `<div id="app"></div>`作为启动的根节点，或者干脆直接挂载在 `document.body`上。因为我们所有的页面内容都是由js去生成、插入到页面中的，所以除了已经在 `head` 里先加载好的样式，文档树里可能什么都没有。而如果我们用了各种类库模块打包进了入口js, 会导致 js 体积变大，这段加载等待的空白时间就会变久。因此为了提高用户的体验，比如说加一个加载动画条之类的效果，可能不得不把这段节点放在入口文件之外——也就是原本的 `index.html` 之中。
+
+首先制作一段纯 css 的加载动画“转菊花”，让它固定在屏幕中间，并且保持最高层级不致被覆盖。加载动画的样式使用 sass 里的 for 循环简化了各个写法：
+
+> html:
+```html
+<div class="loading" id="loading">
+  <div class="m-loading">
+    <div class="m-loading-line m-line-1"></div>
+    <div class="m-loading-line m-line-2"></div>
+    <div class="m-loading-line m-line-3"></div>
+    <div class="m-loading-line m-line-4"></div>
+    <div class="m-loading-line m-line-5"></div>
+    <div class="m-loading-line m-line-6"></div>
+    <div class="m-loading-line m-line-7"></div>
+    <div class="m-loading-line m-line-8"></div>
+    <div class="m-loading-line m-line-9"></div>
+    <div class="m-loading-line m-line-10"></div>
+    <div class="m-loading-line m-line-11"></div>
+    <div class="m-loading-line m-line-12"></div>
+  </div>
+</div>
+```
+
+> loading.scss:
+```css
+.loading {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 100000;
+}
+
+.m-loading {
+  width: 40px;
+  height: 40px;
+  position: relative;
+  transform: translate(-50%, -50%);
+  left: 50%;
+  top: 50%;
+
+  .m-loading-line {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+
+    &:before {
+      content: '';
+      display: block;
+      margin: 0 auto;
+      width: 5%;
+      height: 25%;
+      background-color: #333;
+    }
+  }
+
+  @for $i from 1 through 12 {
+    .m-line-#{$i} {
+      transform: rotate(30deg * $i);
+      animation: m-loading-fade 1.2s (-0.1s * (12 - $i)) infinite ease-in-out both;
+    }
+  }
+}
+
+@keyframes m-loading-fade {
+  0%, 39%, 100% { opacity: .3; }
+  40% { opacity: 1; }
+}
+```
+
+接下来，在入口 js 文件或者根组件的样式中引用该样式文件——样式部分最终会提取、合并打包成一个单独的样式文件，并插入到页面 `head` 里先行加载，再把 `html` 的部分放在文档的 `body` 中。
+然后，入口 js 里通过选择器找到 `loading` 节点，并隐藏或者删除，或者写一些控制它隐藏／展示的方法以达到复用的目的， 例如：
+
+> loading.js
+```javascript
+var el = document.querySelector('#loading')
+var isLoading = true
+
+//  if is loading, prevent any scroll events
+function onScroll (e) {
+  if (isLoading) {
+    e.preventDefault()
+  }
+}
+
+window.addEventListener('touchmove', onScroll)
+window.addEventListener('scroll', onScroll)
+
+export default {
+  show () {
+    isLoading = true
+    el.classList.remove('hide')
+  },
+  hide () {
+    isLoading = false
+    el.classList.add('hide')
+  }
+}
+```
+
+---
+
+### 异步数据加载完成前的时间
+
+当入口 js 开始执行后，往往需要通过接口去取页面所需要的数据，最后再根据这些数据渲染视图结构。这段等待时间如果不做处理，默认的视图结构可能也会影响体验。
+我们可以根据视图数据是否加载完成来决定是否显示视图元素。这样会稍好一些，缺点就是页面内容区域空置的时间会稍长。
+
+有一种更好的处理方式——专门设置一种排好的内容占位符(content placeholder)，这种占位符由一些方形色块填充起来，与拿到数据之后的实际渲染相比有一定的相似，切换起来体验也会自然很多。国外大概是 facebook 带领起来的潮流，国内的网站上，知乎、微博都有用到过类似的效果。
+
+![](../img/20170307-01.jpeg)
+
+参考文章 [facebook-content-placeholder-deconstruction](http://cloudcannon.com/deconstructions/2014/11/15/facebook-content-placeholder-deconstruction.html)。文中的 css 可能有点杂乱，因为它的目的是让那些占位区块的背景色具有进度条一般的动画效果，不得不用镂空的办法实现。明白了其策略之后，我们也可以自己实现一个类似的、稍微灵活一些的占位显示。以下是我用 `vue(1.0)` 制作的一个占位区域组件：
+
+> Placeholder.vue
+```html
+<template>
+  <div class="placeholder">
+    <div class="box">
+      <div class="animated-bg">
+        <div class="grid-row" v-for="item in layout">
+          <div class="full-row" :style="item | styleMain">
+            <div class="row-left masker" :style="item | styleLeft"></div>
+            <div class="row-right masker" :style="item | styleRight"></div>
+          </div>
+          <div class="full-row masker" :style="item | styleBottom"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+<style lang="scss" scoped>
+  @import '../styles/variables.scss';
+
+  @keyframes placeHolderShimmer {
+	  0% {
+	    background-position: -4rem 0
+	  }
+	  100% {
+	    background-position: 6rem 0
+	  }
+	}
+
+  .box {
+	  background: $bgColor;
+	  // border: 1px solid;
+	  border-color: #e5e6e9 #dfe0e4 #d0d1d5;
+	  padding: 0.24rem;
+	  margin: 0 auto;
+	  max-width: 472px;
+	  min-height: 200px;
+	}
+
+  .masker {
+    background-color: $bgColor;
+  }
+
+  .animated-bg {
+    animation: placeHolderShimmer 1s linear infinite;
+	  animation-fill-mode: forwards;
+	  background: #f6f7f8;
+	  background: #eeeeee;
+	  background: -webkit-gradient(linear, left top, right top, color-stop(8%, #eeeeee), color-stop(23%, #dddddd), color-stop(33%, #eeeeee));
+	  background: -webkit-linear-gradient(left, #eeeeee 8%, #dddddd 23%, #eeeeee 33%);
+	  background: linear-gradient(to right, #eeeeee 8%, #dddddd 23%, #eeeeee 33%);
+	  background-size: 150% 100%;
+	  position: relative;
+	}
+
+  .background-masker {
+	  background: #fff;
+	  position: absolute;
+	  box-sizing: border-box;
+	}
+
+  .full-row {
+    width: 100%;
+    height: 20px;
+    position: relative;
+  }
+
+  .row-left {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+  }
+
+  .row-right {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+  }
+</style>
+<script>
+//  上下的高度单位必需要用具体高度值
+//  水平的宽度必需要用百分比
+const layout = [
+  {left: 0, width: 100, height: 2, bottom: 0.4},
+  {left: 2, width: 70, height: 0.4, bottom: 0.4},
+  {left: 2, width: 40, height: 0.16, bottom: 0.9}
+  {left: 2, width: 75, height: 0.21, bottom: 0.4},
+  {left: 2, width: 90, height: 0.21, bottom: 0.4},
+  {left: 2, width: 0, height: 0.21, bottom: 0.4},
+  {left: 2, width: 55, height: 0.21, bottom: 0.4},
+  {left: 2, width: 80, height: 0.21, bottom: 0.4},
+  {left: 2, width: 45, height: 0.21, bottom: 0.4},
+  {left: 2, width: 65, height: 0.21, bottom: 0.4},
+  {left: 2, width: 75, height: 0.21, bottom: 0.4},
+  {left: 45, width: 10, height: 0.21, bottom: 0.4},
+  {left: 20, width: 60, height: 0.35, bottom: 0.4}
+]
+export default {
+  data () {
+    return {
+      xUnit: '%',
+      yUnit: 'rem'
+    }
+  },
+  props: {
+    layout: {
+      type: Array,
+      default () {
+        return layout
+      }
+    }
+  },
+  filters: {
+    styleMain (item) {
+      return {
+        height: item.height + this.yUnit
+      }
+    },
+    styleLeft (item) {
+      return {
+        width: item.left + this.xUnit
+      }
+    },
+    styleRight (item) {
+      var w = 100 - (item.left + item.width)
+      return {
+        width: (w < 0 ? 0 : w) + this.xUnit
+      }
+    },
+    styleBottom (item) {
+      return {
+        height: item.bottom + this.yUnit
+      }
+    }
+  }
+}
+</script>
+```
+
+这个组件里通过 `layout` 定义每一行占位区块的位置大小，因此可以依据规则自己排布一些合适的结构。另外还有一些不足，如果一行内要出现网格型的布局，按照目前的配置规则就无法满足了。这个留待以后真正需要了再去解决吧！
+
+### 总结
+
+以上两种策略实施起来其实都不是那么方便，要在框架之外加 dom 元素导致不便整理、复用，或者是得写一些判断语句和结构参数。但总的来说，加上了体验会更好一些。还有一个问题——如果加载入口js比js去异步加载数据慢，那么理论上说应该把占位效果放在框架之外、入口js之前去显示，以达到最佳的显示效果。

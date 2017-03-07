@@ -64,7 +64,7 @@ MDN上的[文档](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Flexible_
 
 - flex: 以上三个参数的组合, 例如 `flex: 1 1 10%` 分别定义了 `flex-grow: 1; flex-shrink: 1; flex-basis: 10%;`
 
-- align-self: 拥有该属性的子项会覆盖掉容器的 align-item 给它的定位。值与 `align-item` 完全一样
+- align-self: 拥有该属性的子项会覆盖掉容器的 align-items 给它的定位。值与 `align-item` 完全一样
 
 经测试, 容器的 `display: flex` 也可以和 `position: relative` 一并生效, 很灵活。
 
