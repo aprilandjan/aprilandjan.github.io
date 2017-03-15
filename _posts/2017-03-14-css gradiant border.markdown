@@ -33,7 +33,7 @@ categories: css
 
 经过测试，发现圆角属性 `border-radius` 并不生效。查阅相关资料发现 `border-image` 本身就不支持混用圆角。这样以来，单纯使用 `border` 的方式就不行了。 
 
-#### `pseudo`: `:before` & `:after`
+### `pseudo element`: `:before`
 
 不得已，只好换个实现方式，用多个层级来处理。用 `:before` 制作渐变的底色，再让元素自身内容区域为白色盖在渐变底色下，两层都各自有一定的圆角，以此达到渐变边框的效果：
 
@@ -88,6 +88,4 @@ categories: css
 }
 ```
 
-
-
-
+通过以上的步骤，终于能大致实现满足需求的样式了。还有一点需要注意的是：垫在底下的渐变层的 `border-radius` 和内容区域的 `border-radius` 的值需要相匹配，否则圆角的那部分看起来粗细就不一致了。具体应该如何匹配，可以手动调整观察，也可以根据边框粗细程度计算，大致上应该如此计算：`borderRadius(外) - borderWidth(外) = borderRadius(内)`。
