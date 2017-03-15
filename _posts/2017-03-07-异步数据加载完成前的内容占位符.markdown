@@ -125,7 +125,7 @@ export default {
 
 有一种更好的处理方式——专门设置一种排好的内容占位符(content placeholder)，这种占位符由一些方形色块填充起来，与拿到数据之后的实际渲染相比有一定的相似，切换起来体验也会自然很多。国外大概是 facebook 带领起来的潮流，国内的网站上，知乎、微博都有用到过类似的效果。
 
-![](../img/20170307-01.jpeg)
+![](/img/20170307-01.jpeg)
 
 参考文章 [facebook-content-placeholder-deconstruction](http://cloudcannon.com/deconstructions/2014/11/15/facebook-content-placeholder-deconstruction.html)。文中的 css 可能有点杂乱，因为它的目的是让那些占位区块的背景色具有进度条一般的动画效果，不得不用镂空的办法实现。明白了其策略之后，我们也可以自己实现一个类似的、稍微灵活一些的占位显示。以下是我用 `vue(1.0)` 制作的一个占位区域组件：
 
