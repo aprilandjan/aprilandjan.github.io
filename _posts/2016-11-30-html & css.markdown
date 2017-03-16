@@ -75,3 +75,28 @@ function setTitle (t) {
 
 做前端路由的SPA的时候, 如果用的路由模式是 `history`, 那么在微信里无法通过右划返回历史纪录上一条; 但是如果用的是默认的 `hash` 模式的前端路由, 微信里就可以了。
 这两种模式在 IOS safari 内都可以右划返回上一层, 但是用 vue 做的路由页面 transition 时, 会必然触发一次切换路由页面的动画, 会显得不那么好看了。
+
+### DIV 里的水平滚动条 平滑滚动
+
+在移动端，DIV 里的水平滚动条表现的很迟钝，不平滑。幸好可以通过以下 css 解决[reference].(https://weblog.west-wind.com/posts/2013/jun/01/smoothing-out-div-scrolling-in-mobile-webkit-browsers):
+
+```css
+.scroll-div {
+  -webkit-overflow-scrolling: touch;
+}
+```
+
+### 保留滚动功能，但是隐藏滚动条
+
+[Reference](http://stackoverflow.com/questions/2572163/horizontal-scrolling-only?rq=1)
+
+```
+::-webkit-scrollbar {
+    width: 0px;  /* remove scrollbar space */
+    background: transparent;  /* optional: just make scrollbar invisible */
+}
+/* optional: show position indicator in red */
+::-webkit-scrollbar-thumb {
+    background: #FF0000;
+}
+```
