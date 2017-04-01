@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  Vuejs 2.0学习和使用
+title:  Vuejs 2.0相关经验汇总
 date:   2016-11-25 19:30:00 +0800
 categories: vue
 ---
@@ -20,6 +20,36 @@ vm 对象派发事件变更为 `$emit` 方法。父容器监听事件的方式�
 ### 生命周期
 
 组件的 `created` 生命周期方法调用时，dom元素都还没有被渲染，所以此时取不到 `$el`, `$refs` 等值；可以在 `mounted` 生命周期方法里去取 dom 元素。
+
+### 列表结构 keep-alive
+
+使用 v-for 生成列表结构的时候，有时需要让组件的实例暂存下来，以达到私有状态存储或者避免新创建的开销之目的。
+通过 `vue`内置的 [`<keep-alive></keep-alive>`](https://vuejs.org/v2/api/#keep-alive) 组件可以达成这个目标，但是前提是需要往其中嵌套 `动态组件<component></component>`。如果列表里的结构原本不是动态组件，也可以用动态组件包裹替代。
+
+>If you want to keep the switched-out components in memory so that you can preserve their state or avoid re-rendering, you can wrap a dynamic component in a <keep-alive> element
+
+```html
+<keep-alive>
+  <component :is="currentView">
+    <!-- inactive components will be cached! -->
+  </component>
+</keep-alive>
+``` 
+
+更复杂一些，在 `keep-alive` 的列表上配合 `transition` 过渡, 以达到每个列表元素都各自有合适的进出过渡效果。
+
+```html
+<template v-for="page in pages">
+    <transition :name="page.transition">
+    <keep-alive>
+        <component :is="'my-page'"
+        v-if="page.index === pageIndex"
+        :list="page.list"
+        ></component>
+    </keep-alive>
+    </transition>
+</template>
+```
 
 ### directives & filter
 
