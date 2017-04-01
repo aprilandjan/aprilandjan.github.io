@@ -23,3 +23,7 @@ git push -u origin my-new-branch
 ```
 
 这样便让新建的项目目录与远端仓库的新建分支联系起来了, 以后开发该项目, 就在这个新建目录里开发即可。
+
+### Update@2017.3
+
+按照以上的操作，使用 node 写了一个简单的 CLI 工具 [`isolate-git-branch`](https://github.com/aprilandjan/isolate-branch-cli), 可以用来在指定目录方便的生成指定仓库的孤立分支。

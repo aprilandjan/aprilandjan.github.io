@@ -100,3 +100,5 @@ function setTitle (t) {
     background: #FF0000;
 }
 ```
+
+此方式在 safari 上配合 `-webkit-overflow-scrolling: touch;` 使用会有bug，导致自定义的滚动条样式没有生效，比如无法隐藏滚动条等等。
