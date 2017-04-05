@@ -86,6 +86,14 @@ function setTitle (t) {
 }
 ```
 
+如果使用以下代码阻止了移动端页面的上下滚动回弹行为：
+
+```javascript
+document.addEventListener('touchmove', function (e) {e.preventDefault})
+```
+
+那么该 css 属性会失效。解决办法：设置 `html` `body` 的定位为 `position: fixed`，去掉阻止默认滚动的 js 即可。
+
 ### 保留滚动功能，但是隐藏滚动条
 
 [Reference](http://stackoverflow.com/questions/2572163/horizontal-scrolling-only?rq=1)

@@ -26,4 +26,4 @@ git push -u origin my-new-branch
 
 ### Update@2017.3
 
-按照以上的操作，使用 node 写了一个简单的 CLI 工具 [`isolate-git-branch`](https://github.com/aprilandjan/isolate-branch-cli), 可以用来在指定目录方便的生成指定仓库的孤立分支。
+按照以上的操作，使用 node 写了一个简单的 CLI 工具 [`isolate-branch-cli`](https://github.com/aprilandjan/isolate-branch-cli), 可以用来在指定目录方便的生成指定仓库的孤立分支。
