@@ -54,7 +54,7 @@ categories: javascript webpack babel
 
 ### `babel` 配置
 
-之前用 vue 的脚手架工具创建项目也并未过多的关注 `babel` 配置，没有深究哪些是有用的，分别是做什么的。实际上，`babel` 搭配 `webpack` 运行起来，需要以下几个模块：
+之前用 vue 的脚手架工具创建项目也并未过多的关注 `babel` 配置，没有深究哪些是有用的，分别是做什么的。实际上，`babel` 搭配 `webpack` 运行起来。以下是一些模块说明：
 
 - `babel-core`
 
@@ -68,5 +68,13 @@ categories: javascript webpack babel
 
   这个模块相当于是 `babel` 语法配置的 `autoprefixer`, 它能根据条件输出需要的预设配置，自动设定编译时需要转换哪些语言特性。例如，如果环境已源生支持 `promise` 了，代码中的 `promise` 就可以免去转换了。这个模块也可以替换成别的一些预设模块或它们的组合，例如 `babel-preset-es2015` `babel-preset-stage-0` 等等。
 
+－ [`babel-plugin-transform-runtime`](http://babeljs.io/docs/plugins/transform-runtime/)
+
+  按照官方说明，`babel` 会在每个文件需要的时候都附加上一些通用的工具方法，这样一来会造成不必要的重复代码，尤其是文件过多的时候。
+  这个模块会把所有的通用工具方法集中到一个模块里，当需要调用工具方法的时候会从该模块去引入，减小体积。
+
+－ `babel-preset-add-module-exports`
+
+  这个模块通过在文件末尾添加一行 `module.exports = exports['default']`, 使得打包出来的模块无论是通过 `require` 引入还是通过 `import` 引入，都是同样的一个对象。
 
 
