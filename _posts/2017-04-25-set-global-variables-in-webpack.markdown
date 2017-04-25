@@ -23,7 +23,7 @@ module.exports = {
 
 ### 配置 webpack
 
-首先要给想要全局使用的模块定义别名，无论是自定义的模块，还是来自依赖里的模块都是可以的；再使用 webpack 自带的 `ProvidePlugin` 把模块放在全局使用。
+首先要给想要全局使用的模块定义别名，无论是自定义的模块，还是来自依赖里的模块都是可以的；再使用 webpack 自带的 `ProvidePlugin` 把模块放在全局使用。`ProvidePlugin` 也可以直接使用自定义模块的路径或者依赖的模块名，因此定义 resolve alias 的步骤可以省略掉。
 
 `webpack.config.js`:
 
