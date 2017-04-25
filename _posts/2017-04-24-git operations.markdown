@@ -7,6 +7,21 @@ categories: git
 
 这篇文章用来记录工作中经常要用到的一些 git 操作。
 
+## git(全局)设置
+
+- 查看全局设置：
+  
+  ```bash
+  git config --global --list
+  ```
+
+- 修改全局设置:
+
+  ```bash
+  git config --global user.name your_new_name
+  git config --global user.email your_new_email
+  ```
+
 ## 删除远端分支
 
 ## 更改远端仓库地址
