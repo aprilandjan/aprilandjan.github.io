@@ -110,3 +110,40 @@ document.addEventListener('touchmove', function (e) {e.preventDefault()})
 ```
 
 此方式在 safari 上配合 `-webkit-overflow-scrolling: touch;` 使用会有bug，导致自定义的滚动条样式没有生效，比如无法隐藏滚动条等等。
+
+### Chrome 表单样式
+
+Chrome 浏览器会自动给表单元素加上一些功能样式，比如自动完成、自动填充的黄色背景等等，有时候完全不需要这些功能。以下是一些解决办法([Reference](https://www.zigpress.com/2014/11/22/stop-chrome-messing-forms/))：
+
+- 禁止自动完成：
+
+  注意要给 `form` `input` 都加上 `autocomplete="off"`, 否则 chrome 里可能救不起作用了。
+
+  ```html
+  <form autocomplete="off">
+    <input type="whatever" autocomplete="off"/>
+  </form>
+  ```
+
+- 禁止自动填充:
+
+  Chrome 内遇到了带有密码输入框的表单，会自动尝试填充表单的内容。为了避免这种行为，不得不在表单开头添加两个隐藏的输入框，让 chrome 自作聪明的填在那里。
+
+  ```html
+  <form>
+    <input type="text" style="display:none;"/>
+    <input type="password" style="display:none;"/>
+    <input type="text" value="" autocomplete="off"/>
+    <input type="password" value="" autocomplete="off"/>
+  </form>
+  ```
+
+- 自动填充区域的黄色背景：
+
+  不得不说自动填充区域的默认的黄色背景简直丑的让人难以忍受，好在可以通过样式解决。
+
+  ```css
+  input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 500px white inset;
+  }
+  ```
