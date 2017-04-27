@@ -1,8 +1,8 @@
 ---
 layout: post
-title:  html & css
+title:  html & css & javascript
 date:   2016-11-30 10:30:00 +0800
-categories: css
+categories: html css javascript
 ---
 
 此文收集一些 html & css 相关的内容
@@ -147,3 +147,68 @@ Chrome 浏览器会自动给表单元素加上一些功能样式，比如自动�
     -webkit-box-shadow: 0 0 0 500px white inset;
   }
   ```
+
+### xhr post 请求弹出下载
+
+通过 `xmlHttpRequest` 下载文件要注意以下几点：
+
+- xhr 的响应头通常会设置成 `content-disposition: attachment;`, 可以藉由此来判断是否是文件下载的逻辑；
+
+- xhr 的响应体如果不是 `blob` 对象(字符串), 需要通过  `new Blob([xhr.response])` 手动生成 `blob` 对象
+
+- 有了 blob 对象，就可以通过 a 标签的 download 属性设置自动弹出下载或类似的功能了。
+
+完整的流程处理如下：
+
+```javascript
+let res = xhr.response
+let disposition = decodeURIComponent(xhr.getResponseHeader('content-disposition'))
+if (disposition && disposition.indexOf('attachment') !== -1) {
+  //  https://stackoverflow.com/questions/16086162/handle-file-download-from-ajax-post/23797348#23797348
+  let filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/
+  let matches = filenameRegex.exec(disposition)
+  let filename = Date.now() + '.csv'  //  这里定义一个默认的名字
+  if (matches != null && matches[1]) {
+    filename = matches[1].replace(/['"]/g, '')
+  }
+  let type = xhr.getResponseHeader('content-type')
+  let blob = (res instanceof window.Blob) ? res : new window.Blob([res], {type})
+  resolve({
+    blob,
+    filename
+  })
+  if (typeof window.navigator.msSaveBlob !== 'undefined') {
+    // IE workaround for "HTML7007: One or more blob URLs were revoked by closing the blob for which they were created. These URLs will no longer resolve as the data backing the URL has been freed."
+    window.navigator.msSaveBlob(blob, filename)
+  } else {
+    let URL = window.URL || window.webkitURL
+    let downloadUrl = URL.createObjectURL(blob)
+
+    if (filename) {
+      // use HTML5 a[download] attribute to specify filename
+      let a = document.createElement('a')
+      // safari doesn't support this yet
+      if (typeof a.download === 'undefined') {
+        window.location = downloadUrl
+      } else {
+        a.href = downloadUrl
+        a.download = filename
+        document.body.appendChild(a)
+        a.click()
+      }
+    } else {
+      window.location = downloadUrl
+    }
+    window.setTimeout(function () { URL.revokeObjectURL(downloadUrl) }, 100) // cleanup
+  }
+} else {
+  try {
+    res = JSON.parse(res)
+  } catch (e) {
+    throw e
+  }
+  resolve(res)
+}
+```
+
+  ```可以直接用
