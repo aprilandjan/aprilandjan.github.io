@@ -154,9 +154,11 @@ Chrome 浏览器会自动给表单元素加上一些功能样式，比如自动�
 
 - xhr 的响应头通常会设置成 `content-disposition: attachment;`, 可以藉由此来判断是否是文件下载的逻辑；
 
-- xhr 的响应体如果不是 `blob` 对象(字符串), 需要通过  `new Blob([xhr.response])` 手动生成 `blob` 对象
+- xhr 的响应体如果不是 `blob` 对象(字符串), 需要通过  `new Blob([xhr.response])` 手动生成 `blob` 对
 
 - 有了 blob 对象，就可以通过 a 标签的 download 属性设置自动弹出下载或类似的功能了。
+
+- 按照这种方式生成的 csv 文件用 excel 打开，中文字符会变成乱码，据说是因为文件头里缺失了 UTF-8 BOM(byte-order-mark, 字节顺序标记，用以标示文件采用哪种格式的编码)。查询得知UTF-8的 BOM 十六进制表示为 `EF BB BF`, 因此可以手动插入这一段 BOM: `var blob = new Blob([new Uint8Array([0xEF, 0xBB, 0xBF]), 'Text Content'])`。这样一来， excel 打开中文字符都是正确显示的了。
 
 完整的流程处理如下：
 
@@ -172,7 +174,7 @@ if (disposition && disposition.indexOf('attachment') !== -1) {
     filename = matches[1].replace(/['"]/g, '')
   }
   let type = xhr.getResponseHeader('content-type')
-  let blob = (res instanceof window.Blob) ? res : new window.Blob([res], {type})
+  let blob = (res instanceof window.Blob) ? res : new window.Blob([new Uint8Array([0xEF, 0xBB, 0xBF]), res], {type})
   resolve({
     blob,
     filename
@@ -210,5 +212,3 @@ if (disposition && disposition.indexOf('attachment') !== -1) {
   resolve(res)
 }
 ```
-
-  ```可以直接用
