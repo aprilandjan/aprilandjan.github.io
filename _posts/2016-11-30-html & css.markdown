@@ -212,3 +212,17 @@ if (disposition && disposition.indexOf('attachment') !== -1) {
   resolve(res)
 }
 ```
+
+### Chrome 跨域
+
+有以下两种方式：
+
+- 使用 chrome 插件 `Allow-Control-Allow-Origin: *`。用这种方式会给所有请求自动添加上跨域的请求头，当跨域发生的时候，浏览器会先发送 `OPTIONS` 请求确认跨域，服务器同意之后才会发送真正的请求。如果服务器不同意或者没有设置对 OPTIONS 的成功响应，跨域仍会失败。
+
+- 完全关闭 chrome后, 使用命令启动：
+
+  ```bash
+  open -a Google\ Chrome --args --disable-web-security --user-data-dir
+  ```
+  
+  通过这种方式是不会发送 OPTIONS 请求的，浏览器完全禁用了这个安全措施。
