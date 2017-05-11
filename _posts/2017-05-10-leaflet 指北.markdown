@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  leaflet
+title:  leaflet 指北
 date:   2017-05-10 17:33:00 +0800
 categories: javascript
 ---
@@ -181,7 +181,7 @@ L.featureGroup([circle, polygon, marker])
 
 通过以上的例子，如果要在地图上操作绘制一些几何图形，是需要自己实现的取点、绘制等操作的。可以通过插件 `Leaflet.Draw` 帮我们完成这个工作。使用起来也不复杂：
 
-首先添加编辑控件栏。此处也设置了一些控件参数：
+首先添加编辑控件栏。可以通过 `L.drawLocal` 设置语言文本等属性，此处也设置了一些控件构造参数：
 
 ```javascript
 var drawItems = L.featureGroup()
@@ -232,6 +232,7 @@ if (typeof drawGeoJson === 'object') {
 
 ...
 
+//  save after created
 map.on(L.Draw.Event.CREATED, e => {
   var type = e.layerType
   var layer = e.layer
@@ -245,14 +246,18 @@ map.on(L.Draw.Event.CREATED, e => {
   localStorage.setItem('drawLayers', JSON.stringify(drawItems.toGeoJSON()))
 })
 
+//  save after edited
 map.on('draw:edited', e => {
-  var layers = e.layers
-  layers.eachLayer(layer => {
-  })
+  localStorage.setItem('drawLayers', JSON.stringify(drawItems.toGeoJSON()))
+})
+
+//  save after deleted
+map.on('draw:deleted', e => {
+  localStorage.setItem('drawLayers', JSON.stringify(drawItems.toGeoJSON()))
 })
 ```
 
-//
+通过以上
 
 
 
