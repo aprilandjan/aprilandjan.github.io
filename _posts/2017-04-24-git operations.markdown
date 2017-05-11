@@ -29,7 +29,7 @@ categories: git
 ## 重置本地代码库至某个 commit
 
 ```bash
-git revert --hard 56e05fced
+git reset --hard 56e05fced
 git reset --soft HEAD@{1}
 git commit -m 'revert to 56e05fced'
 ```

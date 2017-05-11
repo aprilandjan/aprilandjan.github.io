@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  leaflet 指北
+title:  play with leaflet
 date:   2017-05-10 17:33:00 +0800
 categories: javascript
 ---
@@ -259,8 +259,4 @@ map.on('draw:deleted', e => {
 
 ### 总结
 
-通过以上的主要功能点介绍和使用，基本上已经能轻松的使用 `leaflet` 了。如果有需要，可以自行在此基础上开发相关扩展插件。
-
-
-
-
+通过以上的主要功能点介绍和使用，基本上已经能轻松的使用 `leaflet` 了。如果有需要，可以自行在此基础上开发相关扩展插件。[`leaflet.measure`](https://github.com/aprilandjan/leaflet.measure) 是我在前人的基础上开发的一个测量插件。
