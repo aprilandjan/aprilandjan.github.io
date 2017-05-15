@@ -37,3 +37,11 @@ git commit -m 'revert to 56e05fced'
 ## 同一台机器多个 github 帐号 ssh 管理
 
 ## 利用 `stash` 在不同分支上转移修改
+
+## 清理文件夹下的 svn 控制信息
+
+参考 [http://stackoverflow.com/questions/154853/how-do-you-remove-subversion-control-for-a-folder](http://stackoverflow.com/questions/154853/how-do-you-remove-subversion-control-for-a-folder):
+
+```bash
+find . -iname ".svn" -print0 | xargs -0 rm -r
+```

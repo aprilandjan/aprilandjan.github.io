@@ -124,7 +124,7 @@ marker.bindTooltip('Here is The Place!').openTooltip()
 
 ### 基本矢量图形绘制
 
-以下是在地图上绘制形状的基本方法。其中，圆形使用 `svg` 渲染, 多变形使用 `canvas` 渲染：
+以下是在地图上绘制形状的基本方法。其中，圆形使用 `svg` 渲染, 多边形使用 `canvas` 渲染：
 
 ```javascript
 marker.bindTooltip('my tooltip text').openTooltip()
