@@ -26,6 +26,14 @@ categories: git
 
 ## 更改远端仓库地址
 
+## 重命名上一次尚未提交到远端的 commit
+
+参考[https://stackoverflow.com/questions/179123/how-to-modify-existing-unpushed-commits](https://stackoverflow.com/questions/179123/how-to-modify-existing-unpushed-commits):
+
+```bash
+git commit --amend -m "New commit message"
+```
+
 ## 重置本地代码库至某个 commit
 
 ```bash
