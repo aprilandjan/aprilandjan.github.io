@@ -17,9 +17,15 @@ import 'es6-promise/auto'
 
 注意这里引入必须要使用 `import` 而不是 `require`, 因为 `import` 声明的语句经过编译后总是被提升到了文件顶部，执行的比其他的代码要早，所以如果是先 `require('es6-promise/auto')` 再 `import vuex` 的情况下，仍然会报错...另外，尝试了一下，`vuex` 目前如果使用 `es6-promise` 提供的 promise，内部的`registerAction` 方法会报错，但不影响正常工作。可能是 `es6-promise` 实现 promise 与浏览器源生 promise 存在差异引起的。
 
+至于为什么 phantomjs 的无头浏览器环境没有 promise 语法支持？参考 [Supported Web Standards](http://phantomjs.org/faq.html): 
+
+> PhantomJS uses QtWebKit. It supports many features which are part of http://trac.webkit.org/wiki/QtWebKitFeatures22.
+
+具体来说，webkit 只是一种渲染页面布局的引擎，不是完整的浏览器，不是 chrome 或者 chromium。QtWebkit 也只是 webkit 的 QT 实现。因此其 JavaScriptCore 没有 chrome 强大也是可以理解的。
+
 ## 延迟截图，自动图片高度，异常处理
 
-截图延迟写的延迟方法不要用箭头函数，否则会执行不到。可能是因为定时回调的作用域被肩头函数干扰了；另外仿佛没有自动截取完整网页的功能，需要通过 `evaluate` 调用页面内的 js 取得元素的高度来裁剪截图的尺寸；最后，为了便于其他进程调用的状态判断，在异常的情况下给出 `exit(1)` 帮助区分。
+截图延迟写的延迟方法不要用箭头函数，否则会执行不到。可能是因为定时回调的作用域被箭头函数干扰了；另外仿佛没有自动截取完整网页的功能，需要通过 `evaluate` 调用页面内的 js 取得元素的高度来裁剪截图的尺寸；最后，为了便于其他进程调用的状态判断，在异常的情况下给出 `exit(1)` 帮助区分。
 
 ## 完整代码
 
