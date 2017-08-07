@@ -34,6 +34,12 @@ categories: git
 git commit --amend -m "New commit message"
 ```
 
+## 重置指定文件至某个 commit
+
+```bash
+gut checkout commit_id file_path
+```
+
 ## 重置本地代码库至某个 commit
 
 ```bash
