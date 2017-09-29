@@ -7,6 +7,18 @@ categories: linux
 
 去年买的一年期域名都快过期了，一直也没怎么好好利用。最近在 DigitalOcean 上开了个VPS，打算再重新整理一下。这次选的系统是 `ubuntu 16`，因为听说对 linux 不熟悉的人，用 `ubuntu` 会是最好的选择。下面记录一下折腾的全过程。
 
+# 查看系统版本
+
+```
+lsb_release -a
+```
+
+# 查询某服务的运行状态
+
+```
+systemctl status <service_name>
+```
+
 # ssh
 
 在 DigitalOcean 页面上创建好 Droplet (水滴, 很形象的一个词) 之后，DigitalOcean 会往邮箱里发送初始的密码。在本地可以通过 `ssh root@your.ip.address.here` 的方式连接到远程主机，连上去之后会要求输入初始密码，并会要求更改初始密码。之后可以配置 ssh key 来快速连接，方式如下：
@@ -51,3 +63,9 @@ Host    gitlab.my-corp.com
 ```
 
 # nginx
+
+安装过程基本参照 [https://www.digitalocean.com/community/tutorials/how-to-install-nginx-on-ubuntu-16-04](https://www.digitalocean.com/community/tutorials/how-to-install-nginx-on-ubuntu-16-04) 来操作。
+
+# mongo
+
+安装过程基本参照 [https://www.digitalocean.com/community/tutorials/how-to-install-mongodb-on-ubuntu-16-04](https://www.digitalocean.com/community/tutorials/how-to-install-mongodb-on-ubuntu-16-04) 来设置，在此不再赘述。
