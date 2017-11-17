@@ -64,8 +64,8 @@ function goLogin () {
 
 function submit() {
     page.evaluate(function () {
-        document.getElementById('login-username').value = 'aprilandjan'
-        document.getElementById('login-password').value = 'Lenety'
+        document.getElementById('login-username').value = 'my-username'
+        document.getElementById('login-password').value = 'my-password'
         document.getElementById('login-submit').removeAttribute('disabled')
         var evObj = document.createEvent('Events');
         evObj.initEvent('click', true, false);
