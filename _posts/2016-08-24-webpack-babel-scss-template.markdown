@@ -132,7 +132,7 @@ switch(process.env.NODE_ENV){
         break;
     case 'build':
     case 'publish':
-        module.exports.output.publicPath = '//cdn.***REMOVED***.com/share/assets/rugu_homepage/';
+        module.exports.output.publicPath = '//your_public_path_here/';
         module.exports.module.loaders = (module.exports.module.loaders || []).concat([
             {
                 test: /\.scss$/,
