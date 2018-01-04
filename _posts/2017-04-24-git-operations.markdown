@@ -36,7 +36,6 @@ git push -d origin <branch-name>
 git remote set-url <remote_name> <remote_address>
 ```
 
-
 ## 重命名上一次尚未提交到远端的 commit
 
 参考[https://stackoverflow.com/questions/179123/how-to-modify-existing-unpushed-commits](https://stackoverflow.com/questions/179123/how-to-modify-existing-unpushed-commits):
@@ -45,10 +44,18 @@ git remote set-url <remote_name> <remote_address>
 git commit --amend -m <commit_message>
 ```
 
+## 使用 `--no-ff` 合并分支
+
+在使用 `git merge` 合并其他分支时，如果没有冲突，默认会执行 `fast-forward` 合并，自动创建合并 commit。虽然说通常没冲突代表没有问题，但是有的时候还是需要在合并时自己检查下合并操作导致的文件变更，来确保合并结果正确。可以在合并时使用参数 `--no-ff` 停留在 `stage` 阶段，让操作者决定合并结果。如果检查没问题，再直接 commit 即可。
+
+```bash
+git merge <branch> --no-ff
+```
+
 ## 重置指定文件至某个 commit
 
 ```bash
-gut checkout <commit_id> <file_path>
+git checkout <commit_id> <file_path>
 ```
 
 ## 重置本地代码库至某个 commit
@@ -100,6 +107,14 @@ git checkout <branch-name>
 git stash pop
 ```
 
+## 利用 `cherry-pick` 单独合并某个 commit
+
+首先通过 `git log` 或者其他的方式拿到目标 commit 的 `commit sha`，然后可以用 `cherry-pick` 命令把这个 commit 的变更合并到当前分支，很“形象”的一个操作！
+
+```bash
+git cherry-pick <commit/sha/tag>
+```
+
 ## 清理文件夹下的 svn 控制信息
 
 参考 [http://stackoverflow.com/questions/154853/how-do-you-remove-subversion-control-for-a-folder](http://stackoverflow.com/questions/154853/how-do-you-remove-subversion-control-for-a-folder):
@@ -118,4 +133,4 @@ git filter-branch --index-filter 'git rm --cached --ignore-unmatch <file>'
 git push origin --all --force
 ```
 
-这个方式会更改到所有涉及到的 commit 节点，最后再通过 `push --force` 覆盖到远端，因此参与项目的其他人可能需要重新 `clone` 一次代码了... 
+这个方式会更改到所有涉及到的 commit 节点，最后再通过 `push --force` 覆盖到远端，因此参与项目的其他人可能需要重新 `clone` 一次代码了...
