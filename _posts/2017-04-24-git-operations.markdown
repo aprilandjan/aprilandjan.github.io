@@ -133,4 +133,9 @@ git filter-branch --index-filter 'git rm --cached --ignore-unmatch <file>'
 git push origin --all --force
 ```
 
-这个方式会更改到所有涉及到的 commit 节点，最后再通过 `push --force` 覆盖到远端，因此参与项目的其他人可能需要重新 `clone` 一次代码了...
+这个方式会更改到所有涉及到的 commit 节点，最后再通过 `push --force` 覆盖到远端。当进行过这个操作之后，需要在本地仓库里重置并同步远端，方式如下：
+
+```bash
+git fetch --all
+git reset --hard origin/<branch_name>
+```
