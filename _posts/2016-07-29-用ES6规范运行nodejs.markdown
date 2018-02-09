@@ -2,7 +2,7 @@
 layout: post
 title:  "用ES6规范运行nodejs"
 date:   2016-07-29 22:00:00 +0800
-categories: ES6 nodejs
+categories: node
 ---
 
 在自己的VPS上搭建了一个nodejs服务器，使用了ES6的语法规范。为了免去ES6转ES5，也可以通过如下方式直接运行ES6规范的程序:

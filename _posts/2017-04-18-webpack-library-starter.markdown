@@ -2,7 +2,7 @@
 layout: post
 title:  webpack library starter
 date:   2017-04-18 15:34:00 +0800
-categories: javascript webpack babel
+categories: javascript webpack
 ---
 
 ### 准备工作

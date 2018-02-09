@@ -2,7 +2,7 @@
 layout: post
 title:  RegExp
 date:   2017-02-10 15:02:00 +0800
-categories: reg
+categories: javascript
 ---
 
 这边文章用来记录一些之前曾了结、用到的正则表达式。[参考(MDN)](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Regular_Expressions)

@@ -2,7 +2,7 @@
 layout: post
 title:  screenshot with phantomjs
 date:   2017-07-19 20:40:00 +0800
-categories: phantomjs javascript
+categories: node javascript
 ---
 
 以前曾尝试使用了一下 phantomjs 打开某页面、模拟页面上交互操作并截图等。这次因为有需求要截取一个使用 vue 全家桶开发的单页应用，原本很简单的截图却遇到了一些问题，现记录如下：

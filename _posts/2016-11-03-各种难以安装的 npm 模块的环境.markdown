@@ -2,7 +2,7 @@
 layout: post
 title:  各种难以安装的 npm 模块的环境
 date:   2016-11-03 11:30:00 +0800
-categories: npm
+categories: node
 ---
 
 ### 淘宝npm镜像源, 基本上都在这里

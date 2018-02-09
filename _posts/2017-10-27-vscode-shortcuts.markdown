@@ -2,7 +2,7 @@
 layout: post
 title:  vscode-shortcuts
 date:   2017-09-29 17:33:00 +0800
-categories: vscode ide
+categories: ide
 ---
 
 

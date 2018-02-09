@@ -2,7 +2,7 @@
 layout: post
 title:  classical in 2017
 date:   2017-01-02 15:12:00 +0800
-categories: mac
+categories: life
 ---
 
 2017年了。不想说什么"重新开始"之类的自欺欺人的话, 不年轻了呵, 且行且珍惜。

@@ -2,7 +2,7 @@
 layout: post
 title:  "在Github上搭建Jekyll博客"
 date:   2016-03-15 15:30:06 +0800
-categories: GitHub Jekyll
+categories: github
 ---
 
 跟随官方文档一步步来即可。如果想要本地测试效果，需要搭建 ruby 环境。
