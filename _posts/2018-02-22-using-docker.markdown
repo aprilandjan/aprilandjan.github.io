@@ -115,7 +115,7 @@ docker images prune
 
 ### 减少镜像文件体积
 
-## Practice
+## Practice: Pure frontend webpack+MVVM framework project
 
 ### 开发环境
 
@@ -125,8 +125,8 @@ docker images prune
 
 2. 配置 `.npmrc` 文件以确保在容器内可以正确安装依赖；
 
-3. 为了实现开发过程中 webpack 热更新，需要在运行镜像时设置挂载点(volumn), 使镜像内 webpack 监听文件变更的目录与本地可操作目录同步：
-：
+3. 为了实现开发过程中 webpack 热更新，需要在运行镜像时设置挂载点(volume), 使镜像内 webpack 监听文件变更的目录与本地可操作目录同步：
+
   ```bash
   docker run -it \
     --rm \ 
@@ -136,7 +136,23 @@ docker images prune
     docker-vue
   ```
 
-注意 `-v` 只接受绝对路径，所以用变量 `$PWD` 指代当前的本地工作目录。
+注意 `-v` 只接受绝对路径，所以用变量 `$PWD` 指代当前的本地工作目录。也可以把这行命令写成 `docker-compose.yaml` 执行：
+
+```docker-compose.yaml
+version: "3"
+services:
+  web:
+    build:
+        context: .
+        dockerfile: Dockerfile
+    image: docker-vue
+    ports:
+      - 3000:3000
+    volumes:
+      - $PWD/src:/app/src
+```
+
+然后直接运行 `docker-compose up` 即可。
 
 ### 生产环境
 
