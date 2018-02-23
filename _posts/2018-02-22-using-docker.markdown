@@ -5,11 +5,11 @@ date:   2018-02-22 15:16:00 +0800
 categories: linux
 ---
 
-### Image & Container
+## Image & Container
 
 **镜像(Image)** 与 **容器(Container)** 在 docker 里是不同的两个概念。镜像相当于是一份代码仓库，而容器是某个代码库运行的实例环境。 比如，docker 命令中的 `rm` 和 `rmi` 后者的删除主体是镜像而不是容器。
 
-### `docker ps`
+## `docker ps`
 
 使用 `docker ps` 查看当前**正在运行**的镜像列表。
 
@@ -32,7 +32,7 @@ docker rmi -i hello-world
 ```
 
 
-### [`docker run`](https://docs.docker.com/engine/reference/commandline/run/#options)
+## [`docker run`](https://docs.docker.com/engine/reference/commandline/run/#options)
 
 使用 `docker run` 运行镜像并通过 `--name=<name>` 指定运行名时，可能会遇到名称冲突：
 
@@ -74,15 +74,15 @@ docker run -it --rm <image> bash
 docker images prune
 ```
 
-来清除不需要的这些镜像。另外可以使用 `docker system prune` 来清除各种docker相关的不使用的资源。
+来清除不需要的这些镜像; 相似的，也有 `docker container prune` 来清除非运行状态的容器；最后，可以使用 `docker system prune` 来清除各种docker相关的不使用的资源(image, container, network等)。
 
-### node with docker
+## node with docker
 
-#### 选择合适的 node 镜像版本作为 base image([参考](https://derickbailey.com/2017/03/09/selecting-a-node-js-image-for-docker/))
+### 选择合适的 node 镜像版本作为 base image([参考](https://derickbailey.com/2017/03/09/selecting-a-node-js-image-for-docker/))
 
 推荐使用 alpine 版本
 
-#### 在容器内通过 npm 安装来自私有源的依赖([参考](https://docs.npmjs.com/private-modules/docker-and-private-modules))
+### 在容器内通过 npm 安装来自私有源的依赖([参考](https://docs.npmjs.com/private-modules/docker-and-private-modules))
 
 如果项目中有需要安装来自私有源(cnpm)的依赖，`docker build` 内运行 `npm install` 会产生安装失败（如果有 package-lock.json 甚至会报 node_modules 目录下文件没找到这种毫不相干的奇怪错误）。此时有两种办法：
 
@@ -111,10 +111,35 @@ docker images prune
   RUN npm install
   ```
 
-#### 容器内数据库资源持久化存储(mongo, redis)
+### 容器内数据库资源持久化存储(mongo, redis)
 
-#### 减少镜像文件体积
+### 减少镜像文件体积
 
-### Practice: 包含私有源依赖的纯前端项目
+## Practice
 
-### Practice: 包含私有源依赖的node项目
+### 开发环境
+
+虽然从实用角度上看没有必要把这种项目的开发环境放在 docker 里作为镜像运行，但是出于熟悉 docker 的目的，尝试了一下这个过程。有以下几个需要注意的点：
+
+1. Base Image 可能需要完全版本的 node 镜像(carbon), 否则一些需要编译的依赖可能会因为镜像环境中没有相关工具类库而导致安装失败，例如 `node-sass`;
+
+2. 配置 `.npmrc` 文件以确保在容器内可以正确安装依赖；
+
+3. 为了实现开发过程中 webpack 热更新，需要在运行镜像时设置挂载点(volumn), 使镜像内 webpack 监听文件变更的目录与本地可操作目录同步：
+：
+  ```bash
+  docker run -it \
+    --rm \ 
+    -p 3000:3000 \
+    --name=web \
+    -v $PWD/src:/app/src
+    docker-vue
+  ```
+
+注意 `-v` 只接受绝对路径，所以用变量 `$PWD` 指代当前的本地工作目录。
+
+### 生产环境
+
+生产环境比较简单，build 完生成静态文件之后即可把不必要的文件删除，减少镜像体积（[参考](https://medium.com/dirtyjs/how-to-deploy-vue-js-app-in-one-line-with-docker-digital-ocean-2338f03d406a)）
+
+## Practice: 包含私有源依赖的node项目
