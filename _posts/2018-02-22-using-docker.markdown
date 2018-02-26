@@ -158,4 +158,111 @@ services:
 
 生产环境比较简单，build 完生成静态文件之后即可把不必要的文件删除，减少镜像体积（[参考](https://medium.com/dirtyjs/how-to-deploy-vue-js-app-in-one-line-with-docker-digital-ocean-2338f03d406a)）
 
-## Practice: 包含私有源依赖的node项目
+## Practice: Koa + Nuxt + Mongo project
+
+这个项目需要经由 nuxt 编译生成静态文件资源，再通过 Koa 提供服务，并使用 Mongo 作为数据存储。如果不使用容器，部署的时候需要在服务器上单独安装 mongo, node 并拉取源代码编译运行。使用容器可以把整个项目需要的一切打包在一起。
+
+首先是把 node 端的资源容器化， 使用 [multi-stage](https://docs.docker.com/develop/develop-images/multistage-build/) 的方式 build 一份最小的镜像：
+
+```Dockerfile
+# ----- base node -----
+FROM node:carbon AS base
+
+WORKDIR /app/web
+
+COPY package*.json .
+
+# ----- build with carbon -----
+FROM base AS build
+
+# install only production dependencies
+RUN npm install --only-production
+
+# copy production dependencies aside
+RUN cp -R node_modules prod_node_modules
+
+COPY . .
+
+# install all dependencies
+RUN npm install
+
+# build nuxt static files, get the .nuxt static folder
+RUN npm run build
+
+# ----- release with alpine -----
+FROM node:8.9.4-alpine AS release 
+
+ENV PORT=3000
+
+EXPOSE $PORT
+
+ENV NODE_ENV=production
+
+WORKDIR /app/web
+
+COPY --from=build /app/web/package.json .
+COPY --from=build /app/web/prod_node_modules node_modules
+COPY --from=build /app/web/.nuxt .nuxt
+
+# COPY server resources
+COPY server server
+COPY static static
+COPY config.js .
+COPY nuxt.config.js .
+
+RUN ls -a
+
+CMD npm run start
+```
+
+上面的示例中，首先在 `base` 镜像里安装生产环境的依赖并另存为其他目录，再下载完全部依赖，之后进行编译产出静态文件；之后再从 `release` 镜像里拷贝服务运行需要的依赖和文件，作为镜像入口。这样以来，提供 web 服务的镜像就完成了。
+
+另外还需添加 `network` 以供镜像之间互联、开启 mongo 镜像。注意 mongo 镜像通过参数 `--hostname` 指定了一个名称 `mymongo` 使得其他容器可以通过此名称访问到它：
+
+```bash
+docker network create blognet
+docker run -d --name=mymongo --network=blognet --hostname=mymongo mongo
+docker run --rm -p 3000:3000 --network=blognet --name=myblog -it myblog
+```
+
+使用 `docker-compose` 把以上过程合并为文件如下：
+
+```docker-compose.yaml
+version: "3"
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mymongo
+    networks:
+      - blognet
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: myblog
+    depends_on:
+      - mongo
+    networks:
+      - blognet
+    ports:
+      - 3000:3000
+networks:
+  blognet:
+    driver: bridge
+```
+
+这样即可通过一行命令 `docker-compose up` 来部署整个服务了。有时改动 `docker-compose.yaml` 重启会仍然使用改动前的容器配置，可能需要手动执行 `docker rm` 确保修改生效。
+
+### Dev & Prod 配置
+
+在开发环境下，对于 node 这种很有可能需要经过编译运行的语言项目，流程和生产环境下可能有较大差异。上面的 multi-stage 配置适用于 prod, 而 dev 下需要 watch, hot-reload, 需要配置容器内外代码同步，执行的 npm 命令也不相同。因此可能需要不同的配置文件(Dockerfile, docker-compose.yaml)。有一点需要注意的是如果整个 host 目录挂载到容器内目录，node_modules 需要单独设置挂载到其他地方避免依赖在不同系统环境下表现差异。
+
+[参考1](https://medium.com/@basi/docker-compose-from-development-to-production-88000124a57c)
+[参考2](https://blog.codeship.com/using-docker-compose-for-nodejs-development/)
+[参考3](http://jdlm.info/articles/2016/03/06/lessons-building-node-app-docker.html)
+
+### CI
+
+#### CI with Gitlab
+
+#### CI with Jenkins
