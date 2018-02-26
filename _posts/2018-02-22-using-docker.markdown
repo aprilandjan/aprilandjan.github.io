@@ -253,9 +253,9 @@ networks:
 
 这样即可通过一行命令 `docker-compose up` 来部署整个服务了。有时改动 `docker-compose.yaml` 重启会仍然使用改动前的容器配置，可能需要手动执行 `docker rm` 确保修改生效。
 
-### Dev & Prod 配置
+### 多环境配置
 
-在开发环境下，对于 node 这种很有可能需要经过编译运行的语言项目，流程和生产环境下可能有较大差异。上面的 multi-stage 配置适用于 prod, 而 dev 下需要 watch, hot-reload, 需要配置容器内外代码同步，执行的 npm 命令也不相同。因此可能需要不同的配置文件(Dockerfile, docker-compose.yaml)。有一点需要注意的是如果整个 host 目录挂载到容器内目录，node_modules 需要单独设置挂载到其他地方避免依赖在不同系统环境下表现差异。
+开发环境下需要使用 docker-compose 启动所需要的全部服务，需要使用 volume 映射路径, 需要跑开发环境的命令；而发布环境里，最终部署时也需要 docker-compose 把各个服务串联起来。这两个环境所需要的 nodejs 的镜像可能差距很大：开发环境下得有热更新，得共享目录，得安装 devDependency，得编译源代码等等，所以，感觉一份 Dockerfile 是无法仅仅通过几个环境变量的差异就把两个环境的镜像搞定的，因此权衡之后使用两套文件：Dockerfile & docker-compose.yaml、Dockerfile.dev & docker-compose.dev.yaml 来应对不同环境。
 
 [参考1](https://medium.com/@basi/docker-compose-from-development-to-production-88000124a57c)
 [参考2](https://blog.codeship.com/using-docker-compose-for-nodejs-development/)
@@ -263,6 +263,4 @@ networks:
 
 ### CI
 
-#### CI with Gitlab
-
-#### CI with Jenkins
+如果没有 CI, 那么开发部署流程大概是这样：开发完毕; build 镜像并推到 image hub; 登录到远程主机；在远程主机上拉取 image 并通过合适的 docker-compose.yaml 开启服务。这个流程虽然行的通，但是有一定的弊端：每次想部署都要自己手动 build & push; 在多人协作的过程时，仍需要 git 等代码管理工具；需要对推送到 hub 设置一定的权限控制；缺乏代码审查等。因此还是需要一个自动化的过程，让开发不用或者不需要过多的关注开发之外的事情。Github、Gitlab 以及 Jenkins 等都对 docker 的持续集成分发有相关功能支持，在此就不详细复制粘贴了。
