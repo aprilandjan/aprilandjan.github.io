@@ -54,7 +54,7 @@ docker run --name=<name> --rm <image>
 docker run --name=<name> --rm -it --init <image>
 ```
 
-使用参数 `-v` 使当前系统目录挂载到容器目录下，这样对容器内外的目录内的任何文件变更都会互相同步：
+使用参数 `-v` 使当前系统目录挂载到容器目录下，这样对容器内外的目录内的任何文件变更都会互相同步，可以实现数据持久化存储或代码更新同步：
 
 ```bash
 docker run -d --rm -v ./data:/data <image>
@@ -102,22 +102,16 @@ docker images prune
   @myspace:registry=https://my-cnpm-registry.com
   ```
 
-然后在容器内执行 `npm install` 之前把此文件拷贝到容器工作目录内：
+  然后在容器内执行 `npm install` 之前把此文件拷贝到容器工作目录内：
 
   ```Dockerfile
-  COPY package*.json /app/
-  COPY .npmrc /app/
-
+  COPY package*.json .npmrc /app/
   RUN npm install
   ```
 
-### 容器内数据库资源持久化存储(mongo, redis)
-
-### 减少镜像文件体积
-
 ## Practice: Pure frontend webpack+MVVM framework project
 
-### 开发环境
+### 开发环境
 
 虽然从实用角度上看没有必要把这种项目的开发环境放在 docker 里作为镜像运行，但是出于熟悉 docker 的目的，尝试了一下这个过程。有以下几个需要注意的点：
 
@@ -253,7 +247,7 @@ networks:
 
 这样即可通过一行命令 `docker-compose up` 来部署整个服务了。有时改动 `docker-compose.yaml` 重启会仍然使用改动前的容器配置，可能需要手动执行 `docker rm` 确保修改生效。
 
-### 多环境配置
+### 多环境配置
 
 开发环境下需要使用 docker-compose 启动所需要的全部服务，需要使用 volume 映射路径, 需要跑开发环境的命令；而发布环境里，最终部署时也需要 docker-compose 把各个服务串联起来。这两个环境所需要的 nodejs 的镜像可能差距很大：开发环境下得有热更新，得共享目录，得安装 devDependency，得编译源代码等等，所以，感觉一份 Dockerfile 是无法仅仅通过几个环境变量的差异就把两个环境的镜像搞定的，因此权衡之后使用两套文件：Dockerfile & docker-compose.yaml、Dockerfile.dev & docker-compose.dev.yaml 来应对不同环境。
 
