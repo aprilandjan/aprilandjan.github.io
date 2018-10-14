@@ -27,7 +27,5 @@ function prefixedEventListener(element, type, callback) {
 }
 ```
 
----
-
 ##### 参考
 - [How to Capture CSS3 Animation Events in JavaScript](https://www.sitepoint.com/css3-animation-javascript-event-handlers/)
