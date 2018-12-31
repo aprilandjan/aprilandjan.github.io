@@ -6,6 +6,7 @@ categories: typescript
 ---
 
 > "动态一时爽，重构火葬场"
+>
 > "其实一旦接受了这种设定，还是很带感的"
 
 在越来越多的项目中开始使用 `typescript` 之后，越来越觉得预定义类型及类型推断的重要性及其带来的好处了。是的，使用类型非常简单，一般来说只需要在声明变量时声明其可能的数据类型或结构，后续关于它的一切都交给 `typescript` 的静态类型检查及推断，在编码阶段就能避免大量潜在的错误。
@@ -43,7 +44,7 @@ type NumberArray = Array<number>;
 const numberList: NumberArray = [1, 3, 10, 20];
 
 type CatArray = Array<ICat>;
-const catList:ICatArray = [
+const catList:CatArray = [
   // ...
 ];
 ```
