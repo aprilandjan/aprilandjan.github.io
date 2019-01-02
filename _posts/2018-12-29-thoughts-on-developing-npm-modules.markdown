@@ -5,7 +5,7 @@ date:   2018-12-29 23:40:00 +0800
 categories: npm
 ---
 
-开发一个 npm 模块前，考虑以下几个问题：
+开发一个 npm 模块前，通常需考虑以下几个问题：
 
 - 使用环境是在浏览器端还是 node？
 - 用到了哪些语法特性？
@@ -15,11 +15,11 @@ categories: npm
 - 哪些文件需要提供给模块使用者？
 - 如何引入及管理模块自身的依赖？
 
-我们逐个讨论以上问题。
+接下来我们将逐个讨论这些问题。
 
 ### 使用环境是在浏览器端还是 node？
 
-两者主要区别还在于浏览器端和 node 端能访问到的 api 不同。浏览器端主要是对页面做操作，而 node 端则囊括文件读写、数据存取、网络服务等。比如，浏览器端能访问 `window` `document` 等 node 中不存在的对象，而 node 端能使用 `global, process` 等浏览器中不存在的对象。如果没弄清楚环境随意使用，可能会产生 undefined 异常。
+两者主要区别还在于浏览器端和 node 端能访问到的 api 不同。浏览器端主要是对页面做操作，而 node 端则囊括文件读写、数据存取、网络服务等。比如，浏览器端能访问 `window` `document` 等 node 中不存在的对象，而 node 端能使用 `global` `process` 等浏览器中不存在的对象。如果没弄清楚环境随意使用，可能会产生 undefined 异常。
 
 如果代码既可能运行在 node 中，也可能运行在浏览器里，该代码就可称之为同构的(isomorphic)。此时尤其需要考虑对不同环境 api 的调用是否合理。
 
@@ -34,7 +34,7 @@ categories: npm
 1. 使用语法转换器(transpiler) 把自己的源代码转换为更兼容的代码。常用的转换器有 `babel` `typescript` 等；
 2. 在目标环境添加语法兼容代码(polyfill)，提供新语法特性里加入的 api。这种方式需要模块使用者自行添加。常用的 polyfill 有 [babel-polyfill](https://babeljs.io/docs/en/babel-polyfill)、[core-js](https://github.com/zloirock/core-js) 等。
 
-polyfill 并非万能良药，语法特性关键字、部分 api(例如 ES6 Proxy) 无法被 polyfill。另外作为模块开发者，我们无法干预目标环境，因此使用语法转换器编译在大部分情况下就很有必要了。
+polyfill 并非万能良药。某些语法特性关键字、部分 api(例如 ES6 Proxy) 无法被 polyfill。另外作为模块开发者，我们无法干预目标环境，因此使用语法转换器编译在大部分情况下就很有必要了。
 
 ### 是否使用 babel/typescript?
 
@@ -77,7 +77,7 @@ root
 
 ### 如何引入及管理模块自身的依赖？
 
-当需要在自己开发的模块中引入其他模块依赖时，可以简单的通过 `npm install <dep>` 来添加。但是需要注意，`package-lock` 支持三种类型的依赖：
+当需要在自己开发的模块中引入其他模块依赖时，可以简单的通过 `npm install <dep>` 来添加。但是需要注意，`package.json` 支持三种类型的依赖：
 
 1. `dependency` 是模块要能正常工作所必须的依赖。使用者安装模块时，这些模块也会被自动安装；
 2. `devDependency` 是在开发此模块过程中的依赖。使用者安装模块时，无需安装这些模块；
@@ -147,7 +147,7 @@ root
 
 [npm scripts](https://docs.npmjs.com/misc/scripts) 其实预置了相当多种钩子命令，这些命令就好比 react/vue 组件的生命周期方法，如果在 `package.json` 里有定义对应的钩子命令，就会在相应动作触发时去执行自定义的某些行为。
 
-作为模块开发者，当发布模块 `yarn publish` 前，往往需要做一些单元测试、编译、打包、清理等的工作。这时我们可以通过定义 `prepublishOnly` 钩子命令来确保发布前这些流程总是依次执行并且是通过了的。例如：
+作为模块开发者，当发布模块 `yarn publish` 前，往往需要做一些单元测试、清理、编译、打包等的工作。这时我们可以通过定义 `prepublishOnly` 钩子命令来确保发布前这些流程总是依次执行并且是通过了的。例如：
 
 ```json
 {

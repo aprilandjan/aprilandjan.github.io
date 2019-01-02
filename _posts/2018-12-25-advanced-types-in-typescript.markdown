@@ -44,7 +44,7 @@ type NumberArray = Array<number>;
 const numberList: NumberArray = [1, 3, 10, 20];
 
 type CatArray = Array<ICat>;
-const catList:CatArray = [
+const catList: CatArray = [
   // ...
 ];
 ```
