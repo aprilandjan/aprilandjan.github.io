@@ -74,7 +74,7 @@ git clean -d -f
 
 参考 [git-scm](https://git-scm.com/docs/git-clean), `git clean` 会提示删掉所有未追踪的文件，但是不包括文件夹。`-d`参数也会删除未追踪的文件夹, 而 `-f` 参数不添加的话可能默认只是提示有哪些文件可以被删除而不是真正的删除。
 
-### 同一台机器多个 github 帐号 ssh 管理
+### 同一台机器多个 git 帐号 ssh 管理
 
 可以在用户目录(`~`)下添加配置文件 `.ssh/config` 的方式实现：
 
@@ -138,4 +138,15 @@ git push origin --all --force
 ```bash
 git fetch --all
 git reset --hard origin/<branch_name>
+```
+
+### 仓库镜像
+
+先创建一个新的空仓库，然后使用 `clone --mirror` 的方式把原仓库的所有分支、tag 等都镜像到该新仓库：
+
+```bash
+git clone --mirror <url_of_old_repo>
+cd <name_of_old_repo>
+git remote set-url origin <url_of_new_repo>
+git push --mirror
 ```
