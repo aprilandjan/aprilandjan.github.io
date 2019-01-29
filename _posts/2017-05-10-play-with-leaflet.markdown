@@ -39,7 +39,7 @@ var mapB = new L.Map(elB, {
 
 ### 瓦片图供应商
 
-Leaflet 并不持有任何的地图数据（瓦面图）资源。在地图中，按照坐标位置提供不同尺寸的图片资源的提供者在 leaflet 里又叫做瓦片图供应商。可以通过插件 [Leaflet.ChineseTmsProviders](https://github.com/htoooth/Leaflet.ChineseTmsProviders) 获取到多种国内的瓦面图供应商。使用起来也很简单，先调用 `L.tileLayer` 生成瓦面图层，再添加到地图实例中：
+Leaflet 并不持有任何的地图数据（瓦面图）资源。在地图中，按照坐标位置提供不同尺寸的图片资源的提供者在 leaflet 里又叫做瓦片图供应商。可以通过插件 [Leaflet.ChineseTmsProviders](https://github.com/htoooth/Leaflet.ChineseTmsProviders) 获取到多种国内的瓦面图供应商。使用起来也很简单，先调用 `L.tileLayer` 生成瓦面图层，再添加到地图实例中：
 
 ```javascript
 var normalTile = L.tileLayer.chinaProvider('GaoDe.Normal.Map', {
@@ -50,7 +50,7 @@ var normalTile = L.tileLayer.chinaProvider('GaoDe.Normal.Map', {
 map.addLayer(normalTile)
 ```
 
-以下是使用 [`Control.Layers`](http://leafletjs.com/reference-1.0.3.html#control-layers) 罗列出所有在 `ChineseTmsProviders` 里提供的瓦面供应商列表并且添加到地图实例上作为切换控件的方法：
+以下是使用 [`Control.Layers`](http://leafletjs.com/reference-1.0.3.html#control-layers) 罗列出所有在 `ChineseTmsProviders` 里提供的瓦面供应商列表并且添加到地图实例上作为切换控件的方法：
 
 ```javascript
 var config = {
@@ -75,7 +75,7 @@ Object.keys(p).forEach(key => {
 
 //  图层选择控件加入到地图实例
 L.control.layers(layers).addTo(map)
-//  设置地图默认的使用的层
+//  设置地图默认的使用的层
 layers['GaoDe.Normal.Map'].addTo(map)
 ```
 
@@ -122,7 +122,7 @@ map.on('click', e => {
 marker.bindTooltip('Here is The Place!').openTooltip()
 ```
 
-### 基本矢量图形绘制
+### 基本矢量图形绘制
 
 以下是在地图上绘制形状的基本方法。其中，圆形使用 `svg` 渲染, 多边形使用 `canvas` 渲染：
 
@@ -164,9 +164,9 @@ setTimeout(() => {
 map.fitBounds(polygon.getBounds())
 ```
 
-### 层级容器／组
+### 层级容器／组
 
-LayerGroup` 相当于是一个容器层，在其中可以装载多个其他 `Layer`，作为一个整体操作；`FeatureGroup` 相当于是一个威力加强版的 `LayerGroup`， 区别在于：对这个容器组操作(例如 `bindPopup`)可以对其中的每一个子层级生效，以及响应子层级冒泡传递过来的事件:
+LayerGroup` 相当于是一个容器层，在其中可以装载多个其他 `Layer`，作为一个整体操作；`FeatureGroup` 相当于是一个威力加强版的 `LayerGroup`， 区别在于：对这个容器组操作(例如 `bindPopup`)可以对其中的每一个子层级生效，以及响应子层级冒泡传递过来的事件:
 
 ```javascript
 L.featureGroup([circle, polygon, marker])
@@ -179,7 +179,7 @@ L.featureGroup([circle, polygon, marker])
 
 ### [`Leaflet.Draw`](https://github.com/Leaflet/Leaflet.draw)
 
-通过以上的例子，如果要在地图上操作绘制一些几何图形，是需要自己实现的取点、绘制等操作的。可以通过插件 `Leaflet.Draw` 帮我们完成这个工作。使用起来也不复杂：
+通过以上的例子，如果要在地图上操作绘制一些几何图形，是需要自己实现的取点、绘制等操作的。可以通过插件 `Leaflet.Draw` 帮我们完成这个工作。使用起来也不复杂：
 
 首先添加编辑控件栏。可以通过 `L.drawLocal` 设置语言文本等属性，此处也设置了一些控件构造参数：
 
@@ -207,7 +207,7 @@ var drawControl = new L.Control.Draw({
 map.addControl(drawControl)
 ```
 
-添加了控件之后，就可以点击地图上的控件直接在地图上绘制图形。插件也提供了一些事件使得我们可以处理绘制时产生的数据。详细的事件列表可见于 [官方文档](https://leaflet.github.io/Leaflet.draw/docs/leaflet-draw-latest.html#l-draw-feature)。
+添加了控件之后，就可以点击地图上的控件直接在地图上绘制图形。插件也提供了一些事件使得我们可以处理绘制时产生的数据。详细的事件列表可见于 [官方文档](https://leaflet.github.io/Leaflet.draw/docs/leaflet-draw-latest.html#l-draw-feature)。
 
 以下例子里，通过 [`GeoJSON`](http://leafletjs.com/examples/geojson/) 和 `localStorage` 实现了基本的保存/读取绘制的多变形的功能：
 

@@ -237,4 +237,4 @@ docker push your-hub/your-space/project-name:0.0.1
 
 ## 部署
 
-编写合适的  `docker-compose.yaml` 文件并部署到服务器上用 Docker 启动。
+编写合适的  `docker-compose.yaml` 文件并部署到服务器上用 Docker 启动。

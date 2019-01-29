@@ -162,7 +162,7 @@ root
 
 这样在发布前，总是会依次执行跑测试(test), 清理目录(rimraf dist), 以及编译(build) 的工作，确保流程正确。
 
-#### 参考链接
+## 参考链接
 
 - <https://docs.npmjs.com/cli-documentation/>
 - <https://docs.npmjs.com/misc/developers>

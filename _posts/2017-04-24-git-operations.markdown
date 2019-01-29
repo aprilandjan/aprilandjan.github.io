@@ -52,7 +52,7 @@ git commit --amend -m <commit_message>
 git merge <branch> --no-ff
 ```
 
-### 重置指定文件至某个 commit
+### 重置指定文件至某个 commit
 
 ```bash
 git checkout <commit_id> <file_path>
