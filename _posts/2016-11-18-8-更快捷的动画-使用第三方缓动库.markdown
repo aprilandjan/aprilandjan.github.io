@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  8 - 更快捷的动画:使用第三方缓动库
+title:  8 - 更快捷的动画: 使用第三方缓动库
 date:   2016-11-18 11:30:00 +0800
 categories: canvas
 ---
@@ -19,7 +19,7 @@ categories: canvas
     var tween = Tween.get(p)
     tween.to({x: 100, y: 100}, 1000);   //  p = {x:100, y:100} after 1000ms
     ```
-    
+
 
 - `wait`, `call` 等待 & 回调
 
@@ -27,13 +27,13 @@ categories: canvas
     // 延迟1000ms执行后续缓动
     tween.wait(1000);    //  wait for 1000ms
     tween.to({x: 300, y: 300}, 1000);    //  tween to target state in 1000ms
-    
+
     // call: 在下一帧执行自定义回调, 相当于 nextTick
     tween.call(()=>{
         console.log('finished!');   //  called when previous steps are done
     }
     ```
-    
+
 - chained call 链式调用
 
     ```javascript
@@ -43,11 +43,11 @@ categories: canvas
         console.log('now x=300, y=300!');
     });
     ```
-    
+
 - `get` 参数配置
-    
+
     ```javascript
-    var config = {  
+    var config = {
         //  当该缓动序列有属性值变更时调用
         onChange: function () { console.log(p.x, p.y) },
         //  是否覆盖之前的全部缓动, 避免同一个对象的多个缓动实例之间的干扰
@@ -58,8 +58,8 @@ categories: canvas
     var ease = Ease.cubicInOut
     Tween.get(p, config).to({x: 100, y: 100}, 1000, ease);
     ```
-    
-更详细的功能可以参看官网[API](http://createjs.com/docs/tweenjs/classes/Tween.html) 
+
+更详细的功能可以参看官网[API](http://createjs.com/docs/tweenjs/classes/Tween.html)
 
 ### 缓动方程
 

@@ -1,6 +1,7 @@
 ---
 layout: post
 title:  Vue2.0 SSR and PreRender
+link: vue-v2-ssr-and-pre-render
 date:   2016-11-14 10:30:00 +0800
 categories: vue
 ---
@@ -31,9 +32,9 @@ Vue2.0 提供了SSR, 网上的示例和介绍还不太多。[官网](https://vue
         }
       }
     ```
-    
+
     要使用 ExtractTextPlugin 提取 css, 需要如下配置:
-    
+
     ```javascript
     vue: {
         loaders: {
@@ -42,7 +43,7 @@ Vue2.0 提供了SSR, 网上的示例和介绍还不太多。[官网](https://vue
         }
     }
     ```
-    
+
     以上属于是加载/提取 vue 中的样式部分, 之外的部分仍需在 `loaders` 里添加相应的加载器
 
 - webpack 配置的一些知识可以参考: [ref](https://github.com/magicdawn/magicdawn/issues/7#issuecomment-229655801)
@@ -55,7 +56,7 @@ client 需要先读取写到 window 里的初始条件变量, 并使用 `store.r
 ### 另一种选择: PreRender
 
 通过以上的摸索可以看出 ssr 还是不方便的。如果只是为了首屏内容抓取, 也许用 [PreRender](https://github.com/chrisvfritz/prerender-spa-plugin) 会是个更好的选择。
-    
+
 其原理是用 phantomjs 打开 spa 并把前端生成的 dom 结构再置入 HTML 内——虽然有一种多此一举的感觉, 但也的确是快速解决前端渲染页面 SEO 问题的有效办法。使用方法很简单, 向 webpack 里写入以下代码即可:
 
 ```webpack.prod.conf.js

@@ -1,6 +1,7 @@
 ---
 layout: post
-title:  working-with-docker
+title:  使用 Docker
+link:  working-with-docker
 date:   2018-02-22 15:16:00 +0800
 categories: docker
 ---
@@ -20,18 +21,18 @@ categories: docker
 # Dockerfile.dev
 
 FROM node:carbon
- 
+
 WORKDIR /app
- 
+
 # 安装依赖需要的相关文件
 COPY package*.json .npmrc /app/
- 
+
 # install all dependencies
 RUN npm install
- 
+
 # just a remark
 EXPOSE 7001
- 
+
 CMD ["npm", "run", "docker-dev"]
 ```
 
@@ -174,40 +175,40 @@ docker-compose run node npm run test
 # Dockerfile
 # ----- build with carbon -----
 FROM node:carbon AS build
- 
- 
+
+
 WORKDIR /app
- 
+
 COPY package*.json .npmrc ./
- 
+
 # install only production dependencies
 RUN npm install --only-production
- 
+
 # copy production dependencies aside
 RUN cp -R node_modules prod_node_modules
- 
+
 # install all dependencies
 RUN npm install
- 
+
 COPY . .
- 
+
 # build files
 RUN npm run tsc
- 
+
 # ----- release with alpine -----
 FROM node:carbon-alpine AS release
- 
+
 # install curl
 RUN apk add --no-cache --update curl
- 
+
 WORKDIR /app
- 
+
 # copy everything needed from base
 COPY --from=build /app/prod_node_modules node_modules
 COPY --from=build /app/app app
 COPY --from=build /app/config config
 COPY --from=build /app/app.js /app/package.json ./
- 
+
 CMD ["npm", "run", "start"]
 ```
 

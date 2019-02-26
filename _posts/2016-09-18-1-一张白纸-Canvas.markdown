@@ -5,11 +5,11 @@ date:   2016-09-18 12:30:00 +0800
 categories: canvas
 ---
 
-### 简介    
-    
-&lt;canvas&gt; 是HTML5标准里新增的一个元素标签。它是一张空白的画布, 为了在画布上进行创作, 通过`canvas.getContext()`访问特定绘图环境提供的一系列 API。 
-可以实现以下功能, 主要包含: 
-    
+### 简介
+
+&lt;canvas&gt; 是HTML5标准里新增的一个元素标签。它是一张空白的画布, 为了在画布上进行创作, 通过`canvas.getContext()`访问特定绘图环境提供的一系列 API。
+可以实现以下功能, 主要包含:
+
 - Image/Canvas元素的填充绘制 `drawImage`
 - 矩形区域绘制 `fillRect`
 - 路径绘制 `beginPath` `moveTo` `lineTo` `endPath` `arc` `bezierCurveTo`
@@ -18,9 +18,9 @@ categories: canvas
 - 混合模式, 用来决定接下来的绘制内容如何与当前画布上已有内容相叠加
 
 以上内容可以在 [MDN](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Basic_usage) 详细查看
-    
+
 ### 宽、高与二维坐标体系
-    
+
 画布的宽 `canvas.width`、高 `canvas.height` 决定了画布的绘图范围大小。画布的样式宽 `canvas.style.width`、高 `canvas.style.height` 决定了画布显示在页面上的大小。它们之间没有必然的对应关系;
 只是如果画布的 `宽高比` 与其 `样式宽高比`一致, 那么画布内容不会变形; 否则会失去应有的宽高比, 导致方不方、圆不圆。这一点和 &lt;img&gt; 标签是类似的。
 

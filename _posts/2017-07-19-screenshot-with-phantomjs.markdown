@@ -1,6 +1,7 @@
 ---
 layout: post
-title:  screenshot with phantomjs
+title:  使用 PhantomJS 截图
+title:  screenshot-with-phantomjs
 date:   2017-07-19 20:40:00 +0800
 categories: node javascript
 ---
@@ -17,7 +18,7 @@ import 'es6-promise/auto'
 
 注意这里引入必须要使用 `import` 而不是 `require`, 因为 `import` 声明的语句经过编译后总是被提升到了文件顶部，执行的比其他的代码要早，所以如果是先 `require('es6-promise/auto')` 再 `import vuex` 的情况下，仍然会报错...另外，尝试了一下，`vuex` 目前如果使用 `es6-promise` 提供的 promise，内部的`registerAction` 方法会报错，但不影响正常工作。可能是 `es6-promise` 实现 promise 与浏览器源生 promise 存在差异引起的。
 
-至于为什么 phantomjs 的无头浏览器环境没有 promise 语法支持？参考 [Supported Web Standards](http://phantomjs.org/faq.html): 
+至于为什么 phantomjs 的无头浏览器环境没有 promise 语法支持？参考 [Supported Web Standards](http://phantomjs.org/faq.html):
 
 > PhantomJS uses QtWebKit. It supports many features which are part of http://trac.webkit.org/wiki/QtWebKitFeatures22.
 
@@ -37,7 +38,7 @@ var url = args[0] || 'http://localhost:8080/#/'
 var output = args[1] || 'screenshot.jpg'
 
 var size = {
-    width: 1300, 
+    width: 1300,
     height: 8000
 }
 

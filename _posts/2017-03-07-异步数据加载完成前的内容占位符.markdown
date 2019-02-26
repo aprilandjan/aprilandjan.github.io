@@ -1,6 +1,7 @@
 ---
 layout: post
 title:  异步数据加载完成前的内容占位符
+link: placeholder-before-loaded
 date:   2017-03-07 14:57:00 +0800
 categories: css
 ---

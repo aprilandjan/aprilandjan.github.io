@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  webpack-babel-scss-template-with-multi-entries
+title:  webpack babel scss template with multi entries
 date:   2016-09-09 22:53:00 +0800
 categories: webpack
 ---
@@ -27,7 +27,7 @@ categories: webpack
         |-- static          //  静态资源
         |-- buildEntries.js //  提及多页入口
         |-- gulpfile.js     //  gulp 脚本文件
-        |-- config.json     //  gulp里的关于upload的一些上传的配置 
+        |-- config.json     //  gulp里的关于upload的一些上传的配置
         |-- favicon.ico     //  页面 favicon
 
 ### buildEntries.js

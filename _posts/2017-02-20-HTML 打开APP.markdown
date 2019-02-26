@@ -1,6 +1,7 @@
 ---
 layout: post
-title:  HTML打开APP
+title:  HTML 打开 APP
+link: open-app-in-html
 date:   2017-02-20 11:47:00 +0800
 categories: javascript
 ---
@@ -44,4 +45,4 @@ function openApp (schema) {
 
 - [https://developer.chrome.com/multidevice/android/intents](https://developer.chrome.com/multidevice/android/intents)
 
-- [https://paul.kinlan.me/deep-app-linking-on-android-and-chrome/](https://paul.kinlan.me/deep-app-linking-on-android-and-chrome/) 
+- [https://paul.kinlan.me/deep-app-linking-on-android-and-chrome/](https://paul.kinlan.me/deep-app-linking-on-android-and-chrome/)

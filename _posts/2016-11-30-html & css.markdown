@@ -1,6 +1,7 @@
 ---
 layout: post
 title:  html & css & javascript
+link: html-css-javascript
 date:   2016-11-30 10:30:00 +0800
 categories: html css javascript
 ---
@@ -224,5 +225,5 @@ if (disposition && disposition.indexOf('attachment') !== -1) {
   ```bash
   open -a Google\ Chrome --args --disable-web-security --user-data-dir
   ```
-  
+
   通过这种方式是不会发送 OPTIONS 请求的，浏览器完全禁用了这个安全措施。

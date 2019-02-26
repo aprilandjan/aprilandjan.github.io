@@ -1,6 +1,7 @@
 ---
 layout: post
-title:  customize-webpack-loader
+title:  自定义 webpack loader
+link: customize-webpack-loader
 date:   2018-01-26 21:33:00 +0800
 categories: webpack
 ---
@@ -83,7 +84,7 @@ module.exports = {
 为了给某个使用 `vue` 框架开发的站点页面添加另外一套主题样式，可能最好的方式是提炼组件和样式，根据主题风格制定一套合适的预处理样式变量，后续再定制变量来改变风格即可。但是有时也需要针对某些组件做不同的样式效果，仅依赖样式变量无法满足。所幸的是, `vue` 支持单个文件内含多个样式块 `<style></style>`，我们完全可以把不同的主题的样式集中放在不同的样式块内，不同的主题块引入不同的主题变量文件。理想情况下，如果要切主题，只需要改变跟根节点元素 class 即可。当然了，如果不做处理，这些样式块都会包含在最终打包的文件中。这个可以后续再改进下打包、加载机制。
 
 
-### vue-theme-loader 
+### vue-theme-loader
 
 可以对 `vue` 文件略为扩展一下规则：写入多个样式块并自定义主题`<style theme="dark"></style>` `<style theme="light"></style>`用来区分，通过自定义 `loader` 读取这些样式块并根据主题字段 `theme` 做相应的拼接处理，仅把对应主题的变量文件引入，再把这些专属样式包裹在以主题名命名的大节点下，拼接文件输出内容给 `vue-loader` 正常载入解析，最终生成一份样式合集。
 

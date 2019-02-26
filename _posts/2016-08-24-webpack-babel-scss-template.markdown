@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  webpack-babel-scss-template
+title:  webpack babel scss template
 date:   2016-08-24 20:58:00 +0800
 categories: webpack
 ---
@@ -23,7 +23,7 @@ categories: webpack
         |-- static          //  图片等静态资源
         |-- index.html      //  html 入口
         |-- gulpfile.js     //  gulp 脚本文件
-        |-- config.json     //  gulp里的关于upload的一些上传的配置 
+        |-- config.json     //  gulp里的关于upload的一些上传的配置
         |-- favicon.ico     //  页面 favicon
 
 ### webpack.config.json

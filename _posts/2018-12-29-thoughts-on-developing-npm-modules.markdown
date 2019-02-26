@@ -1,6 +1,7 @@
 ---
 layout: post
 title:  npm 模块开发漫谈
+link:   thoughts-on-developing-npm-modules
 date:   2018-12-29 23:40:00 +0800
 categories: npm
 ---
