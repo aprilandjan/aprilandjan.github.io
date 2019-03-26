@@ -5,32 +5,35 @@ date:   2016-09-09 22:53:00 +0800
 categories: webpack
 ---
 
-把之前的单页模版改造了一下, 做成了多页模版, 并且加入了 fontspider & spritesmith
+把之前的单页模版改造了一下, 做成了多页模版, 并且加入了 fontspider & spritesmith。
 
-### 项目目录
+## 项目目录
 
-    -- Project
-        |-- src
-            |-- assets
-                |-- fonts   //  字体文件
-                |-- imgs    //  图片资源
-                |-- sprites //  需要合并的sprite
-                |-- styles  //  公共样式
-            |-- common      //  公共JS
-            |-- views
-                |-- pageA   //  pageA 目录
-                    |-- app.js
-                    |-- index.html
-                |-- pageB   //  pageB 目录
-                    |-- app.js
-                    |-- index.html
-        |-- static          //  静态资源
-        |-- buildEntries.js //  提及多页入口
-        |-- gulpfile.js     //  gulp 脚本文件
-        |-- config.json     //  gulp里的关于upload的一些上传的配置
-        |-- favicon.ico     //  页面 favicon
+```bash
+.
+├── src
+│   ├── assets
+│   │   ├── fonts   //  字体文件
+│   │   ├── imgs    //  图片资源
+│   │   ├── sprites //  需要合并的sprite
+│   │   └── styles  //  公共样式
+│   ├── common      //  公共JS
+│   └── views
+│       ├── pageA   //  pageA 目录
+│       │   ├── app.js
+│       │   └── index.html
+│       └── pageB   //  pageB 目录
+│           ├── app.js
+│           └── index.html
+├── static          //  静态资源
+├── buildEntries.js //  提及多页入口
+├── gulpfile.js     //  gulp 脚本文件
+├── config.json     //  gulp里的关于upload的一些上传的配置
+└── favicon.ico     //  页面 favicon
+```
 
 ### buildEntries.js
+
 ```javascript
 var glob = require('glob');
 var path = require('path');
@@ -249,7 +252,7 @@ switch(env){
 }
 ```
 
-### gulpfile.js
+## gulpfile.js
 
 ```javascript
 var fs = require('fs')
@@ -400,7 +403,7 @@ gulp.task('sprite', function() {
 });
 ```
 
-### package.json
+## package.json
 
 所需要用到的包依赖
 
@@ -457,5 +460,3 @@ gulp.task('sprite', function() {
   }
 }
 ```
-
-### TIPS

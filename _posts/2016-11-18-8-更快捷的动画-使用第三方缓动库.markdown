@@ -20,7 +20,6 @@ categories: canvas
     tween.to({x: 100, y: 100}, 1000);   //  p = {x:100, y:100} after 1000ms
     ```
 
-
 - `wait`, `call` 等待 & 回调
 
     ```javascript

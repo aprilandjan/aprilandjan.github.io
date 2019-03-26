@@ -1,60 +1,58 @@
 ---
 layout: post
-title:  计算rem
-date:   2016-08-02 19:23:00 +0800
+title: 计算 rem
+date: 2016-08-02 19:23:00 +0800
 categories: css
 ---
 
-开发移动端页面的时候, 会有这样一种情景: 设计师给出的设计稿是 640 * 1136 尺寸。假如稿件上某区块宽度为 320px, 那么它的宽度就占据了整个视图区域的 50%。
-但是在实际做页面的时候, 是不能给它指定 `width:320px` 的, 因为整个视图区域很可能并不是 640px。
+开发移动端页面的时候, 会有这样一种情景: 设计师给出的设计稿是 640 \* 1136 尺寸。假如稿件上某区块宽度为 320px, 那么它的宽度就占据了整个视图区域的 50%。但是在实际做页面的时候, 是不能给它指定 `width:320px` 的, 因为整个视图区域很可能并不是 640px。
 
-既然如此, 根据比例来换算具体宽度, 应该可以解决问题, 而 css 单位 rem 正是这个换算的比例系数。
-rem 是根元素的字体大小(font size of Root Element), 如果以它作为度量单位, 那么实际尺寸只和根元素字体大小相关。
-当要调整比例的时候, 修改根元素字体大小, 即可进行整体缩放调整。
+既然如此, 如果我们根据比例来换算具体宽度, 应该可以解决问题, 而 css 单位 `rem` 正是这个换算的比例系数。
 
-假设我的目的是把 rem 变成一个等同于 px 的单位, 即: 某元素在设计稿上的标注宽度是 320px, 那么我在HTML里给它指定 `width:320rem`, 即可保证在移动端适配, 无需进行其他计算转换。有没有办法做到呢?
+rem 是根元素的字体大小(font size of Root Element), 如果以它作为度量单位, 那么实际尺寸只和根元素字体大小相关。当要调整比例的时候, 修改根元素字体大小, 即可进行整体缩放调整。
 
-### 测试屏幕宽度与像素的关系
+假设我的目的是把 rem 变成一个等同于 px 的单位, 即: 某元素在设计稿上的标注宽度是 320px, 那么我在 HTML 里给它指定 `width: 320rem`, 即可保证在移动端适配, 无需进行其他计算转换。有没有办法做到呢?
 
-在chrome里模拟 iPhone5 进行测试。页面代码如下:
+## 测试屏幕宽度与像素的关系
+
+在 chrome 里模拟 iPhone5 进行测试。页面代码如下:
 
 ```html
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="initial-scale=1"/>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="initial-scale=1" />
     <title>Index</title>
-</head>
-<style>
+  </head>
+  <style>
     * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
-    .div1{
-        background-color: antiquewhite;
-        width: 160px;
-        font-size: 160px;
+    .div1 {
+      background-color: antiquewhite;
+      width: 160px;
+      font-size: 160px;
     }
-</style>
-<body>
+  </style>
+  <body>
     <div class="div1">
-        <p>正方形</p>
+      <p>正方形</p>
     </div>
-    
-    <script>
-    alert(window.innerWidth);
-    </script>
-</body>
 
+    <script>
+      alert(window.innerWidth);
+    </script>
+  </body>
 </html>
 ```
 
 可以看到, '正方形'的内容区域刚好占据浏览器视场区域宽度(window.innerWidth)的一半。也就是说, 通过 window.innerWidth / window.innerHeight, 可以获取视场区域的宽高的*像素*值。
 
-### 初步计算 rem
+## 初步计算 rem
 
 依据等比例计算的思想, 计算 rem 的过程如下:
 
@@ -72,35 +70,35 @@ var viewportWidth = window.innerWidth;
 var viewport1px = viewportWidth * p1px;
 
 //  设置 rem
-document.querySelector('html').style.fontSize = viewport1px + 'px';
+document.querySelector("html").style.fontSize = viewport1px + "px";
 ```
 
 经过此番计算, 设计稿上宽度为 320px 的元素, 放置在页面里, 理论上只需要改写成 320rem 即可! 然而实际查看页面, 发现并不是期待的等比(50%的可视区域宽), 而是大的离谱, chrome 开发者工具显示有 3840px!
 
-### 浏览器最小字体限制
+## 浏览器最小字体限制
 
 原来, google 浏览器有一个最小的元素字体限制为 12px, 一旦给元素设定了小于 12px 的字体都会限制为 12px。
 按照上面的代码, 给根元素设置的字体大小仅为 0.5px, 因此实际的根元素字体大小为 12px, 于是, 320rem 即等于 `320 * 12px = 3840px` 了!
 
-### 改进计算 rem
+## 改进计算 rem
 
-于是, 不能把 rem 定义成那么小的数值, 只能够放大 rem 来实际应用了! 这里为了方便, 把rem 按照上面的计算方式再放大 100 倍, 便于实际应用(设计稿上 320px 的, 就定义成 3.2rem, 即数值除以100), 再适当封装一下即可!
+于是, 不能把 rem 定义成那么小的数值, 只能够放大 rem 来实际应用了! 这里为了方便, 把 rem 按照上面的计算方式再放大 100 倍, 便于实际应用(设计稿上 320px 的, 就定义成 3.2rem, 即数值除以 100), 再适当封装一下即可!
 
-完整代码如下: 
+完整代码如下:
 
 ```javascript
-(function (dw) {
-            dw = dw || 640;
-            var vw = window.innerWidth;
-            var calcREM = function(){
-                document.querySelector('html').style.fontSize = 100 * vw / dw + 'px';
-            };
+(function(dw) {
+  dw = dw || 640;
+  var vw = window.innerWidth;
+  var calcREM = function() {
+    document.querySelector("html").style.fontSize = (100 * vw) / dw + "px";
+  };
 
-            calcREM();
-            window.addEventListener('resize', function(){
-                calcREM();
-            });
-        }(640))     //  此处依据设计稿的像素宽度值真实填写 0.0
+  calcREM();
+  window.addEventListener("resize", function() {
+    calcREM();
+  });
+})(640); //  此处依据设计稿的像素宽度值真实填写 0.0
 ```
 
 注意, 如果设计稿宽是其他数值比如 750px, 那么最后一行要传递 750。

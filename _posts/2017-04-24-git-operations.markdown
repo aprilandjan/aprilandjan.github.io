@@ -10,7 +10,7 @@ categories: git
 ### git(全局)设置
 
 - 查看全局设置：
-  
+
   ```bash
   git config --global --list
   ```

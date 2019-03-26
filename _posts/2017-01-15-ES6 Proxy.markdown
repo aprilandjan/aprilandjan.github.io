@@ -30,9 +30,9 @@ console.log(obj['a'])
 ```javascript
 function createObject(x, y) {
     Object.defineProperty(this, 'x', {
-        get: function () {  
+        get: function () {
             console.log('try to access x in obj')
-            return x 
+            return x
         }
     })
     Object.defineProperty(this, 'y', {

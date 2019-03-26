@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  复合输入事件
-title:  input-with-composition
+link:  input-with-composition
 date:   2017-07-18 22:26:00 +0800
 categories: html javascript
 ---

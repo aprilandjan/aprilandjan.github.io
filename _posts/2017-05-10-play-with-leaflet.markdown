@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  Leaflet 使用及开发
-title:  play-with-leaflet
+link:  play-with-leaflet
 date:   2017-05-10 17:33:00 +0800
 categories: javascript
 ---

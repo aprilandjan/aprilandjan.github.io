@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  使用 PhantomJS 截图
-title:  screenshot-with-phantomjs
+link:  screenshot-with-phantomjs
 date:   2017-07-19 20:40:00 +0800
 categories: node javascript
 ---

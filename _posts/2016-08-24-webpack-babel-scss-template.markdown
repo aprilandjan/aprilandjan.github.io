@@ -5,15 +5,13 @@ date:   2016-08-24 20:58:00 +0800
 categories: webpack
 ---
 
-自从习惯了使用 es6 以后, 强烈的需求把各个分离的小功能放在不同的文件内, 需要的时候 import 进来, 然后又能自动处理互相的依赖注入关系, 最终便捷的打包发布。
+自从习惯了使用 es6 以后, 强烈的需求把各个分离的小功能放在不同的文件内, 需要的时候 import 进来, 然后又能自动处理互相的依赖注入关系, 最终便捷的打包发布。于是整理了一份 webpack 配置, 使用 babel/scss
 
-于是整理了一份 webpack 配置, 使用 babel/scss
-
-### Updates
+## Updates
 
 2016/9/1: 根据实际项目修正了一些配置错误。添加 gulpfile 用来处理包括 dev/build/publish/upload 等前前后后的问题
 
-### 项目目录
+## 项目目录
 
     -- Project
         |-- css
@@ -26,7 +24,7 @@ categories: webpack
         |-- config.json     //  gulp里的关于upload的一些上传的配置
         |-- favicon.ico     //  页面 favicon
 
-### webpack.config.json
+## webpack.config.json
 
 ```javascript
 var path = require('path');
@@ -174,7 +172,7 @@ switch(process.env.NODE_ENV){
 }
 ```
 
-### gulpfile.js
+## gulpfile.js
 
 ```javascript
 var path = require('path');
@@ -261,7 +259,7 @@ gulp.task('publish', function(callback){
 });
 ```
 
-### package.json
+## package.json
 
 所需要用到的包依赖
 
@@ -312,14 +310,10 @@ gulp.task('publish', function(callback){
 }
 ```
 
-### TIPS
+## TIPS
 
-- 在 npm run 命令里使用 ```NODE_ENV=dev``` 注入命令进程的环境变量
-
-- 在 webpack.config.json 里通过 ```process.env.NODE_ENV``` 获取注入的环境变量
-
-- 在 webpack.config.json 里使用 webpack.DefinePlugin 定义注入到 bundle.js 里的环境变量
-
-- 在 bundle.js 里直接访问以上环境变量并做相应的配置
-
-- 在 webpack HtmlWebpackPlugin 里可以通过字段 `favicon` 配置注入页面 favicon
+- 在 npm script 里使用 `NODE_ENV=dev` 注入命令进程的环境变量；
+- 在 `webpack.config.json` 里通过 `process.env.NODE_ENV` 获取注入的环境变量；
+- 在 `webpack.config.json` 里使用 `webpack.DefinePlugin` 定义注入到 bundle.js 里的环境变量；
+- 在 bundle.js 里直接访问以上环境变量并做相应的配置；
+- 在 `webpack.HtmlWebpackPlugin` 里可以通过字段 `favicon` 配置注入页面 favicon。
