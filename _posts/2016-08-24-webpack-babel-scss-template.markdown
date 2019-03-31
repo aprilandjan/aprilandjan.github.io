@@ -263,7 +263,7 @@ gulp.task('publish', function(callback){
 
 所需要用到的包依赖
 
-```javascript
+```json
 {
   "name": "webpack-babel-template",
   "version": "1.0.0",

@@ -407,7 +407,7 @@ gulp.task('sprite', function() {
 
 所需要用到的包依赖
 
-```javascript
+```json
 {
   "name": "webpack-babel-template",
   "version": "1.0.0",

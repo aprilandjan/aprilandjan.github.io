@@ -8,7 +8,7 @@ categories: javascript
 最近做页面, 某个动画可能要监听一段 css animation 动画的完成事件。查了一下相关资料, 发现 animation 相关的事件在不同设备上还是有区别的。下表总结的比较全:
 
 |W3C standard|Firefox|webkit|Opera|IE10|
-|---|---|---|---|---|---|
+|---|---|---|---|---|
 |animationstart|animationstart|webkitAnimationStart|oanimationstart|MSAnimationStart|
 |animationiteration|animationiteration|webkitAnimationIteration|oanimationiteration|	MSAnimationIteration|
 |animationend|animationend|webkitAnimationEnd|oanimationend|MSAnimationEnd|
@@ -27,5 +27,6 @@ function prefixedEventListener(element, type, callback) {
 }
 ```
 
-##### 参考
+## 参考
+
 - [How to Capture CSS3 Animation Events in JavaScript](https://www.sitepoint.com/css3-animation-javascript-event-handlers/)

@@ -12,7 +12,7 @@ categories: typescript
 
 在越来越多的项目中开始使用 `typescript` 之后，越来越觉得预定义类型及类型推断的重要性及其带来的好处了。是的，使用类型非常简单，一般来说只需要在声明变量时声明其可能的数据类型或结构，后续关于它的一切都交给 `typescript` 的静态类型检查及推断，在编码阶段就能避免大量潜在的错误。
 
-# 基本类型
+## 基本类型
 
 一般来说，我们常用到以下基本数据类型：`any` `boolean` `number` `string` `undefined` `null` `object` `Array` `Function` 等。为了更具体的描述对象(object)的数据结构，也常使用接口。接口使用关键字 `interface` ，通过它定义一种对象数据结构：
 
@@ -36,7 +36,7 @@ interface ICat extends IPet, IAnimal {
 
 上例中，`IAnimal` 类型的 `favorites` 属性被标记为可选的(?)，这意味着在进行代码检查时，该属性可能存在也可能不存在(undefined)。符号 `?` 是关于属性描述的一种修饰符。
 
-# 高级类型
+## 高级类型
 
 有时某个类型只是其他类型的别名，可以使用 `type` 关键字来定义类型的别名，方便后续使用：
 
@@ -54,7 +54,7 @@ const catList: CatArray = [
 
 既然拥有了“类型变量”，倘若结合一定的逻辑运算，是否能创造更多的可能性？答案是肯定的，`typescript` 通过一些方式提供了类型推断的种种可能，使其对实际代码的描述能力大大提高。以下我们通过一些例子简要的了解一下这种“面向类型的编程”。
 
-## 并集 union
+### 并集 union
 
 [并集](https://en.wikipedia.org/wiki/Union_(set_theory)) 是若干个集合所包含的全部元素组成的集合。例如，集合 `a = [string, number, boolean]` 与集合 `b = [string, boolean, Function]` 的并集是集合 `[string, number, boolean, Function]`, 并集中已包含集合 `a` 与 `b` 的全部成员。
 换句话说，并集中的某个元素，既可能是 `a` 的成员，也可能是 `b` 的成员。
@@ -78,7 +78,7 @@ interface IBanana {
 let fruit: IApple | IBanana | undefined;
 ```
 
-## 交集 intersection
+### 交集 intersection
 
 [交集](https://en.wikipedia.org/wiki/Intersection_(set_theory)) 是若干个集合都共有的全部元素组成的集合。例如，集合 `a = [string, number, boolean]` 与集合 `b = [string, boolean, Function]` 的交集是集合 `[string, boolean]`, 交集中的每个元素既是集合 `a` 的成员，也是集合 `b` 的成员。
 
@@ -96,7 +96,7 @@ const ab: IAppleBanana = {
 
 注意，对于接口，`{ name, color, length }` 是 `{ name, color }` 的子集，因此接口的交集是接口包含的全部键的并集组成的类型。
 
-## 类型索引
+### 类型索引
 
 `typescript` 提供了关键字 `keyof` 以获得一种类型(通常是接口) 下所有的键构成的集合。
 
@@ -142,7 +142,7 @@ const apple: IApple = {
 const appleValues = pluck(apple, ['name', 'color']);
 ```
 
-## 类型映射 Mapped Types
+### 类型映射 Mapped Types
 
 `typescript` 提供了关键字 `in` 用来约束类型是否属于某个类型集合。配合类型查询，可以创造出一些用于产生衍生类型的工具类型：
 
@@ -181,7 +181,7 @@ const p2: Pick<IPoint, 'x' | 'y'> = {
 
 于是，我们拿到了以下辅助类型：`Partial<T>`, `Required<T>`, `Pick<T, K>`。
 
-## 条件类型
+### 条件类型
 
 `typescript` 拥有一定程度的类型运算逻辑。类似于**三目条件运算符** `condition ? a : b`, 可以对某类型（泛型）进行类型条件运算推断：
 
@@ -243,11 +243,11 @@ const IXY: Omit<IPoint, 'type'> = {
 |`Filter<T, U>`|从泛型 T 中过滤选择出能够满足 泛型 U 约束的类型|❌|
 |`Exclude<T, U>`|从泛型 T 中剔除能够满足泛型 U 约束的类型|✅|
 
-# 高级类型使用
+## 高级类型使用
 
 以下通过两个实际编码场景来简单应用一下以上所学习的高级类型。
 
-## 可选配置项
+### 可选配置项
 
 某模块通过参数 options 提供配置选项供使用者配置时，这些配置选项通常都是可选的；然而在模块内部收到配置项时，也常使用 "默认配置项" 与使用者的配置项合并补全成完整的配置项。这样一来，对于外部使用者来说，options 的每一个属性都是可选的，而对于内部使用者来说，options 的每一个属性都已被补全，因此能直接使用。
 
@@ -272,7 +272,7 @@ export function useModule(options?: IOptions) {
 }
 ```
 
-## React 高阶组件 (HOC)
+### React 高阶组件 (HOC)
 
 高阶组件(Higher Order Component) 在 React 开发中是一种常用的范式。通过创建一个能够在运行时动态创建新的组件(类或方法)的方法，可以实现对原组件无侵入的注入(inject)属性或剔除(expel)属性的目的。
 
@@ -370,11 +370,11 @@ export const ExpelledBox = expelComp(Box, { size: 100 });
 
 注：在最近的几个版本的 `typescript` 中, 对 react 组件声明注入使用的工具类型可能存在 bug, 导致 ts 编译报错 [issue#28748](https://github.com/Microsoft/TypeScript/issues/28748)；本文仅阐述高级类型的使用方式，不确保编译正确。
 
-# 总结
+## 总结
 
 `Typescript` 的高级类型为复杂的类型表达和推断提供了更多便利和可能。对于强迫症患者来说，为了能自然的使用类型，增加了不少学习和维护成本，堪称为“面向类型编程”也不为过。但它并非完美无瑕无懈可击，在复杂性增加后，也存在各种BUG(尤其是配合 React 生态使用时)，非常影响开发体验——也许适当的灵活使用 `as` 关键字绕过复杂的类型推断反而更实际。
 
-## 参考链接：
+## 参考链接
 
 - <https://www.typescriptlang.org/docs/handbook/advanced-types.html>
 - <https://github.com/basarat/typescript-book/>

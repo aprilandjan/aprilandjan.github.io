@@ -6,16 +6,16 @@ categories: canvas
 ---
 
 很多时候动画的每帧之间, 不仅仅是变形属性的差异, 更重要的是内容(素材)的变化。一串动画, 往往是通过工具做好的一串序列帧。
+
 以下我们两张构成序列帧的图片。按照一定的时间间隔, 交替展示这两张图片, 就形成了小鸟挥舞翅膀飞的动画。
+
 ![](https://raw.githubusercontent.com/aprilandjan/aprilandjan.github.io/master/img/frame0.png) ![](https://raw.githubusercontent.com/aprilandjan/aprilandjan.github.io/master/img/frame1.png)
 
-在HTML里, 可以用<img>引入gif图片展示动图; 在画布里, 利用 Ticker 加上切分帧间隔, 也可以实现类似的效果。
-完整代码和演示可见于 [jsfiddle](https://jsfiddle.net/aprilandjan/yrwyzrnv/)
+在HTML里, 可以用<img>引入gif图片展示动图; 在画布里, 利用 Ticker 加上切分帧间隔, 也可以实现类似的效果。完整代码和演示可见于 [jsfiddle](https://jsfiddle.net/aprilandjan/yrwyzrnv/)
 
 ### 创建 Sprite 类
 
-Sprite 是一个展现序列动画的类, 只需要实现以下功能: 一份关于每一帧的`全部状态`的数据合集; 每秒钟更新多少帧。我们把这些数据作为构造函数参数 config 传入。
-然后, 在 Sprite 内部注册 Ticker 事件, 每帧检查是否需要切换到下一帧。如果需要, 就把当前帧指向下一帧的数据, 并在这一帧结束的时候重绘。
+Sprite 是一个展现序列动画的类, 只需要实现以下功能: 一份关于每一帧的`全部状态`的数据合集; 每秒钟更新多少帧。我们把这些数据作为构造函数参数 config 传入。然后, 在 Sprite 内部注册 Ticker 事件, 每帧检查是否需要切换到下一帧。如果需要, 就把当前帧指向下一帧的数据, 并在这一帧结束的时候重绘。
 
 ```javascript
 var Sprite = function (config) {
@@ -95,7 +95,8 @@ function start() {
 
 ### 上下浮动
 
-为了让飞的效果更好一些, 给 Sprite 加入一种上下晃动的效果。这里给它加入两个属性 offsetX, offsetY 作为额外的偏移, 并利用正弦变换, 每帧计算偏移量, 并最终应用到 `draw()` 方法中
+为了让飞的效果更好一些, 给 Sprite 加入一种上下晃动的效果。这里给它加入两个属性 offsetX, offsetY 作为额外的偏移, 并利用正弦变换, 每帧计算偏移量, 并最终应用到 `draw()` 方法中。
+
 定义属性 r 作为浮动的半径, 定义属性 deg 作为相位角度(单位是度), 定义 vDeg 作为相位角度的增速(单位是度)。代码如下:
 
 ```javascript
@@ -127,8 +128,11 @@ function start() {
 ### 点击交互
 
 最后, 加入一点点交互: 点击舞台, 让小鸟飞到点击的位置。通过小鸟当前的位置和点击的位置, 实时计算小鸟的 vx, vy。
+
 计算从A点到B点的矢量的倾斜度, 通常使用 `Math.atan2` 以得到值域在[-PI, PI] 之间的弧度值。然后, 把矢量的速度分解为水平/垂直分量并赋值给小鸟, 使得小鸟以恒定的速度飞向点击位置。
+
 然而还有一个问题: 需要判定小鸟是否飞到了目标点。简单的每帧判断坐标点是否等于目标位置坐标是不行的, 因为运动过程中坐标数值是小数, 在每一帧可能都不会严格等于目标位置坐标。
+
 于是采用了距离计算的方式, 每一帧记录与目标位置之间的距离, 如果这个距离比上一次记录的距离要大,说明刚刚飞过目标点, 此时把小鸟停在目标点并移除速度即可。
 
 ```javascript
@@ -169,6 +173,7 @@ Ticker.on(() => {
 ```
 
 ---
+
 由以上的演示, 可以看出帧动画实际上是比较不方便的。所幸有很多第三方缓动库, 可以快速实现不错的运动效果。
 
 完整代码和演示可见于 [jsfiddle](https://jsfiddle.net/aprilandjan/yrwyzrnv/)

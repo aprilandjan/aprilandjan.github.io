@@ -6,8 +6,6 @@ date:   2018-12-29 23:40:00 +0800
 categories: npm
 ---
 
-## 开发之前的思考
-
 开发一个 npm 模块前，通常需考虑以下几个问题：
 
 - 使用环境是在浏览器端还是 node？
@@ -106,9 +104,7 @@ root
 
 代码功能是否可靠，没有必要一定要写一个完整可运行例子，或下载下来在真实环境使用了才知道。可以通过编写合适的单元测试代码来快速验证小块功能或是大段代码的逻辑输出是否符合预期。另外值得一提的是，单元测试鉴于其执行的独立性，对于打断点调试来说也是非常方便。推荐使用 [Jest](https://github.com/facebook/jest) 配合 VSCode 的 [Launch Script](https://code.visualstudio.com/docs/editor/tasks) 运行测试文件，事半功倍：
 
-> .vscode/launch.json
-
-```json
+```json name=.vscode/launch.json
 {
   "version": "0.2.0",
   "configurations": [

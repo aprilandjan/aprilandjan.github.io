@@ -8,7 +8,8 @@ categories: canvas
 动画是画面随时间变动的效果。无论是用何种方式的随时间变动(setInterval, setTimeout), 都是可以驱"动"的; 但是在浏览器端, 使用 requestAnimationFrame 获取的定时间隔更平稳可靠。参考: [MDN](https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame)
 
 以下是一个简单的驱动动画的方法, 我们把它命名为 Ticker.js, 用来驱动更新视图:
-```javascript Ticker.js
+
+```javascript name=Ticker.js
 var _raf
 var _callbacks = []
 var _tick = function () {

@@ -15,7 +15,6 @@ categories: javascript
 |`i`|忽略大小写||
 |`m`|多行, 让开始和结束字符(`^`和`$`)工作在多行模式工作, 而不是整个字符串的开始和结尾处||
 
-
 |元字符|含义|
 |--------|--------|
 |`.`|匹配换行符之外的任意字符|
@@ -24,12 +23,10 @@ categories: javascript
 |`\s`|匹配一个空白字符，包括空格、制表符、换页符和换行符|
 |`\S`|匹配一个除了空白字符之外的任意字符(非空白字符)|
 
-
 |反义元字符|含义|
 |--------|--------|
 |`W`|匹配字母、数字或下划线|
 |`S`|匹配任意的空白符|
-
 
 |限定符|含义|
 |--------|--------|
@@ -37,12 +34,11 @@ categories: javascript
 |`+`|重复一次或多次|
 |`?`|重复零次或一次|
 
-
-#### 表达式中的小括号`()`(parentheses, or round branket)
+#### 表达式中的小括号 `()` (parentheses, or round bracket)
 
 `()`是为了提取匹配的字符串。表达式中有几个`()`就有几个相应的匹配字符串, 可以配合字符串 `replace` 方法使用以提取字串。
 
-#### 表达式中的中括号`[]`
+#### 表达式中的中括号 `[]`
 
 `[]`是定义匹配的字符范围。比如 `[a-zA-Z0-9]` 表示相应位置的字符要匹配英文字符和数字。`[\S*]` 表示任意非空字符
 
@@ -55,9 +51,9 @@ categories: javascript
 'ab\nc'.match(/[\s\S]/g) // ["a", "b", "↵", "c"]
 ```
 
-#### `+?`的含义, 贪婪／非贪婪匹配
+#### `+?` 的含义, 贪婪／非贪婪匹配
 
-`+`是限定符, 放在字符或表达式后面, 代表重复前面的字符或表达式至少一次; 
+`+`是限定符, 放在字符或表达式后面, 代表重复前面的字符或表达式至少一次;
 跟在限定符后面的 `?`表示本限定符使用非贪婪匹配(默认是贪婪的);
 贪婪与限定符有关，贪婪匹配要求尽可能长，非贪婪匹配要求尽可能短
 例如: `'abbbbbbc'.match(/[b]+?/g)` 匹配结果是 `["b", "b", "b", "b", "b", "b"]`, 而 `'abbbbbbc'.match(/[b]+/g)` 匹配结果是 `["bbbbbb"]`
@@ -66,7 +62,7 @@ categories: javascript
 
 - 匹配指定字符头尾之间的字符串
 
-  目标: 在字符串中提取提取以 `<` 开头、以 `>` 结束的部分 
+  目标: 在字符串中提取提取以 `<` 开头、以 `>` 结束的部分
 
   例子: `abc<script>def`
 
@@ -75,7 +71,7 @@ categories: javascript
   匹配结果: `<script>`
 
 - 匹配模版变量
-  
+
   目标：在模版中提取 `<%=` `%>` 之间的内容
 
   例子: `Hello, <%= username %>`
@@ -86,9 +82,9 @@ categories: javascript
 
   配合字符串 `replace` 方法使用：
 
-    ```Javascript
-    'Hello, <%= username %>'.replace(/<%=([\s\S]+?)%>/g, function (match, code) {
-      console.log(match, code)  // '<%= username %>' ' username '
-      return code + Date.now()
-    })  //  'Hello,  username 1486718503160' 
-    ```
+  ```javascript
+  'Hello, <%= username %>'.replace(/<%=([\s\S]+?)%>/g, function (match, code) {
+    console.log(match, code)  // '<%= username %>' ' username '
+    return code + Date.now()
+  })  //  'Hello,  username 1486718503160'
+  ```

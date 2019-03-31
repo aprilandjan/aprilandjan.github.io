@@ -17,7 +17,7 @@ categories: canvas
 ### 缓动追随
 
 已知物体位置(x, y), 想要到达的目标位置(tarX, tarY), 我们采用以下技巧更新坐标:
- 
+
 ```javascript
 var ease = 0.3
 x += (tarX - x) * ease
@@ -25,22 +25,26 @@ y += (tarY - y) * ease
 ```
 
 该方法首先是计算当前位置与目标位置的距离差, 然后仅把当前位置向目标位置靠近一定的比例(ease)。即:
+
 假设物体位置(0, 0), 目标位置(100, 50), 靠近的比例是 0.3, 按照上面的流程:
-第1帧 移动距离:(30, 15); 目前到达:(30, 15)
-第2帧 移动距离:(21, 10.5); 目前到达:(51, 25.5)
-第3帧 移动距离:(14.7, 7.35); 目前到达:(65.7, 32.85)
-...
-第12帧 移动距离:(0.5931980228999976, 0.2965990114499988); 目前到达:(98.6158712799, 49.30793563995)
-第13帧 移动距离:(0.4152386160299983, 0.20761930801499914); 目前到达:(99.03110989593, 49.515554947965)
-第14帧 移动距离:(0.2906670312209996, 0.1453335156104998); 目前到达:(99.321776927151, 49.6608884635755)
-...
+
+- 第1帧 移动距离:(30, 15); 目前到达:(30, 15)
+- 第2帧 移动距离:(21, 10.5); 目前到达:(51, 25.5)
+- 第3帧 移动距离:(14.7, 7.35); 目前到达:(65.7, 32.85)
+- ...
+- 第12帧 移动距离:(0.5931980228999976, 0.2965990114499988); 目前到达:(98.6158712799, 49.30793563995)
+- 第13帧 移动距离:(0.4152386160299983, 0.20761930801499914); 目前到达:(99.03110989593, 49.515554947965)
+- 第14帧 移动距离:(0.2906670312209996, 0.1453335156104998); 目前到达:(99.321776927151, 49.6608884635755)
+- ...
 
 观察以上数据可以知道, 每一帧都让物体更接近于目标, 越接近目标, 移动的距离就越小。这样便实现了一种非线性的缓动效果(ease-out); 上面的 ease 也叫缓动系数
 
 把这种追随的方式应用到上面的例子中: [演示](https://jsfiddle.net/aprilandjan/aemdc1dh/)
 
 在使用的缓动系数为 0.1 的情况下, 按照此比例靠近目标, 只需经过43次迭代(43帧时长, 如果按照 requestAnimationFrame 的默认60FPS, 大约0.7秒), 即可到达逼近程度 99% 以上。
+
 缓动系数越大, 就越快接近目标。如果把缓动系数设置为1, 那么就相当于上例的立即到达的效果; 如果设置为0, 那么就相当无法响应位置追随了。
+
 通常在60FPS下的缓动系数设置不宜超过0.2, 否则太快了, 缓动效果显得不明显。
 
 ### 比例缓动
@@ -54,63 +58,63 @@ var mapping = function (val, inputMin, inputMax, outputMin, outputMax) {
 ```
 
 例如, 把数字0.5从[0, 1] 映射到[100, 200], 得到的值是150, 在此变换中, 相对于各自的值域的比例程度不变。
+
 把它用在以上的例子当中, 有一下修改:
 
 - 点击时, 记录起始点(initX, initY), 目标点(tarX, tarY), 重置比例为 0
-    
-    ```
-        tarX = x
-        tarY = y
-        initX = children[0].x
-        initY = children[0].y
-        p = 0
+
+    ```javascript
+    tarX = x
+    tarY = y
+    initX = children[0].x
+    initY = children[0].y
+    p = 0
     ```
 
-- 每帧事件里, 让比例系数增加, 靠近完成比例 1 
+- 每帧事件里, 让比例系数增加, 靠近完成比例 1
 
-    ```
+    ```javascript
     Ticker.on(() => {
         children.forEach(child => {
             child.move()
         })
-    
+
         p += 0.01
     })
     ```
 
 - 物体运动方法 `move` 里, 根据比例系数获取应该的坐标
 
-    ```
+    ```javascript
     this.move = function () {
-            if (!this.canMove || p > 1) {
-                return
-            }
-    
-            this.x = mapping(p, 0, 1, initX, tarX)
-            this.y = mapping(p, 0, 1, initY, tarY)
-    
-            this.deg += this.vDeg
-            var rad = Math.PI * this.deg / 180
-            // this.offsetX = this.r * Math.cos(rad)
-            this.offsetY = this.r * Math.sin(rad)
+        if (!this.canMove || p > 1) {
+            return
         }
+
+        this.x = mapping(p, 0, 1, initX, tarX)
+        this.y = mapping(p, 0, 1, initY, tarY)
+
+        this.deg += this.vDeg
+        var rad = Math.PI * this.deg / 180
+        // this.offsetX = this.r * Math.cos(rad)
+        this.offsetY = this.r * Math.sin(rad)
+    }
     ```
 
-- 如果 p 是每帧匀速递增的, 就没有缓动效果(linear); 为了应用缓动效果, 我们可以使用一些缓动函数对 p 做数值映射。
-例如 `p = Math.sin(p * Math.PI/2)`(sineOut), 经过变换, 0 依然是 0, 1 依然是 1, 仅仅是中间的过程不同。
+- 如果 p 是每帧匀速递增的, 就没有缓动效果(linear); 为了应用缓动效果, 我们可以使用一些缓动函数对 p 做数值映射。例如 `p = Math.sin(p * Math.PI/2)`(sineOut), 经过变换, 0 依然是 0, 1 依然是 1, 仅仅是中间的过程不同。
 
-```
-var EaseFunctions = {
-    linear (p) {
-        return p
-    },
+    ```javascript
+    var EaseFunctions = {
+        linear (p) {
+            return p
+        },
 
-    sineOut (p) {
-        return Math.sin(p * Math.PI / 2)
+        sineOut (p) {
+            return Math.sin(p * Math.PI / 2)
+        }
     }
-}
-...
-var ease = EaseFunctions.linear
-```
+    ...
+    var ease = EaseFunctions.linear
+    ```
 
 完整代码和示例: [jsfiddle](https://jsfiddle.net/aprilandjan/6x827dne/)。可以通过扩展更多的缓动方程来获取更多的缓动效果。

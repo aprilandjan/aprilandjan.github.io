@@ -6,9 +6,9 @@ date:   2017-02-20 11:47:00 +0800
 categories: javascript
 ---
 
-最近遇到一个需求，给用户发短信，并附带上一串链接，用户点击链接跳转到html页面之后，如果安装了app，要求`自动`跳转到应用内的对应页面。通过HTML打开APP, 前端通常需要用到 URL Schema
+最近遇到一个需求，给用户发短信，并附带上一串链接，用户点击链接跳转到html页面之后，如果安装了 app，要求`自动`跳转到应用内的对应页面。通过 HTML 打开 APP, 前端通常需要用到 URL Schema。
 
-### url schema
+## url schema
 
 URL schema 可以理解成 app 自定义的跳转协议，使用方式也极其简单，通常访问网站, 输入它的url，例如 `https://www.google.com`, 在 `://` 之前的 `https` 就是协议，后面的 `www.google.com` 是协议接纳的参数，组合起来就是访问网络上某地址的资源。
 类似的，url schema 是属于 app 的地址，如果系统有安装此应用、可以识别它，那就通过它跳转到应用并访问 app 的资源。
@@ -39,10 +39,7 @@ function openApp (schema) {
 
 仔细想想，由用户选择是否要打开 app 确实是较为合理的用户体验。之前在 ios safari 里打开一些来自知乎、贴吧的页面，自动跳转到 app 内打开了，结果只要切换回 safari 仍然自动跳转一次，很恼人。
 
-###
-
-##### reference
+## reference
 
 - [https://developer.chrome.com/multidevice/android/intents](https://developer.chrome.com/multidevice/android/intents)
-
 - [https://paul.kinlan.me/deep-app-linking-on-android-and-chrome/](https://paul.kinlan.me/deep-app-linking-on-android-and-chrome/)

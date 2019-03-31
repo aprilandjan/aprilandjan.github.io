@@ -7,14 +7,13 @@ categories: canvas
 
 这一节来创建一个运动、交互的例子。代码及效果: [JSFiddle](https://jsfiddle.net/aprilandjan/mfja7w7d/)
 
-在前面的 Ticker 中, 定义了 `on(callback, scope)` 方法, 注册一个自定义事件到每帧回调之中。
-通过这个处理中心, 每帧改变显示对象的坐标属性(或者其他可用的变形属性), 让显示对象各自做一系列规律的运动。由于每个物体的运动和其他物体无关, 所以我们可以把各自的运动放在类定义中。
+在前面的 Ticker 中, 定义了 `on(callback, scope)` 方法, 注册一个自定义事件到每帧回调之中。通过这个处理中心, 每帧改变显示对象的坐标属性(或者其他可用的变形属性), 让显示对象各自做一系列规律的运动。由于每个物体的运动和其他物体无关, 所以我们可以把各自的运动放在类定义中。
 
 ### 注册点
 
 默认的, 显示对象的注册点(RegisterPoint)在图片自身的左上角。很多时候这不利于定位以及边距检测。所以给 DisplayObject 加入了两个属性 regX, regY, 分别代表绘图时自己的注册点偏移。
 相应的, 显示对象 draw 的时候要把这部分偏移算上去。以下把默认的注册中心设置为图片中心点处:
-    
+
 ```javascript
     var DisplayObject = function (img) {
         this.img = img
@@ -22,7 +21,7 @@ categories: canvas
         this.y = 0
         this.regX = img.width / 2
         this.regY = img.height / 2
-    
+
         this.draw = function () {
             ctx.drawImage(this.img, this.x - this.regX, this.y - this.regY)
         }
@@ -43,17 +42,17 @@ categories: canvas
         this.y = 0
         this.regX = img.width / 2
         this.regY = img.height / 2
-    
+
         //  每帧改变量
         this.vx = 0
         this.vy = 0
-    
+
         this.canMove = true
-    
+
         this.draw = function () {
             ctx.drawImage(this.img, this.x - this.regX, this.y - this.regY)
         }
-    
+
         this.move = function () {
             this.x += this.vx
             this.y += this.vy
@@ -65,50 +64,50 @@ categories: canvas
 
 运行之后, 物体可能会位移至离开画布范围, 因此我们加入简单的边界检测。当超过边界的时候, 对该方向每帧位移量取反(速度反向), 起到反向回弹的效果:
 
-    ```javascript
-    this.move = function () {
-            this.x += this.vx
-            this.y += this.vy
-    
-            if (this.x <= this.regX || this.x >= canvas.width - this.regX) {
-               this.vx *= -1
-            }
-            if (this.y <= this.regY || this.y >= canvas.height - this.regY) {
-                this.vy *= -1
-            }
-        }
-    ```
+```javascript
+this.move = function () {
+    this.x += this.vx
+    this.y += this.vy
 
+    if (this.x <= this.regX || this.x >= canvas.width - this.regX) {
+        this.vx *= -1
+    }
+    if (this.y <= this.regY || this.y >= canvas.height - this.regY) {
+        this.vy *= -1
+    }
+}
+```
 
 ### 点击交互
 
 为了结合前面例子中的点击判定, 加入以下控制: 当点击画布时, 如果有触碰到物体, 若物体处于运动状态则静止下来; 若物体处于运动状态则给它随机速度开始运动。同时,如果点击到多个物体, 只取最上面的那个:
 
-    ```javascript
-    if(hits.length){
-            var hit = hits.pop()
-    
-            if (hit.canMove) {
-                hit.canMove = false
-                children.splice(children.indexOf(hit), 1)
-                children.push(hit)
-            } else {
-                hit.canMove = true
-                hit.vx = 4 * Math.random() - 2
-                hit.vy = 4 * Math.random() - 2
-            }
-        }
-    ```
+```javascript
+if(hits.length){
+    var hit = hits.pop()
+
+    if (hit.canMove) {
+        hit.canMove = false
+        children.splice(children.indexOf(hit), 1)
+        children.push(hit)
+    } else {
+        hit.canMove = true
+        hit.vx = 4 * Math.random() - 2
+        hit.vy = 4 * Math.random() - 2
+    }
+}
+```
 
 最后, 再注册一个帧回调, 每帧调用各自的 `move()` 方法, 累加改变量:
 
-    ```javascript
-    Ticker.on(() => {
-        children.forEach(child => {
-            child.move()
-        })
+```javascript
+Ticker.on(() => {
+    children.forEach(child => {
+        child.move()
     })
-    ```
+})
+```
 
 ---
+
 完整的代码和演示效果如下: [jsfiddle](https://jsfiddle.net/aprilandjan/mfja7w7d/)

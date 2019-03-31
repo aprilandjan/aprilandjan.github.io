@@ -120,5 +120,4 @@ instance.z.m = 2 // throw error: Can't modify immutable object
 
 写到这里, 本人早已按耐不住使用它的冲动, 也许可以用它来实现默认属性的对象、具有自我校验属性是否合法的对象、一些快捷操作的需要使用寄存器方法达到数据绑定的对象等等! 想象一下是不是能带来很大便利呢。具体的应用还留待日后补充。
 
-值得注意的是, 代理句柄 (handler) 对象拥有多达[14种方法](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Proxy#Methods_of_the_handler_object), 和 JS 中对象原型的方法是
-完全对应的, 也就是说代理可以从语法层面就完全控制一个对象的全部行为, 从此对象操作真正是拥有更大的自由和可能。
+值得注意的是, 代理句柄 (handler) 对象拥有多达[14种方法](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Proxy#Methods_of_the_handler_object), 和 JS 中对象原型的方法是完全对应的, 也就是说代理可以从语法层面就完全控制一个对象的全部行为, 从此对象操作真正是拥有更大的自由和可能。

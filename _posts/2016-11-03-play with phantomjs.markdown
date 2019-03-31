@@ -21,7 +21,7 @@ npm install -g phantomjs --phantomjs_cdnurl=http://npm.taobao.org/mirrors/phanto
 
 使用 `phantomjs ./test.js` 即可执行指定路径下的文件。在这里尝试使用phantomjs登录百度并且截屏:
 
-```test.js
+```javascript name=test.js
 var page = require('webpage').create()
 page.settings.userAgent = 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'
 page.viewportSize = { width: 750, height: 1334 }
