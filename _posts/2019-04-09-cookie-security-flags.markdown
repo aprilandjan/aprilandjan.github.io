@@ -36,7 +36,7 @@ Set-Cookie: secure_one=yes; Path=/; Expires=Tue, 09 Apr 2019 11:17:54 GMT; HttpO
 - 登陆请求成功，接口服务器通过响应头 `set-cookie` 尝试往客户端设置登陆凭证 cookie；
 - devServer 中转该请求到本地开发环境前端例如 `http://localhost:8080`；
 - 因为该登陆凭证 cookie 被设置为 `Secure`，它在非 https 的本地开发环境下，被浏览器抛弃，没有成功存储到本地；
-- 本地其他请求始终拿不到登陆凭证，被接口服务器坚定为未登陆，请求失败。
+- 本地其他请求始终拿不到登陆凭证，被接口服务器鉴定为未登陆，请求失败。
 
 既然知道了问题的关键在于 `Secure` 标志上，那么在不改动后端配置的情况下，如果能在 node devServer 层面上手动去掉该标志，就可以保证 cookie 在本地设置成功了。如果有配置过 node devServer，可能会记得代理中间件[http-proxy-middleware](https://github.com/chimurai/http-proxy-middleware) 的配置参数里有一项 `secure`——它能否直接在代理时去掉该 cookie 标识呢？参看文档：
 
