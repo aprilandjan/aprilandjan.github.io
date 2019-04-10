@@ -26,7 +26,7 @@ Set-Cookie: secure_one=yes; Path=/; Expires=Tue, 09 Apr 2019 11:17:54 GMT; HttpO
 
 `Secure` 标识有一定的缺陷。如果请求发生在非安全协议下，仍然有可能会被中间人攻击所截获——这是 secure 标示的固有缺陷。现代浏览器(Chrome 52+/Firefox 52+) 在非安全协议下收到这种 `set-cookie` 时，并不会存储该 cookie，因此 `set-cookie` 会失效。
 
-## Cookie 本地代理转发
+## Cookie 本地代理
 
 前端后端分离开发的时候，前端本地常使用 node 启动一个开发服务器（devServer)，用来提供页面服务、代理转发接口请求避免跨域等功能。对于 cookie 来说，它只是 http/https 协议中请求头或响应头中的一段数据。因此对于开发服务器，cookie 依附于接口转发，一般来说不会有问题。
 
@@ -38,10 +38,33 @@ Set-Cookie: secure_one=yes; Path=/; Expires=Tue, 09 Apr 2019 11:17:54 GMT; HttpO
 - 因为该登陆凭证 cookie 被设置为 `Secure`，它在非 https 的本地开发环境下，被浏览器抛弃，没有成功存储到本地；
 - 本地其他请求始终拿不到登陆凭证，被接口服务器坚定为未登陆，请求失败。
 
-既然知道了问题的关键在于 `Secure` 标志上，那么在不改动后端配置的情况下，如果能在 node devServer 层面上手动去掉该标志，就可以保证 cookie 在本地设置成功了。所幸各种 devServer 里最常用的代理中间件[http-proxy-middleware](https://github.com/chimurai/http-proxy-middleware) 提供了选项 `secure` 以控制该标志，因此只需要简单的设置 `secure: false` 即可解决。
+既然知道了问题的关键在于 `Secure` 标志上，那么在不改动后端配置的情况下，如果能在 node devServer 层面上手动去掉该标志，就可以保证 cookie 在本地设置成功了。如果有配置过 node devServer，可能会记得最常用的代理中间件[http-proxy-middleware](https://github.com/chimurai/http-proxy-middleware) 的配置参数里有一项 `secure`——它能否直接在代理时去掉该 cookie 标识呢？参看文档：
+
+> option.secure: true/false, if you want to verify the SSL Certs
+
+原来，该配置参数来自模块 [http-proxy](https://github.com/nodejitsu/node-http-proxy)，它只是配置代理时是否验证 ssl 证书，并不是加工 cookie 去掉 `Secure` 标志。因此，参考 [issue](https://github.com/chimurai/http-proxy-middleware/issues/237)，我们只好在配置里监听代理事件，自行手动加工代理回来的响应了：
+
+```javascript
+const options = {
+  onProxyRes: (proxyRes, req, res) => {
+    const sc = proxyRes.headers['set-cookie'];
+    if (Array.isArray(sc)) {
+      proxyRes.headers['set-cookie'] = sc.map(sc => {
+        return sc.split(';')
+          .filter(v => v.trim().toLowerCase() !== 'secure')
+          .join('; ')
+      });
+    }
+  },
+}
+```
+
+通过以上设定，我们成功的在本地开发环境下去掉了接口服务器的 cookie 安全标识，确保后续接口调用能正确携带登陆凭证。
 
 ## 参考链接
 
 - <https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies>
 - <https://stackoverflow.com/questions/21540089/why-do-browsers-accept-secure-cookies-sent-over-a-non-secure-http-connection>
 - <https://github.com/chimurai/http-proxy-middleware>
+- <https://github.com/chimurai/http-proxy-middleware/issues/169>
+- <https://github.com/nodejitsu/node-http-proxy/issues/1165>
