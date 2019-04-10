@@ -12,7 +12,7 @@ categories: http node
 
 ## HttpOnly
 
-`HttpOnly` 标识该 cookie 仅用于 http 传输，无法在客户端通过 javascript 代码直接读取。未标识为 `HttpOnly` 的 cookie，可以通过 `document.cookie` 直接访问到，因此客户端一旦被 XSS 注入恶意脚本时，恶意脚本能直接窃取到 cookie 造成凭证泄露。因此，如果客户端不需要自行解析 cookie 时，服务端通常应设置该标志位。
+`HttpOnly` 标识该 cookie 仅用于 http 传输，无法在客户端通过 javascript 代码直接读取。未标识为 `HttpOnly` 的 cookie，可以通过 `document.cookie` 直接访问到。客户端一旦被 XSS 注入恶意脚本时，恶意脚本能直接窃取到 cookie 造成凭证泄露。因此，如果客户端不需要自行解析 cookie 时，服务端通常应设置该标志位。
 
 ## Secure
 
@@ -20,11 +20,11 @@ categories: http node
 
 对于服务器通过 `set-cookie` 请求头发送给客户端的 cookie 数据，即便服务端已标识了该 cookie 为 `Secure` 例如：
 
-```bash
+```
 Set-Cookie: secure_one=yes; Path=/; Expires=Tue, 09 Apr 2019 11:17:54 GMT; HttpOnly; Secure
 ```
 
-`Secure` 标识有一定的缺陷。如果请求发生在非安全协议下，仍然有可能会被中间人攻击所截获——这是 secure 标示的固有缺陷。现代浏览器(Chrome 52+/Firefox 52+) 在非安全协议下收到这种 `set-cookie` 时，并不会存储该 cookie，因此 `set-cookie` 会失效。
+如果请求发生在非安全协议下，仍然有可能会被中间人攻击所截获——这是 secure 标示的固有缺陷。现代浏览器(Chrome 52+/Firefox 52+) 在非安全协议下收到这种 `set-cookie` 时，并不会存储该 cookie，因此 `set-cookie` 会失效。
 
 ## Cookie 本地代理
 
@@ -38,7 +38,7 @@ Set-Cookie: secure_one=yes; Path=/; Expires=Tue, 09 Apr 2019 11:17:54 GMT; HttpO
 - 因为该登陆凭证 cookie 被设置为 `Secure`，它在非 https 的本地开发环境下，被浏览器抛弃，没有成功存储到本地；
 - 本地其他请求始终拿不到登陆凭证，被接口服务器坚定为未登陆，请求失败。
 
-既然知道了问题的关键在于 `Secure` 标志上，那么在不改动后端配置的情况下，如果能在 node devServer 层面上手动去掉该标志，就可以保证 cookie 在本地设置成功了。如果有配置过 node devServer，可能会记得最常用的代理中间件[http-proxy-middleware](https://github.com/chimurai/http-proxy-middleware) 的配置参数里有一项 `secure`——它能否直接在代理时去掉该 cookie 标识呢？参看文档：
+既然知道了问题的关键在于 `Secure` 标志上，那么在不改动后端配置的情况下，如果能在 node devServer 层面上手动去掉该标志，就可以保证 cookie 在本地设置成功了。如果有配置过 node devServer，可能会记得代理中间件[http-proxy-middleware](https://github.com/chimurai/http-proxy-middleware) 的配置参数里有一项 `secure`——它能否直接在代理时去掉该 cookie 标识呢？参看文档：
 
 > option.secure: true/false, if you want to verify the SSL Certs
 
