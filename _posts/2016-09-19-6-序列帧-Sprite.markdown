@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  6 - 序列帧: Sprite
+title:  6 - 序列帧：Sprite
 date:   2016-09-19 17:30:00 +0800
 categories: canvas
 ---

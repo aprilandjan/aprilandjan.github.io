@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  3 - "动"画的实现: requestAnimationFrame
+title:  3 - "动"画的实现：requestAnimationFrame
 date:   2016-09-18 16:30:00 +0800
 categories: canvas
 ---
