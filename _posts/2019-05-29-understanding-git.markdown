@@ -267,7 +267,7 @@ $ git merge github/master
 
 ### 多仓库修改代码
 
-需求：在前端两个仓库 `worklog` / `todo` 添加基本相同相同的 sentry 监控代码。
+需求：在前端两个仓库 `project` / `project-backup` 添加基本相同相同的 sentry 监控代码。
 
 操作：
 
