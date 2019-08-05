@@ -22,3 +22,7 @@ categories: npm
 ## 尽可能的共享相同的依赖
 
 ## 无法共享的依赖
+
+## 参考
+
+- <https://npm.github.io/how-npm-works-docs/index.html>
