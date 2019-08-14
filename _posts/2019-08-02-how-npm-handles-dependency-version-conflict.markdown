@@ -125,15 +125,16 @@ root
         └── F@1.0.0
     ```
 
-    顺便提一句：`yarn` 在安装依赖时会自动执行 `dedupe` 操作——又多了一个推荐使用 `yarn`替代 `npm` 的理由！
+顺便提一句：`yarn` 在安装依赖时会自动执行 `dedupe` 操作：
 
-## 版本冲突如何产生
+```bash
+$ yarn dedupe
+yarn dedupe v1.17.3
+error The dedupe command isn't necessary. `yarn install` will already dedupe.
+info Visit https://yarnpkg.com/en/docs/cli/dedupe for documentation about this command.
+```
 
-在执行 `npm install <module>` 时，写入到 `package.json` 里的该模块的版本号前都会默认的带上符号 `^`，表示可以接受不低于该版本号的模块。
-
-## 版本冲突的模块如何在运行时共存
-
-## webpack 如何处理版本冲突的模块
+可见 yarn 在设计时得确是抓住了很多细小的点去改善使用体验。
 
 ## 参考
 
