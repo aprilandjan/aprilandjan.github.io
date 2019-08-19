@@ -70,6 +70,6 @@ TypeScript 是“带有类型的 JavaScript 的语言超集”。所谓超集，
 
 ## 参考链接
 
-- [TypeScript 官网](https://www.typescriptlang.org/index.html): 官方站点，提供 TS 各种语法的说明及示例、`tsc` 配置项说明、Playgrond 等；
+- [TypeScript 官网](https://www.typescriptlang.org/index.html): 官方站点，提供 TS 各种语法的说明及示例、`tsc` 配置项说明、Playground 等；
 - [TypeScript Book](https://github.com/basarat/typescript-book/): 社区总结的 TS 指导书，相比官方文档更加偏向实践；
 - [TypeScript React Redux Guide](https://github.com/piotrwitek/react-redux-typescript-guide): TS 在 React 生态开发使用的最佳实践的说明。
