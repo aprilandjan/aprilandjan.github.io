@@ -66,7 +66,7 @@ hello.exe: hello.o
 hello.o: main.cpp
 	g++ -c main.cpp -o hello.o
 
-# task of cleaning jobs
+# task of cleaning jobs. if run in windows powershell, it needs to be 'del' instead of `rm`
 clean:
 	rm hello.o hello.exe
 ```
@@ -74,6 +74,8 @@ clean:
 when using `make` in terminal, it will defaultly try command `all`, then check if the prerequisite files exist. if not, it will find command to create it; otherwise, the defined script below will be executed. A litte similar to `pre` scripts in `npm`.
 
 If files are all existed, none script will be excuted; if source file changed, the script will do both `compile` and `link` jobs.
+
+Tasks that do not require files are `phony targets`, such as `clean` in above example. It is just a label representing the command, so it will be executed everytime when called. 
 
 ## References
 
