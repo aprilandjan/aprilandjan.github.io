@@ -81,3 +81,4 @@ Tasks that do not require files are `phony targets`, such as `clean` in above ex
 
 - <https://www3.ntu.edu.sg/home/ehchua/programming/cpp/gcc_make.html>
 - <https://www.learncpp.com/cpp-tutorial/introduction-to-the-compiler-linker-and-libraries/>
+- <http://gernotklingler.com/blog/creating-using-shared-libraries-different-compilers-different-operating-systems/>
