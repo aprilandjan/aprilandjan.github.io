@@ -55,3 +55,4 @@ root
 
 - <https://docs.npmjs.com/files/package.json#dependencies>
 - <https://docs.npmjs.com/misc/semver>
+- <https://formidable.com/blog/2018/finding-webpack-duplicates-with-inspectpack-plugin/>
