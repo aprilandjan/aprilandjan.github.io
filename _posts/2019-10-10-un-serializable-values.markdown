@@ -55,3 +55,4 @@ No \\n's!",
 
 - <https://github.com/microsoft/vscode/issues/82104#event-2698545870>
 - <https://stackoverflow.com/questions/1423081/json-left-out-infinity-and-nan-json-status-in-ecmascript>
+- <https://github.com/json5/json5>
