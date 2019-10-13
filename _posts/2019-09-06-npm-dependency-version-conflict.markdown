@@ -47,9 +47,12 @@ root
 
 ## 版本冲突的模块如何在运行时共存
 
-## webpack 如何处理版本冲突的模块
+在同一个运行环境内，当某个模版的版本冲突时，是否会存在所有这些不同版本的模块的引用及资源占用？
+
+## 版本冲突的模块如何在 webpack bundle 内共存
 
 ## 参考
 
 - <https://docs.npmjs.com/files/package.json#dependencies>
 - <https://docs.npmjs.com/misc/semver>
+- <https://formidable.com/blog/2018/finding-webpack-duplicates-with-inspectpack-plugin/>
