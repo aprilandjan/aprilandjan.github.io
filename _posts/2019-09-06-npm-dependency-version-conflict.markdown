@@ -51,6 +51,8 @@ root
 
 ## 版本冲突的模块如何在 webpack bundle 内共存
 
+当通过 webpack 打包时，版本冲突的模块是否都被打包进了 bundle 中？
+
 ## 参考
 
 - <https://docs.npmjs.com/files/package.json#dependencies>
