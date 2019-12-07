@@ -69,3 +69,22 @@ categories: npm
 ```
 
 那么通过 npm 命令钩子执行 `check.js` 时，当前的进程参数表，总是得到 `node` 程序路径以及 js 文件路径，似乎没有是否是 `npm` 或 `yarn` 的信息。但是没关系，既然当前进程没有，它总归是由某个来自 `npm` 或 `yarn` 的进程所开辟的子进程所执行的。如果通过查找当前进程的父进程的方式，依次找下去，总会找到一个进程的信息它通过 `node` 执行了来自于 `npm` 或 `yarn` 的脚本。于是问题来到了怎样去递归的查找当前进程的父进程及其进程参数的问题。`process` 拥有 `pid` 以及 `ppid` 来指代当前进程的 id 及父进程 id, 但是遇到递归向上查找时，并没有一个内置的方法去查找。所幸万能的 npm 生态里无所不包，可以通过 [find-process](https://github.com/yibn2008/find-process) 兼容的查找指定进程可能的一切信息，包括父进程 id, 参数列表等等。于是通过这个工具，不难实现判断当前程序是否是最终通过 `npm` 或 `yarn` 唤起的逻辑。
+
+虽然这样操作具有可行性，但是总归不太方便。能不能有其他的方式呢？npm 客户端会在执行时往进程里写入许多关于当前程序的环境变量，这里面有没有可以利用的信息呢？尝试使用 `npm` 和 `yarn` 分别执行了一段命令，并且把进程的全部环境变量打印出来做对比：
+
+```javascript
+const fs = require('fs');
+fs.writeFileSync(`env-${Date.now()}.json`, JSON.stringify(process.env, null, 2));
+```
+
+可以从中发现，无论是 `npm` 还是 `yarn`，它们都会通过环境变量 `npm_config_user_agent` 写入当前的客户端信息——这有点类似于浏览器的 `navigator.userAgent`。例如：
+
+```javascript
+//  when executed by yarn, for example: 'yarn/1.7.0 npm/? node/v8.9.4 darwin x64'
+//  when executed by npm, for example: 'npm/6.1.0 node/v8.9.4 darwin x64'
+console.log(process.env.npm_config_user_agent);
+```
+
+于是，用这个信息来判断 npm 客户端，就非常简单直接了。可以在 `check.js` 里写上相应的判断代码，然后如果当前使用的 npm 客户端，则给出提示、抛出异常并避免执行后续任务。
+
+## 安装模块前检查并提示
