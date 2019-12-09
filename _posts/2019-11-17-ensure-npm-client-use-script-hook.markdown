@@ -86,3 +86,9 @@ console.log(process.env.npm_config_user_agent);
 于是，用这个信息来判断 npm 客户端，就非常简单直接了。可以在 `check.js` 里写上相应的判断代码，然后如果当前使用的 npm 客户端，则给出提示、抛出异常并避免执行后续任务。
 
 ## 在“安装模块“前执行检查程序
+
+前面已经提到过，可以利用 `preinstall` 钩子命令去执行检查代码。但是经验证，还存在一些问题：`npm` 和 `yarn` 对待 `preinstall` 的调用时机不一致。`npm` 仅会在当前项目执行完整安装（即 `npm install`）时会触发该钩子调用，单独安装某个模块（即 `npm install <module>`）时并不会触发；而 `yarn` 则在这两种情况下都会如预期希望的那样，触发该钩子命令。这样一来，如果想限制 `npm` 的使用者让他们在安装任意模块前都通过调用钩子命令去阻止、提示，就没办法实现了([issue](https://github.com/npm/cli/issues/481))。
+
+## References
+
+- <https://github.com/npm/cli/issues/481>
