@@ -87,8 +87,13 @@ console.log(process.env.npm_config_user_agent);
 
 ## 在“安装模块“前执行检查程序
 
-前面已经提到过，可以利用 `preinstall` 钩子命令去执行检查代码。但是经验证，还存在一些问题：`npm` 和 `yarn` 对待 `preinstall` 的调用时机不一致。`npm` 仅会在当前项目执行完整安装（即 `npm install`）时会触发该钩子调用，单独安装某个模块（即 `npm install <module>`）时并不会触发；而 `yarn` 则在这两种情况下都会如预期希望的那样，触发该钩子命令。这样一来，如果想限制 `npm` 的使用者让他们在安装任意模块前都通过调用钩子命令去阻止、提示，就没办法实现了([issue](https://github.com/npm/cli/issues/481))。
+前面已经提到过，可以利用 `preinstall` 钩子命令去执行检查代码。但是经验证，还存在一些问题：`npm` 和 `yarn` 对待 `preinstall` 的调用时机不一致。`npm` 仅会在当前项目执行完整安装（即 `npm install`）时会触发该钩子调用，单独安装某个模块（即 `npm install <module>`）时并不会触发；而 `yarn` 则在这两种情况下都会如预期希望的那样，触发该钩子命令。这样一来，如果想限制 `npm` 的使用者让他们在安装任意模块前都通过调用钩子命令去阻止、提示，就暂时没办法实现了([issue](https://github.com/npm/cli/issues/481))。
+
+## `check-npm-client`
+
+基于以上的尝试和探索，可以把相关的代码提炼为一个单独的模块去做检验和保证。[check-npm-client](https://github.com/aprilandjan/check-npm-client) 正是这样的一个模块：它提供了判断 `npm` 客户端的判断，并可以通过预定义的 `bin` 脚本在项目中的钩子命令里直接使用。当然，因为上面分析的一些原因，对希望能限制 `npm` 来安装模块的情况下不能完全和预期一样，但也有一些别的方式或许可以绕过：`npm` 拥有一些区别于在 `package.json` 里定义的钩子命令的“[钩子命令](https://docs.npmjs.com/misc/scripts#hook-scripts)”，能实现对任意模块安装的钩子流程。或许可以利用独立模块的 `preinstall` 功能去写入这样的钩子，以实现和 `yarn` 相同的表现。不过，具体的实现就有待后续再去完善了。
 
 ## References
 
 - <https://github.com/npm/cli/issues/481>
+- <https://docs.npmjs.com/misc/scripts#hook-scripts>
