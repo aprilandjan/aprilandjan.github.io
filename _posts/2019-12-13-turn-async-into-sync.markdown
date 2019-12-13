@@ -20,7 +20,8 @@ function test(p) {
     resolved = true;
   })
   while(!resolved) {
-    require('deasync').sleep(100);
+    // do nothing
+    // require('deasync').sleep(100);
   }
 }
 
