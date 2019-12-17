@@ -12,7 +12,30 @@ categories: test
 
 ## mock 模块
 
+```js
+const mockFn = jest.fn();
+jest.mock('@/utils/helper', () => ({
+  formatData: mockFn,
+}));
+```
+
 ## mock 模块中的某个方法
 
-## 重置模块
+```js
+const mockFn = jest.fn();
+jest.mock('@/utils/helper', () => ({
+  ...jest.requireActual('@/utils/helper'),
+  formatData: mockFn,
+}));
+```
 
+## 重置模块或 mock
+
+```js
+describe('some test', () => {
+  beforeEach(() => {
+    mockFn.mockReset();
+    jest.resetModules();
+  });
+});
+```
