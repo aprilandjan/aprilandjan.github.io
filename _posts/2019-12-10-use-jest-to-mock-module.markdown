@@ -39,3 +39,7 @@ describe('some test', () => {
   });
 });
 ```
+
+## 参考
+
+- <https://jestjs.io/docs/en/getting-started>
