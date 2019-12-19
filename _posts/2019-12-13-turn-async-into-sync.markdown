@@ -83,7 +83,9 @@ function test(p) {
   console.log('a');
   test(wait(1000));
   console.log('b')
-})();  
+})();
 ```
 
 这段代码执行后并没有希望中的按顺序输出 `a` `async done` `b`，而是在打印出字符 `a` 之后程序一直停留在 `while(!resolved)` 的循环内执行下去，不会结束，也不会打印出 `async done`。这说明 `while(true)` 语句的却是阻塞了其他的代码——也包括它前面的 `p.finally`。其实也很符合逻辑：假如它不能阻塞前面 `Promise` 的执行，那就肯定也无法阻塞其他的代码块执行了。既然这样，那类似 `nodejs` 里的 `fs.writeFileSync` 以及 `fs.writeFile` 它们是如何能做到既能同步又能异步的呢？
+
+## 事件循环
