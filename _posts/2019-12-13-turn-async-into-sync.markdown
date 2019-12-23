@@ -94,11 +94,46 @@ function test(p) {
 
 但是 `javascript` 里也有很多异步的实现，例如 `setTimeout`，`process.nextTick`，`promise` 等。它们是怎么工作的呢？在这些异步操作被定义后，操作的回调并不是直接的添加到当前的调用栈当中去立即执行，而是把相应的 `事件(Event)` 以 `先进先出(FIFO, First-In-First-Out)` 的形式添加到事件队列中，等待恰当的时机来临时去执行这些异步操作的定义的回调。那么，这里这个“恰当的时机”怎样才能来临呢？
 
-回到事件循环上来。可以把 `javascript` 的 `运行时(runtime)` 想象成一个时钟，它拥有一个 `定时周期(tick)` 并且每个周期都要执行去做以下工作：检查此刻的调用栈看是否为空。如果调用栈为空（即当前要执行的代码都已执行完），则从上面的事件表中找到满足其触发时机（可能是达到了定时间隔，或者是检测到了特定的用户交互发生）的事件，并将对应事件的回调添加到调用栈中执行；如果没有满足的事件，那么该周期什么都不执行，等待下一个定时周期来临时再次执行检测。这个过程一直进行下去，就是所谓的事件循环。
+回到事件循环上来。可以把 `javascript` 的 `运行时(runtime)` 想象成一个时钟，它拥有一个 `定时周期(tick)` 并且每个周期都要执行去做以下工作：检查此刻的调用栈看是否为空。如果调用栈为空（即当前要执行的代码都已执行完），则从上面的事件表中找到满足其触发时机（满足的定时间隔，或者是输入输出等）的事件，并将对应事件的回调添加到调用栈中执行；如果没有满足的事件，那么该周期什么都不执行，等待下一个定时周期来临时再次执行检测。这个过程一直进行下去，就是所谓的事件循环。
 
 事件循环为 `非阻塞(Non-Blocking)` 行为提供了条件。上文提及的各种异步行为，都是非阻塞行为的具体应用。
 
 有了这些概念，再回到上面我们尝试实现的“将异步转换为同步”的代码中来，可以更清晰的认知到：`while(!resolved)` 由于一直在占用当前的调用栈不结束，因此事件循环停留在了这一个操作所处的阶段里；而 `p.finally` 的触发执行要等待事件循环进入后续的阶段，一直无法达到。因此以上尝试的代码不能起到预想的效果。
+
+## DeAsync
+
+好了，既然知道了 `node` 自身的事件循环会按上面分析的过程执行代码，那究竟有没有办法去实现异步转同步？这里的关键在于，如何能在阻塞后续 `javascript` 代码执行的情况下不阻塞整个线程，并且允许事件循环过程中的事件队列能够被照常处理——相当于是改变了 `javascript` 默认的事件循环处理流程！在 `nodejs` 里，由于能通过 `Native C++ Binding` 调用底层关于 `Event Loop` 的某些实现，还真能能达成这种效果。例如，模块 [DeAsync](https://github.com/abbr/deasync) 实现了这种阻塞策略。用它来加工上面的测试代码如下：
+
+```js
+function wait (t) {
+  return new Promise(resolve => setTimeout(resolve, t));
+}
+
+function test(p) {
+  let resolved = false;
+  p.finally(() => {
+    console.log('async done');
+    resolved = true;
+  })
+  while(!resolved) {
+    //  just block while for some time
+    //  meanwhile allow other event executing
+    require('deasync').sleep(100);
+  }
+}
+
+(() => {
+  console.log('a');
+  test(wait(1000));
+  console.log('b')
+})();
+```
+
+执行后输出依次为：`a` `async done` `b`，完美的达成了异步转同步的目标。
+
+## 总结
+
+虽然如此编码可能在实际中很难用到，但了解事件循环的这个过程本身就令人受益匪浅。
 
 ## 参考
 
@@ -106,3 +141,4 @@ function test(p) {
 - <https://nodejs.org/de/docs/guides/event-loop-timers-and-nexttick/>
 - <https://blog.logrocket.com/a-complete-guide-to-the-node-js-event-loop/>
 - <https://hackernoon.com/understanding-js-the-event-loop-959beae3ac40>
+- <https://github.com/abbr/deasync>
