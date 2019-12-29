@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  使用 generator 模拟 async
-link:   use-generator-to-make-async
+title:  使用 generator 实现 async await
+link:   use-generator-to-implement-async-await
 date:   2019-12-20 22:15:00 +0800
 categories: javascript
 ---
@@ -32,7 +32,7 @@ function *wait(t) {
 });
 ```
 
-在充分理解这段代码之前，我们需要对其中涉及到的生成器语法 `generator` 的概念有一定的理解。
+在充分理解这段代码之前，我们需要对其中涉及到的生成器 `generator` 的概念有一定的理解。
 
 ## 生成器 generator
 
