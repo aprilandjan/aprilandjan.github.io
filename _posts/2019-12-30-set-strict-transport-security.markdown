@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  设置 strict transport security
+title:  设置 HSTS
 link:   set-strict-transport-security
 date:   2019-12-30 19:04:00 +0800
 categories: network
