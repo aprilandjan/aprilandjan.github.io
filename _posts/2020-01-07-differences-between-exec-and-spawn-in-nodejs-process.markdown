@@ -67,7 +67,7 @@ spawn('echo', ['google.com']);
 
   在返回的 `ChildProcess` 实例对象上具有 `stdout` `stderr` 这两个可读流(ReadableStream)，想要获得被执行命令的输出结果，只能通过监听流的数据写入事件得知。同上面的 `exec` 对比可知，当我们希望能够**实时获取**子进程命令执行结果的时候，用 `spawn` 会更加的合适。
 
-## 同步版本差异
+## 同步版本
 
 `exec` 和 `spawn` 各自拥有其同步版本的方法 `execSync` 和 `spawnSync`。我们知道，同步代码意味着阻塞，意味着在同步调用之后的代码，应该能确定前面的代码意图是执行完成。例如：
 
@@ -79,7 +79,7 @@ const b = spawnSync('echo', ['google.com']);
 console.log(b.stdout.toString())  //  google.com
 ```
 
-可见此刻两种方式基本形式达成了一致。换成会长期存活的命令试一试：
+换成会长期存活的命令试一试：
 
 ```javascript
 var a = exec('ping google.com');
@@ -90,10 +90,9 @@ console.log(a.toString());
 // console.log('b...', b.stdout.toString());
 ```
 
-结果如预期所想的那样，程序一直到出错前都没有输出任何实时的信息。那是否说明在同步调用的情况下，这两种方法其实没有本质差异呢？
+结果如预期所想的那样，程序一直到出错前都没有输出任何实时的信息。这说明在同步调用时，两种方式基本形式达成了一致。
 
 ## References
 
 - <https://nodejs.org/api/child_process.html#child_process_child_process_exec_command_options_callback>
 - <https://www.hacksparrow.com/nodejs/difference-between-spawn-and-exec-of-node-js-child-rocess.html>
-
