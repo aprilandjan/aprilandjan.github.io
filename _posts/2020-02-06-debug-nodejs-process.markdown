@@ -30,6 +30,22 @@ node ./my-script.js --inspect
 
 ### Pick Process
 
+在项目下新建 `./vscode/launch.json` 文件并添加如下调试配置（也可以通过触发 suggestions 并选择 `Node.js: Attach To Process` 配置模版）：
+
+```json
+{
+  "type": "node",
+  "request": "attach",
+  "name": "Attach by Process ID",
+  "processId": "${command:PickProcess}",
+  "skipFiles": [
+    "<node_internals>/**"
+  ]
+}
+```
+
+当按 <kbd>F5</kbd> 执行时，`vscode` 会弹出进程选择下拉框，可以手动选择特定进程以挂载调试器。
+
 ## References
 
 - <https://nodejs.org/de/docs/guides/debugging-getting-started/>
