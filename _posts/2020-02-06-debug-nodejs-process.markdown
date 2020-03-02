@@ -48,6 +48,12 @@ node ./my-script.js --inspect
 
 ## 调试 webpack bundle
 
+由于 `vscode` 调试器只支持 `inline-source-map`，因此如果需要对 `webpack` 等工具进行代码转换输出的内容进行调试，可能需要：
+
+- 将 `webpack` 的配置项 `devtools` 设置为 `inline-source-map`；
+- 使用 `vscode` 调试配置文件 `launch.json` 中的 `sourceMapPathOverrides` 去将 webpack 资源地址正确的覆盖映射为资源的实际地址；
+- 或者，使用 `webpack` 的配置项 [output.devtoolModuleFilenameTemplate](https://webpack.js.org/configuration/output/#outputdevtoolmodulefilenametemplate) 使之生成指向真实资源地址的 sourcemap。
+
 ## 在 Chrome 中调试代码
 
 ## References
