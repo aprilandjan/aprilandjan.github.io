@@ -56,6 +56,8 @@ node ./my-script.js --inspect
 
 ## 在 Chrome 中调试代码
 
+通常在开发前端页面应用时，我们在 `vscode` 里进行开发， 在 `chrome` 里查看页面，在需要对页面逻辑进行断点调试的时，便可用通过 chrome devtools 的源代码页签浏览源代码，以及在源代码上打断点调试程序。
+
 ## References
 
 - <https://nodejs.org/de/docs/guides/debugging-getting-started/>
