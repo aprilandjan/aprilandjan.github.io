@@ -56,9 +56,12 @@ node ./my-script.js --inspect
 
 ## 在 Chrome 中调试代码
 
+在使用 Webpack 开发前端应用时，可以通过 Chrome Devtools 内置的 Source 面板打开相应的源文件，并进行断点调试。通过 `vscode` 插件 [vscode-chrome-debug]，也可以在 `vscode` 调试器中调试运行在 chrome 里的代码。
+
 ## References
 
 - <https://nodejs.org/de/docs/guides/debugging-getting-started/>
 - <https://code.visualstudio.com/blogs/2018/07/12/introducing-logpoints-and-auto-attach>
 - <https://code.visualstudio.com/docs/nodejs/nodejs-debugging>
 - <https://code.visualstudio.com/docs/nodejs/debugging-recipes>
+- <https://github.com/microsoft/vscode-chrome-debug>
