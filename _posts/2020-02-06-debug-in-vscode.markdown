@@ -1,9 +1,9 @@
 ---
 layout: post
-title:  Debug Node.js Process
-link: debug-nodejs-process
+title:  debug in vscode
+link: debug-in-vscode
 date:   2020-02-06 20:00:00 +0800
-categories: nodejs
+categories: js vscode
 ---
 
 ## 以调试模式启动 node 进程
@@ -54,9 +54,43 @@ node ./my-script.js --inspect
 - 使用 `vscode` 调试配置文件 `launch.json` 中的 `sourceMapPathOverrides` 去将 webpack 资源地址正确的覆盖映射为资源的实际地址；
 - 或者，使用 `webpack` 的配置项 [output.devtoolModuleFilenameTemplate](https://webpack.js.org/configuration/output/#outputdevtoolmodulefilenametemplate) 使之生成指向真实资源地址的 sourcemap。
 
-## 在 Chrome 中调试代码
+## 调试 Chrome 中运行的代码
 
-在使用 Webpack 开发前端应用时，可以通过 Chrome Devtools 内置的 Source 面板打开相应的源文件，并进行断点调试。通过 `vscode` 插件 [vscode-chrome-debug]，也可以在 `vscode` 调试器中调试运行在 chrome 里的代码。
+在使用 Webpack 开发前端应用时，可以通过 Chrome Devtools 内置的 Source 面板打开相应的源文件，并进行断点调试。通过 `vscode` 插件 [vscode-chrome-debug]，也可以在 `vscode` 调试器中调试运行在 chrome 里的代码。和上面的配置方式类似，添加如下调试配置：
+
+```json
+{
+  "type": "chrome",
+  "request": "launch",
+  "name": "Launch Chrome against localhost",
+  "url": "http://localhost:8080",
+  "webRoot": "${workspaceFolder}"
+}
+```
+
+启动该调试任务时，会自动启动一个独立的 chrome 窗口，打开配置中的 `url` 地址，并通过 chrome 开发协议 (CDP) 连接到 `vscode` 调试器程序。该插件默认的帮我们处理了可能的资源地址映射，由 create-react-app 创建的项目基本基本可以直接连上。
+
+如果不想单独启动一个额外的 chrome 窗口，也可以将调试器尝试附加到某个指定的 chrome 页面，例如：
+
+```json
+{
+  "type": "chrome",
+  "request": "attach",
+  "name": "Attach Chrome against localhost",
+  //  这种方式需要 chrome 已经允许开启了 debug port
+  "port": 9222,
+  "url": "http://localhost:8080",
+  "webRoot": "${workspaceFolder}",
+}
+```
+
+但是这种方式要求当前的 chrome 窗口已经开启了指定的调试端口，正常来说需要**彻底关掉** chrome，再通过特定启动参数启动 chrome。例如：
+
+```bash
+/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222
+```
+
+因此反而显得不太实用。
 
 ## References
 
