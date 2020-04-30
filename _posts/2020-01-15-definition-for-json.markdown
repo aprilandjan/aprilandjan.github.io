@@ -12,4 +12,6 @@ categories: javascript
 
 ## references
 
+- <https://joshuaavalon.io/intellisense-json-yaml-vs-code>
 - <https://json-schema.org/learn/getting-started-step-by-step.html>
+- <http://schemastore.org/json/>
