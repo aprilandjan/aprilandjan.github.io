@@ -44,7 +44,7 @@ node ./my-script.js --inspect
 }
 ```
 
-当按 <kbd>F5</kbd> 执行时，`vscode` 会弹出进程选择下拉框。这时可以手动选择想要查看的进程以挂载调试器。
+当按 <kbd>F5</kbd> 执行时，`vscode` 会弹出进程选择下拉框。这时可以手动选择想要查看的进程以挂载调试器。当然，如果能有配置过滤选项以筛选特定的进程并自动附加调试器，将会更好 ([issue](https://github.com/microsoft/vscode/issues/95598))。
 
 ## 调试 webpack bundle
 
