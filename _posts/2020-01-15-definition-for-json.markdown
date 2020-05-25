@@ -65,7 +65,7 @@ project
 
 ## More
 
-除了编辑器层面的代码提示，`JSON Schema` 是否有更强有力的运行时校验约束呢？答案是肯定的。例如，[ajv](https://github.com/ajv-validator/ajv) 是一个采用该规范进行 JSON 数据校验的第三方类库，很多其他模块也依赖它对配置项等 JSON 信息做校验。
+除了编辑器层面的代码提示，`JSON Schema` 是否有更强有力的运行时校验约束呢？答案是肯定的。[ajv](https://github.com/ajv-validator/ajv) 是一个采用该规范进行 JSON 数据校验的第三方类库，很多其他模块也依赖它对配置项等 JSON 信息做校验。
 
 ## references
 
