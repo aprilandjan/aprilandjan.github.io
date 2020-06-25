@@ -15,7 +15,7 @@ var b = 2;
 console.log(a + b);
 ```
 
-在控制台中输入命令 `node ./add.js` 执行后，可以发现程序在打印出数字 `3` 之后即自动退出，不会影响在当前控制台窗口继续去执行其他的命令或运行程序。但有时运行某些代码，例如启动服务监听、执行定时器、触发异步操作、监听 stdin 等等，例如：
+在控制台中输入命令 `node ./add.js` 执行后，可以发现程序在打印出数字 `3` 之后即自动退出，不会影响在当前控制台窗口继续去执行其他的命令或运行程序。但有时运行诸如启动服务监听、执行定时器、触发异步操作、监听 stdin 等等操作时，例如：
 
 ```js
 // keep-alive.js
@@ -23,17 +23,30 @@ process.stdin.resume();
 setInterval(() => {}, 10000);
 ```
 
-这种不会自动退出的 `nodejs` 程序在运行时，进程(`process`) 会保持存在(`keep-alive`)；当需要对它进行消息通知等控制时，需要采用特定的方式方法去触发执行。
+进程(`process`) 会保持存活状态(`keep-alive`)，不会自动退出。当需要对该进程进行消息通知等控制时，也需要采用特定的方式方法去触发执行。
 
-最常见的情况是，我们可能想立刻结束掉该进程，以便释放该进程占用的资源，或恢复当前命令行窗口的可用性。在这个程序正在执行的命令行窗口中，键入 <kbd>Ctrl</kbd>+<kbd>C</kbd> 往往可以立刻结束该进程。为什么键入该组合按键就能中止进程，这背后存在什么样的逻辑？
+最常见的情况是，我们可能想立刻结束掉该进程，以便释放该进程占用的资源，或恢复当前命令行窗口的可用性。通常，在该命令行窗口中，键入 <kbd>Ctrl</kbd>+<kbd>C</kbd> 可以立刻结束该进程。那为什么键入该组合按键就能中止进程，这背后发生了怎样的逻辑？要了解这些，我们首先需要知道进程及信号之间的关系。
 
 ## Signal
+
+在 `*nix` 中，Signal（信号）是一种由操作系统或者某些程序发送给特定进程的通知消息。该通知通常是单向的、异步响应的，可以由其他进程发给指定进程，也可以由某进程发给自己。Signal 通常都指代了特定的行为命令，例如程序出错，或者是用户键入了 <kbd>Ctrl</kbd>+<kbd>C</kbd>。每一种信号都有一个对应的数字 ID。在 Linux 系统中定义了三十多种有信号。以下是一些常见的信号及其含义：
+
+|Signal|No|Linux 说明|
+|---|---|---|
+|SIGHUP|1|Hang Up. 如果进程从命令行启动，但命令行消失，则程序收到该信号。在 `nodejs` 中，windows 环境下程序会自动的在约10秒后无条件退出；在 mac 环境下如果没有用户针对该信号定义的行为，会默认立即退出|
+|SIGINT|2|Interrupted. 从命令行启动的进程被中断，通常是用户键入了 <kbd>Ctrl</kbd>+<kbd>C</kbd>|
+|SIGKILL|9|Kill. 进程被其他程序显式的终止，例如调用了 `kill` 程序去结束该进程。在 `nodejs` 中，该信号会使当前进程无条件的立即中止，无论是 mac 还是 windows 系统|
+|SIGUSR1|10|用户自定义的响应信号的行为。在 `nodejs` 中，该信号默认被用来启动 `nodejs` 的调试模式|
+|SIGTERM|15|Terminate. 同 `SIGKILL`，进程被其他程序显式的终止，例如调用了 `kill` 程序去结束该进程。在 `nodejs` 中，windows 环境下没有对该信号的处理，可以由用户自定义监听|
+|SIGSTOP|19|由操作系统发出，保存其状态并停止运行；程序将不会获得更多的 CPU 时钟|
+
+注：windows 系统并不支持信号，而是有自己的一套进程间消息通知机制，因此对于一个 `nodejs` 程序，也没有通过信号去中止程序的方法。但是 `nodejs` 通过 `process.kill()` 及 `subprocess.kill()` 提供了一定的模拟实现，可以发送 `SIGINT` `SIGTERM` 或 `SIGKILL` 到某个进程。
+
+## `process.on`
 
 ## `process.kill`
 
 ## `process.exit`
-
-## `process.on`
 
 ## 子进程
 
@@ -42,3 +55,6 @@ setInterval(() => {}, 10000);
 - <https://hackernoon.com/graceful-shutdown-in-nodejs-2f8f59d1c357>
 - <https://nodejs.org/api/process.html#process_signal_events>
 - <https://stackoverflow.com/questions/14031763/doing-a-cleanup-action-just-before-node-js-exits/14032965#14032965>
+- <https://www-uxsup.csx.cam.ac.uk/courses/moved.Building/signals.pdf>
+- <https://www.bogotobogo.com/Linux/linux_process_and_signals.php>
+- <https://man7.org/linux/man-pages/man7/signal.7.html>
