@@ -34,7 +34,7 @@ setInterval(() => {}, 10000);
 |Signal|No|Linux 说明|
 |---|---|---|
 |SIGHUP|1|Hang Up. 如果进程从命令行启动，但命令行消失，则程序收到该信号。在 `nodejs` 中，windows 环境下程序会自动的在约10秒后无条件退出；在 mac 环境下如果没有用户针对该信号定义的行为，会默认立即退出|
-|SIGINT|2|Interrupted. 从命令行启动的进程被中断，通常是用户键入了 <kbd>Ctrl</kbd>+<kbd>C</kbd>|
+|SIGINT|2|Interrupted. 从命令行启动的进程被中断，通常是用户键入了 <kbd>Ctrl</kbd>+<kbd>C</kbd>。在 `nodejs` 中，如果没有对该信号的自定义监听，会默认立刻退出|
 |SIGKILL|9|Kill. 进程被其他程序显式的终止，例如调用了 `kill` 程序去结束该进程。在 `nodejs` 中，该信号会使当前进程无条件的立即中止，无论是 mac 还是 windows 系统|
 |SIGUSR1|10|用户自定义的响应信号的行为。在 `nodejs` 中，该信号默认被用来启动 `nodejs` 的调试模式|
 |SIGTERM|15|Terminate. 同 `SIGKILL`，进程被其他程序显式的终止，例如调用了 `kill` 程序去结束该进程。在 `nodejs` 中，windows 环境下没有对该信号的处理，可以由用户自定义监听|
@@ -43,6 +43,45 @@ setInterval(() => {}, 10000);
 注：windows 系统并不支持信号，而是有自己的一套进程间消息通知机制，因此对于一个 `nodejs` 程序，也没有通过信号去中止程序的方法。但是 `nodejs` 通过 `process.kill()` 及 `subprocess.kill()` 提供了一定的模拟实现，可以发送 `SIGINT` `SIGTERM` 或 `SIGKILL` 到某个进程。
 
 ## `process.on`
+
+通过上表可以看到，有多种信号 `SIGIUP` `SIGINT` `SIGKILL` `SIGTERM` 等能使进程中止。那么在 `nodejs` 中要如何监听这些信号事件呢？
+
+可以通过 `process.on` 添加对这些信号的事件监听以自定义某些行为，例如：
+
+```js
+// Begin reading from stdin so the process does not exit.
+process.stdin.resume();
+
+// listen SIGINT
+process.on('SIGINT', () => {
+  console.log('receive SIGINT');
+});
+```
+
+当启动该程序后，键入 <kbd>Ctrl</kbd>+<kbd>C</kbd> 时程序不会自动中止，而是打印出信息，说明信号被正确的监听并响应，且阻止了默认的中止行为：
+
+```bash
+^Creceive SIGINT
+```
+
+此时要中止掉该进程，可以在另外的控制台窗口使用 [`kill`](https://ss64.com/osx/kill.html) 命令：
+
+```bash
+kill <pid>
+```
+
+另外，我们也可以通过 `kill` 命令给指定进程发送特定的信号，例如，尝试对以上的 `nodejs` 进程发送 `SIGUSR1` 信号：
+
+```bash
+kill -SIGUSR1 <pid>
+```
+
+可以看到，该程序控制台打印出了调试模式开启的说明：
+
+```bash
+Debugger listening on ws://127.0.0.1:9229/2030c055-5018-453d-a840-18f21ead1e8c
+For help, see: https://nodejs.org/en/docs/inspector
+```
 
 ## `process.kill`
 
@@ -58,3 +97,6 @@ setInterval(() => {}, 10000);
 - <https://www-uxsup.csx.cam.ac.uk/courses/moved.Building/signals.pdf>
 - <https://www.bogotobogo.com/Linux/linux_process_and_signals.php>
 - <https://man7.org/linux/man-pages/man7/signal.7.html>
+- <https://github.com/sindresorhus/exit-hook>
+- <https://github.com/tapppi/async-exit-hook>
+- <https://ss64.com/osx/kill.html>
