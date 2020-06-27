@@ -6,7 +6,7 @@ date:   2020-01-20 10:50:00 +0800
 categories: nodejs
 ---
 
-通过 `nodejs` 运行代码时，通常如果事件循环队列中没有更多的可能可执行的任务了，程序会自动的退出。例如：
+使用 `nodejs` 运行代码时，通常如果事件循环队列中没有更多的可能可执行的任务了，程序会自动的退出。例如：
 
 ```js
 // add.js
@@ -35,7 +35,7 @@ setInterval(() => {}, 10000);
 |---|---|---|
 |SIGHUP|1|Hang Up. 如果进程从命令行启动，但命令行消失，则程序收到该信号。在 `nodejs` 中，windows 环境下程序会自动的在约10秒后无条件退出；在 mac 环境下如果没有用户针对该信号定义的行为，会默认立即退出|
 |SIGINT|2|Interrupted. 从命令行启动的进程被中断，通常是用户键入了 <kbd>Ctrl</kbd>+<kbd>C</kbd>。在 `nodejs` 中，如果没有对该信号的自定义监听，会默认立刻退出|
-|SIGKILL|9|Kill. 进程被其他程序显式的终止，例如调用了 `kill` 程序去结束该进程。在 `nodejs` 中，该信号会使当前进程无条件的立即中止，无论是 mac 还是 windows 系统|
+|SIGKILL|9|Kill. 进程被其他程序显式的终止，例如调用了 `kill` 程序去结束该进程。在 `nodejs` 中，该信号会使当前进程无条件的立即中止，无论是 mac 还是 windows 系统，且无法定义自定义信号监听回调|
 |SIGUSR1|10|用户自定义的响应信号的行为。在 `nodejs` 中，该信号默认被用来启动 `nodejs` 的调试模式|
 |SIGTERM|15|Terminate. 同 `SIGKILL`，进程被其他程序显式的终止，例如调用了 `kill` 程序去结束该进程。在 `nodejs` 中，windows 环境下没有对该信号的处理，可以由用户自定义监听|
 |SIGSTOP|19|由操作系统发出，保存其状态并停止运行；程序将不会获得更多的 CPU 时钟|
@@ -64,7 +64,7 @@ process.on('SIGINT', () => {
 ^Creceive SIGINT
 ```
 
-此时要中止掉该进程，可以在另外的控制台窗口使用 [`kill`](https://ss64.com/osx/kill.html) 命令：
+此时要中止掉该进程，可以在另外的控制台窗口使用 Linux 系统自带的 [`kill`](https://ss64.com/osx/kill.html) 命令；默认情况下，该命令会发送 `SIGTERM` 信号：
 
 ```bash
 kill <pid>
@@ -83,11 +83,57 @@ Debugger listening on ws://127.0.0.1:9229/2030c055-5018-453d-a840-18f21ead1e8c
 For help, see: https://nodejs.org/en/docs/inspector
 ```
 
+注：在 unix 系统中，进程对 `SIGKILL` 的响应和中止总是可以保障的，因此，无论程序做了怎样的处理，通过 `kill -9 <pid>` 总是能中止进程（[参考](https://unix.stackexchange.com/questions/5642/what-if-kill-9-does-not-work))；`nodejs` 对 `SIGKILL` 信号的监听响应总是无条件的、无法通过用户自定义行为覆盖的，尝试监听该信号会生成一个运行时的错误。
+
 ## `process.kill`
+
+与系统自带的 `kill` 命令相似，在 `nodejs` 中可以使用 [`process.kill`](https://nodejs.org/api/process.html#process_process_kill_pid_signal) 给指定 `pid` 的进程发送信号。需要注意的是：
+
+1. 该方法虽然名称是 `kill`，但并不是中止进程，而是只发送信号；
+2. 必须指定 `pid`；如果想对自身发送信号，可以使用 `process.kill(process.pid)`；
+3. 对于 `nodejs` 中通过 `spawn` 等方法得到子进程实例，也拥有 `kill` 方法，可以通过它直接发送信号，例如：
+
+    ```js
+    const spawn = require('child_process').spawn;
+    const grep = spawn('grep', ['ssh']);
+
+    grep.on('close', (code, signal) => {
+      console.log(
+        `child process terminated due to receipt of signal ${signal}`);
+    });
+
+    //  the following two methods are the same
+    grep.kill('SIGINT')
+    // process.kill(grep.pid, 'SIGINT');
+    ```
 
 ## `process.exit`
 
-## 子进程
+除了发送信号中止进程，`nodejs` 中也可以通过 [`process.exit`](https://nodejs.org/api/process.html#process_process_exit_code) 方法退出进程：
+
+```js
+process.stdout.resume();
+
+console.log(process.pid);
+
+function handler (signal) {
+  console.log('receive', signal);
+}
+
+process.on('SIGHUP', handler);
+process.on('SIGINT', handler);
+process.on('SIGTERM', handler);
+
+process.exit(1);
+```
+
+在上例中，即便我们已自定义了对 `SIGHUP` `SIGINT` `SIGTERM` 等中止信号的监听，阻止了 `nodejs` 默认的信号响应，但通过 `process.exit` 依然也成功的结束掉了当前进程。另外：
+
+1. 通过参数 `exitCode` 可以用退出状态码来标识程序运行结果是成功还是失败；
+2. 通过对进程监听事件 `process.on('exit', callback)` 可以添加程序退出前需要执行的 **同步回调** 事件；回调中的任何异步操作例如定时器、fs、iostream 等，都会在同步调用结束后丢弃；
+3. 在所有的 `exit` 事件回调都调用之后，程序会立刻退出。
+
+## Parent & Child Processes
 
 ## References
 
