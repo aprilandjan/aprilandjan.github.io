@@ -109,7 +109,7 @@ For help, see: https://nodejs.org/en/docs/inspector
 
 ## `process.exit`
 
-除了发送信号中止进程，`nodejs` 中也可以通过 [`process.exit`](https://nodejs.org/api/process.html#process_process_exit_code) 方法退出进程：
+除了发送信号中止进程，`nodejs` 中也可以通过 [`process.exit(exitCode)`](https://nodejs.org/api/process.html#process_process_exit_code) 方法退出进程：
 
 ```js
 process.stdout.resume();
@@ -127,7 +127,7 @@ process.on('SIGTERM', handler);
 process.exit(1);
 ```
 
-在上例中，即便我们已自定义了对 `SIGHUP` `SIGINT` `SIGTERM` 等中止信号的监听，阻止了 `nodejs` 默认的信号响应，但通过 `process.exit` 依然也成功的结束掉了当前进程。另外：
+在上例中，即便我们通过自定义对 `SIGHUP` `SIGINT` `SIGTERM` 等中止信号的监听，阻止了 `nodejs` 默认的信号响应行为，但通过 `process.exit(1)` 也依然成功的退出了当前进程。此外：
 
 1. 通过参数 `exitCode` 可以用退出状态码来标识程序运行结果是成功还是失败；
 2. 通过对进程监听事件 `process.on('exit', callback)` 可以添加程序退出前需要执行的 **同步回调** 事件；回调中的任何异步操作例如定时器、fs、iostream 等，都会在同步调用结束后丢弃；
