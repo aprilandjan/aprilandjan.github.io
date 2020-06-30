@@ -135,6 +135,11 @@ process.exit(1);
 
 ## Parent & Child Processes
 
+假设现在通过 `spawn` 方法调用起若干子进程各自执行任务，父子进程之间往往希望形成一个组，当其中任意一个进程因故退出时，其他的进程也都中止。情况如下：
+
+1. 父进程异常中止，此时要结束子进程；
+2. 某一子进程异常中止，此时要结束其他子进程以及父进程。
+
 ## References
 
 - <https://hackernoon.com/graceful-shutdown-in-nodejs-2f8f59d1c357>
