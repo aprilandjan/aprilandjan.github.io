@@ -91,7 +91,7 @@ For help, see: https://nodejs.org/en/docs/inspector
 
 1. 该方法虽然名称是 `kill`，但并不是中止进程，而是只发送信号；
 2. 必须指定 `pid`；如果想对自身发送信号，可以使用 `process.kill(process.pid)`；
-3. 对于 `nodejs` 中通过 `spawn` 等方法得到子进程实例，也拥有 `kill` 方法，可以通过它直接发送信号，例如：
+3. 对于 `nodejs` 中通过 `spawn` 等方法得到子进程实例，也拥有 `kill` 方法，可以通过它直接发送信号；默认的信号为 `SIGTERM`，即调用 `cp.kill()` 时应该总是能立即结束子进程。例如：
 
     ```js
     const spawn = require('child_process').spawn;
