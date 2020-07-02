@@ -135,10 +135,95 @@ process.exit(1);
 
 ## Parent & Child Processes
 
-假设现在通过 `spawn` 方法调用起若干子进程各自执行任务，父子进程之间往往希望形成一个组，当其中任意一个进程因故退出时，其他的进程也都中止。情况如下：
+假设现在通过 `spawn` 方法调用起若干子进程各自执行任务，父子进程之间往往希望形成一个组，当其中任意一个进程因故退出时，其他的进程也都中止，以防止留存无用的僵尸进程。情况如下：
 
 1. 父进程异常中止，此时要结束子进程；
 2. 某一子进程异常中止，此时要结束其他子进程以及父进程。
+
+为了试验，编写以下代码进行尝试：
+
+父进程文件：
+
+```js
+//  child.js
+console.log('child process:', process.pid);
+
+process.on('exit', () => {
+  console.log(`child process ${process.pid} exit...`);
+});
+
+setInterval(() => {
+  //
+}, 1000);
+
+process.on('SIGINT', (signal) => {
+  console.log(`child process ${process.pid} receive ${signal}`);
+  process.exit(0);
+});
+```
+
+子进程文件：
+
+```js
+//  parent.js
+const spawn = require('child_process').spawn;
+
+console.log('parent process:', process.pid);
+
+process.on('exit', () => {
+  console.log(`parent process ${process.pid} exit...`);
+});
+
+setInterval(() => {
+  //
+}, 1000);
+
+function create () {
+  const cp = spawn(`node`, [`./child.js`], {
+    stdio: 'inherit',
+  });
+  cp.on('close', (code) => {
+    console.log('parent receive child ' + cp.pid + 'exit with code ' + code);
+  })
+}
+
+create();
+create();
+```
+
+在运行 `node ./parent.js` 之后，程序将通过 `spawn` 生成两个持续存在的子进程，并打印各自的进程 `pid`。
+
+尝试键入 `<kbd>Ctrl</kbd>+<kbd>C</kbd>` 中止掉父进程，此时可以看到所有子进程都自动收到 `SIGINT` 信号，正常执行退出：
+
+```
+parent process: 11515
+child process: 11517
+child process: 11516
+^Cchild process 11516 receive SIGINT
+child process 11517 receive SIGINT
+child process 11516 exit...
+child process 11517 exit...
+```
+
+尝试通过 `kill <parent pid>` 中止掉父进程，此时可以发现仅父进程如期退出，但两个子进程此刻依然存在，成为了“僵尸进程”：
+
+```
+parent process: 11794
+child process: 11796
+child process: 11797
+[1]    11794 terminated  node ./parent.js
+```
+
+尝试通过 `kill <child pid>` 中止掉紫禁城，此时可以发现其他父、子进程依然存在，不受任何影响：
+
+```
+parent process: 12523
+child process: 12527
+child process: 12528
+parent receive child 12528exit with code null
+```
+
+由此可见，正常非 `detach` 启动的 `nodejs` 的子进程并不保证随着父进程的中止而中止。需要有一种方式来确保进程都能关联退出，避免僵尸进程。
 
 ## References
 
@@ -151,3 +236,5 @@ process.exit(1);
 - <https://github.com/sindresorhus/exit-hook>
 - <https://github.com/tapppi/async-exit-hook>
 - <https://ss64.com/osx/kill.html>
+- <https://stackoverflow.com/questions/15833047/how-to-kill-all-child-processes-on-exit>
+- <https://github.com/nodejs/help/issues/1790>
