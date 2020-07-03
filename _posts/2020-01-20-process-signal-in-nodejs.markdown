@@ -214,16 +214,16 @@ child process: 11797
 [1]    11794 terminated  node ./parent.js
 ```
 
-尝试通过 `kill <child pid>` 中止掉紫禁城，此时可以发现其他父、子进程依然存在，不受任何影响：
+尝试通过 `kill <child pid>` 中止掉子进程，此时可以发现其他父、子进程依然存在，不受任何影响：
 
 ```
 parent process: 12523
 child process: 12527
 child process: 12528
-parent receive child 12528exit with code null
+parent receive child 12528exit with code nul
 ```
 
-由此可见，正常非 `detach` 启动的 `nodejs` 的子进程并不保证随着父进程的中止而中止。需要有一种方式来确保进程都能关联退出，避免僵尸进程。
+由此可见，正常以非 `detach` 模式启动的 `nodejs` 的子进程并不保证随着父进程的中止而中止，比如通过 `SIGINT`。需要有一种方式来确保进程都能关联退出，避免僵尸进程。
 
 ## References
 
