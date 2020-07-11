@@ -223,7 +223,40 @@ child process: 12528
 parent receive child 12528exit with code nul
 ```
 
-由此可见，正常以非 `detach` 模式启动的 `nodejs` 的子进程并不保证随着父进程的中止而中止，比如通过 `SIGINT`。需要有一种方式来确保进程都能关联退出，避免僵尸进程。
+由此可见，正常以非 `detach` 模式启动的 `nodejs` 的子进程并不保证随着父进程的中止而中止，比如通过 `SIGINT`。需要有一种方式来确保进程都能关联退出，避免僵尸进程。以下是一种简单的处理方法：
+
+```js
+//  parent.js
+const spawn = require('child_process').spawn;
+
+setInterval(() => {
+  //
+}, 1000);
+console.log('parent process:', process.pid);
+
+const cpList = [];
+
+process.on('exit', () => {
+  console.log(`parent process ${process.pid} exit...`);
+  cpList.forEach(cp => {
+      cp.kill();
+  });
+});
+
+function create () {
+  const cp = spawn(`node`, [`./child.js`], {
+    stdio: 'inherit',
+  });
+  cp.on('close', (code) => {
+    console.log('parent receive child ' + cp.pid + 'exit with code ' + code);
+    process.exit(code);
+  });
+  cpList.push(cp);
+}
+
+create();
+create();
+```
 
 ## References
 
