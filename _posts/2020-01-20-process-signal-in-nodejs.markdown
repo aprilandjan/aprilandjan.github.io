@@ -258,6 +258,8 @@ create();
 create();
 ```
 
+或者也可以使用一些社区的封装，例如 [execa](https://github.com/sindresorhus/execa)，对进程的调用处理会更容易。
+
 ## References
 
 - <https://hackernoon.com/graceful-shutdown-in-nodejs-2f8f59d1c357>
@@ -271,3 +273,4 @@ create();
 - <https://ss64.com/osx/kill.html>
 - <https://stackoverflow.com/questions/15833047/how-to-kill-all-child-processes-on-exit>
 - <https://github.com/nodejs/help/issues/1790>
+- <https://github.com/sindresorhus/execa>
