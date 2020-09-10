@@ -8,7 +8,9 @@ categories: linux
 
 ## symlink
 
-## code sign
+## git tracking
+
+## copy in `Finder`, or in `vscode`
 
 ## references
 
