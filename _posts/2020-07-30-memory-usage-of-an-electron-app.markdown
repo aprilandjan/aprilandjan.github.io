@@ -96,3 +96,4 @@ Electron 页面的渲染引擎 Blink 所使用的内存，和渲染/DOM元素相
 - <https://docs.microsoft.com/en-us/microsoftteams/teams-memory-usage-perf>
 - <http://frozeman.de/blog/2013/08/why-is-svg-so-slow/>
 - <https://kwonoj.github.io/en/post/electron-content-trace/>
+- <https://github.com/nodejs/help/issues/1518>
