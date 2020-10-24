@@ -145,26 +145,6 @@ process.exit(1);
 父进程文件：
 
 ```js
-//  child.js
-console.log('child process:', process.pid);
-
-process.on('exit', () => {
-  console.log(`child process ${process.pid} exit...`);
-});
-
-setInterval(() => {
-  //
-}, 1000);
-
-process.on('SIGINT', (signal) => {
-  console.log(`child process ${process.pid} receive ${signal}`);
-  process.exit(0);
-});
-```
-
-子进程文件：
-
-```js
 //  parent.js
 const spawn = require('child_process').spawn;
 
@@ -185,15 +165,36 @@ function create () {
   cp.on('close', (code) => {
     console.log('parent receive child ' + cp.pid + 'exit with code ' + code);
   })
+  console.log('the spawned child process', cp.pid);
 }
 
 create();
 create();
 ```
 
+子进程文件：
+
+```js
+//  child.js
+console.log('child process:', process.pid);
+
+process.on('exit', () => {
+  console.log(`child process ${process.pid} exit...`);
+});
+
+setInterval(() => {
+  console.log('child process tick...', process.pid, "parent pid:", process.ppid);
+}, 1000);
+
+process.on('SIGINT', (signal) => {
+  console.log(`child process ${process.pid} receive ${signal}`);
+  process.exit(0);
+});
+```
+
 在运行 `node ./parent.js` 之后，程序将通过 `spawn` 生成两个持续存在的子进程，并打印各自的进程 `pid`。
 
-尝试键入 `<kbd>Ctrl</kbd>+<kbd>C</kbd>` 中止掉父进程，此时可以看到所有子进程都自动收到 `SIGINT` 信号，正常执行退出：
+尝试键入 <kbd>Ctrl</kbd> + <kbd>C</kbd> 中止掉父进程，此时可以看到所有子进程都自动收到 `SIGINT` 信号，正常执行退出：
 
 ```
 parent process: 11515
@@ -260,6 +261,8 @@ create();
 
 或者也可以使用一些社区的封装，例如 [execa](https://github.com/sindresorhus/execa)，对进程的调用处理会更容易。
 
+## kill spawned child process in windows
+
 ## References
 
 - <https://hackernoon.com/graceful-shutdown-in-nodejs-2f8f59d1c357>
@@ -274,3 +277,6 @@ create();
 - <https://stackoverflow.com/questions/15833047/how-to-kill-all-child-processes-on-exit>
 - <https://github.com/nodejs/help/issues/1790>
 - <https://github.com/sindresorhus/execa>
+- <https://stackoverflow.com/questions/32705857/cant-kill-child-process-on-windows#>
+- <https://stackoverflow.com/questions/23706055/why-can-i-not-kill-my-child-process-in-nodejs-on-windows>
+- <https://github.com/pkrumins/node-tree-kill>
