@@ -3,7 +3,7 @@ layout: post
 title:  nodejs 中 exec 与 spawn 的差异点
 link: differences-between-exec-and-spawn-in-nodejs-process
 date:   2020-01-07 22:58:00 +0800
-categories: node
+categories: os nodejs
 ---
 
 在 `node.js` 中，可以通过内置的模块 `child_process` 启动子进程执行程序。例如：
