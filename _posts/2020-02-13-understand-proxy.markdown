@@ -3,7 +3,7 @@ layout: post
 title:  understand proxy
 link: understand-proxy
 date:   2020-02-13 23:43:00 +0800
-categories: system
+categories: os
 ---
 
 由于疫情影响，很多公司最近都推行远程办公。但是很多业务是需要能接入公司内部网络才能开展的，为了能让天南海北的人用自己的网络访问公司的内网，想必大家是没有少接触各种“代理”软件的。即便接入了某些代理软件，可能还是有一些特殊的网络服务无法访问，情况会比较复杂。本着解决问题的精神，还是有必要了解下各种代理的方式和基本原理。
@@ -51,7 +51,7 @@ function FindProxyForURL(url, host) {
     // Variables defined for Proxy=Yes and Proxy=No
     var proxy_yes = "PROXY my-proxy-server:port";
     var proxy_no = "DIRECT";
-    // List of all domains you want to Proxy  
+    // List of all domains you want to Proxy
     var proxy_list = Array(
         "*.google.com/*",
         "*.youtube.com/*",
@@ -65,9 +65,9 @@ function FindProxyForURL(url, host) {
         }
     }
 
-    // DEFAULT RULE: All other traffic, send direct.  
+    // DEFAULT RULE: All other traffic, send direct.
     return proxy_no;
 }
 ```
 
-通常该 PAC 文件需要由某个服务器托管（来自网络服务器的地址，或者是本地服务器自行托管的地址）；各大浏览器都可以配置使用的 PAC 地址，具体操作步骤不在本文中赘述。 
+通常该 PAC 文件需要由某个服务器托管（来自网络服务器的地址，或者是本地服务器自行托管的地址）；各大浏览器都可以配置使用的 PAC 地址，具体操作步骤不在本文中赘述。

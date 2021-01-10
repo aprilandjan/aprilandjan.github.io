@@ -3,7 +3,7 @@ layout: post
 title:  Process Signal in node.js
 link: process-signal-in-nodejs
 date:   2020-01-20 10:50:00 +0800
-categories: nodejs
+categories: os nodejs
 ---
 
 使用 `nodejs` 运行代码时，通常如果事件循环队列中没有更多的可能可执行的任务了，程序会自动的退出。例如：
@@ -145,26 +145,6 @@ process.exit(1);
 父进程文件：
 
 ```js
-//  child.js
-console.log('child process:', process.pid);
-
-process.on('exit', () => {
-  console.log(`child process ${process.pid} exit...`);
-});
-
-setInterval(() => {
-  //
-}, 1000);
-
-process.on('SIGINT', (signal) => {
-  console.log(`child process ${process.pid} receive ${signal}`);
-  process.exit(0);
-});
-```
-
-子进程文件：
-
-```js
 //  parent.js
 const spawn = require('child_process').spawn;
 
@@ -185,15 +165,36 @@ function create () {
   cp.on('close', (code) => {
     console.log('parent receive child ' + cp.pid + 'exit with code ' + code);
   })
+  console.log('the spawned child process', cp.pid);
 }
 
 create();
 create();
 ```
 
+子进程文件：
+
+```js
+//  child.js
+console.log('child process:', process.pid);
+
+process.on('exit', () => {
+  console.log(`child process ${process.pid} exit...`);
+});
+
+setInterval(() => {
+  console.log('child process tick...', process.pid, "parent pid:", process.ppid);
+}, 1000);
+
+process.on('SIGINT', (signal) => {
+  console.log(`child process ${process.pid} receive ${signal}`);
+  process.exit(0);
+});
+```
+
 在运行 `node ./parent.js` 之后，程序将通过 `spawn` 生成两个持续存在的子进程，并打印各自的进程 `pid`。
 
-尝试键入 `<kbd>Ctrl</kbd>+<kbd>C</kbd>` 中止掉父进程，此时可以看到所有子进程都自动收到 `SIGINT` 信号，正常执行退出：
+尝试键入 <kbd>Ctrl</kbd> + <kbd>C</kbd> 中止掉父进程，此时可以看到所有子进程都自动收到 `SIGINT` 信号，正常执行退出：
 
 ```
 parent process: 11515
@@ -258,7 +259,44 @@ create();
 create();
 ```
 
-或者也可以使用一些社区的封装，例如 [execa](https://github.com/sindresorhus/execa)，对进程的调用处理会更容易。
+## kill spawned child process in `windows`
+
+在 windows 下，父进程通过 `spawn` 获取到的子进程实例可能并不是目标子进程。例如：
+
+```js
+//  parent.js
+const spawn = require('cross-spawn'); //  use 'cross-spawn' to make it easier when in windows
+const cp = spawn('node', ['./child.js'], {
+  stdio: 'inherit',
+  shell: true,
+});
+
+console.log('parent process ' + process.pid + ' spawned child process: ', cp.pid);
+```
+
+```js
+//  child.js
+setInterval(() => {
+  console.log('child process ' + process.pid + ' alive! parent = ' + process.ppid);
+}, 1000);
+```
+
+控制台输出如下：
+
+```
+parent process 3940 spawned child process:  1924
+child process 15212 alive! parent = 1924
+```
+
+这是因为我们启用了 `shell` 选项。在 windows 上，`nodejs` 会先启动 `cmd` 进程，再通过该进程启动我们真正想执行的任务例如 `./child.js`。
+于是我们拿到的 `cp.pid` 实际上是 `cmd` 进程的 `pid`。如果我们想通过该子进程实例的方法 `cp.kill()` 中止 `child.js` 的执行，会发现 `cmd` 进程虽然正确退出了，但 `child.js` 却依然在执行，没有退出，造成了“僵尸进程”的驻留。
+
+既然在父进程中无法拿到执行 `child.js` 的子进程的 `pid`，那怎样才能清除子进程呢？目前没有特别好的办法，可以考虑使用 [tree-kill](https://github.com/pkrumins/node-tree-kill) 模块清除目标进程及其所有子进程：
+
+```js
+const treeKill = require('tree-kill');
+treeKill(cp.pid);
+```
 
 ## References
 
@@ -274,3 +312,6 @@ create();
 - <https://stackoverflow.com/questions/15833047/how-to-kill-all-child-processes-on-exit>
 - <https://github.com/nodejs/help/issues/1790>
 - <https://github.com/sindresorhus/execa>
+- <https://stackoverflow.com/questions/32705857/cant-kill-child-process-on-windows#>
+- <https://stackoverflow.com/questions/23706055/why-can-i-not-kill-my-child-process-in-nodejs-on-windows>
+- <https://github.com/pkrumins/node-tree-kill>

@@ -3,7 +3,7 @@ layout: post
 title:  Inverse of Control
 link: inverse-of-control
 date:   2020-07-28 21:22:00 +0800
-categories: javascript
+categories: coding
 ---
 
 控制反转（Inverse of Control, IoC）是一个听起来很令人困惑的的编程术语。它表达的含义是什么，在实际编程中有哪些应用场景，能够解决什么样的问题，恐怕很多经验丰富的开发者也很难说的清楚。在此，我将按照自己的理解，尝试对它进行解读。
