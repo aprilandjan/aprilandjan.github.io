@@ -2,7 +2,7 @@
 layout: post
 title:  读书感悟：《交办的技术》
 link: book-reading-the-strategy-of-assignments
-date:   2020-01-10 21:23:00 +0800
+date:   2021-01-10 21:23:00 +0800
 categories: career
 ---
 
