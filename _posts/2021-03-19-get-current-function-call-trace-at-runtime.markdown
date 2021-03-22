@@ -9,9 +9,10 @@ categories: javascript
 
 ## References
 
-- https://stackoverflow.com/questions/11853256/how-to-get-javascript-function-calls-trace-at-runtime
-- https://nodejs.org/api/async_hooks.html
-- https://medium.com/nmc-techblog/the-power-of-async-hooks-in-node-js-8a2a84238acb
-- https://github.com/alfateam/node-cls
-- https://sequelize.org/v5/manual/transactions.html#automatically-pass-transactions-to-all-queries
-- https://github.com/stacktracejs/stacktrace.js
+- <https://stackoverflow.com/questions/11853256/how-to-get-javascript-function-calls-trace-at-runtime>
+- <https://nodejs.org/api/async_hooks.html>
+- <https://medium.com/nmc-techblog/the-power-of-async-hooks-in-node-js-8a2a84238acb>
+- <https://itnext.io/a-pragmatic-overview-of-async-hooks-api-in-node-js-e514b31460e9>
+- <https://github.com/alfateam/node-cls>
+- <https://sequelize.org/v5/manual/transactions.html#automatically-pass-transactions-to-all-queries>
+- <https://github.com/stacktracejs/stacktrace.js>
