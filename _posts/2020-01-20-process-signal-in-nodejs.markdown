@@ -37,6 +37,7 @@ setInterval(() => {}, 10000);
 |SIGINT|2|Interrupted. 从命令行启动的进程被中断，通常是用户键入了 <kbd>Ctrl</kbd>+<kbd>C</kbd>。在 `nodejs` 中，如果没有对该信号的自定义监听，会默认立刻退出|
 |SIGKILL|9|Kill. 进程被其他程序显式的终止，例如调用了 `kill` 程序去结束该进程。在 `nodejs` 中，该信号会使当前进程无条件的立即中止，无论是 mac 还是 windows 系统，且无法定义自定义信号监听回调|
 |SIGUSR1|10|用户自定义的响应信号的行为。在 `nodejs` 中，该信号默认被用来启动 `nodejs` 的调试模式|
+|SIGSEGV|11|内存访问越界错误，通常程序会在此时发生崩溃异常退出。可以通过调用 `kill` 程序对任意进程发送此信号模拟制造进程崩溃退出|
 |SIGTERM|15|Terminate. 同 `SIGKILL`，进程被其他程序显式的终止，例如调用了 `kill` 程序去结束该进程。在 `nodejs` 中，windows 环境下没有对该信号的处理，可以由用户自定义监听|
 |SIGSTOP|19|由操作系统发出，保存其状态并停止运行；程序将不会获得更多的 CPU 时钟|
 
@@ -315,3 +316,4 @@ treeKill(cp.pid);
 - <https://stackoverflow.com/questions/32705857/cant-kill-child-process-on-windows#>
 - <https://stackoverflow.com/questions/23706055/why-can-i-not-kill-my-child-process-in-nodejs-on-windows>
 - <https://github.com/pkrumins/node-tree-kill>
+- <https://stackoverflow.com/questions/17085946/how-to-simulate-process-daemon-crash-on-osx>
