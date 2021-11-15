@@ -14,3 +14,6 @@ categories: nodejs
 
 ## perf_hooks
 
+## references
+
+- <https://stackoverflow.com/questions/23003252/window-performance-now-equivalent-in-nodejs>
