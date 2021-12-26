@@ -44,9 +44,15 @@ console.log(path.join(__dirname, relativePath)); // /my/folder/image/city.png
 
 ### `fs.exists` 是否能兼容识别不同形式的文件路径？
 
-### 浏览器是否能兼容识别不同形式的文件路径？
+- 在 windows 系统中，`fs` 相关 API 可以使用 `.\\path\\to\\file` `./path/to/file` 两种形式的路径；
 
-### windows Explorer 是否能兼容识别 posix 形式的文件路径？
+### 浏览器(chrome)是否能兼容识别不同形式的文件路径？
+
+- 在 windows 系统中，浏览器可以打开 `D:\\my\\folder\\image\\city.png` 或者 `D:/my/folder/image/city.png` 两种形式的路径（且浏览器会自动转换为 posix 的文件路径格式）；
+
+### windows 文件浏览器中，是否能兼容识别 posix 形式的文件路径？
+
+- 在 windows 文件浏览器中，可以识别 `D:\\my\\folder\\image\\city.png` 或者 `D:/my/folder/image/city.png` 两种形式的路径（且文件浏览器会自动转换为 windows 的文件路径格式）；
 
 ### 如何将 win32 路径与 posix 路径互相转换？
 
