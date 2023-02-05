@@ -58,7 +58,7 @@ a.emit('error', null, {msg: 'bad'});
 
 ## 函数类型重载
 
-利用 ts 的函数类型重载（[Function Overload](https://www.typescriptlang.org/docs/handbook/2/functions.html#function-overloads)），我们可以比较比较轻易的达成以上的诉求。函数类型重载是一种针对函数在不同方式被调用时采用不同的重载类型约束的类型描述方法。例如，以下是 `node.js` 中某个根据调用时不同形式的入参决定运行时行为的真实例子：
+利用 TS 的函数类型重载（[Function Overload](https://www.typescriptlang.org/docs/handbook/2/functions.html#function-overloads)），我们可以比较比较轻易的达成以上的诉求。函数类型重载是一种针对函数在不同方式被调用时采用不同的重载类型约束的类型描述方法。例如，以下是 `node.js` 中某个根据调用时不同形式的入参决定运行时行为的真实例子：
 
 ```ts
 import net from 'net';
