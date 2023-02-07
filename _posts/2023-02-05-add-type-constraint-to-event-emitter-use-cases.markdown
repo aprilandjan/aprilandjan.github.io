@@ -99,7 +99,7 @@ listen(handle: any, backlog?: number, listeningListener?: () => void): this;
 listen(handle: any, listeningListener?: () => void): this;
 ```
 
-这种针对一个方法声明多个不同函数描述的方式即为 TS 提供的函数类型重载。注意，由于以上文件（`.d.ts`）仅为类型文件，它只包含了 TS 函数重载种的重载描述（overload signature）部分；我们在写 TS 时，也需要在这些重载描述部分后面加上与之匹配的实现描述（implementation signature）部分，才能构成完备的具有类型重载的函数。
+这种针对一个方法声明多个不同函数描述的方式即为 TS 提供的函数类型重载。注意，由于以上文件（`.d.ts`）仅为类型文件，它只包含了 TS 函数重载种的重载签名（overload signature）部分；我们在写 TS 时，也需要在这些重载签名部分后面加上与之匹配的实现签名（implementation signature）部分，才能构成完备的具有类型重载的函数。
 
 ## 补全事件类型约束关系的 EventEmitter
 
@@ -160,6 +160,6 @@ b.emit('error', null, {msg: 'bad'});  // type error
 
 针对以上示例做几点说明：
 
-1. `Service` 已经继承自 `EventEmitter` 了，原本是不需要将 `on` `emit` 的实现挂在子类的上的。但 TS 的函数类型重载要求重载描述（overload signature）后边必须接着函数的实现描述（implementation signature），只好再使用 `super.on` `super.emit` 调用父类的该方法以满足这个要求——可能会有更好的办法？...
+1. `Service` 已经继承自 `EventEmitter` 了，原本是不需要将 `on` `emit` 的实现挂在子类的上的。但 TS 的函数类型重载要求重载签名（overload signature）后边必须接着函数的实现签名（implementation signature），只好再使用 `super.on` `super.emit` 调用父类的该方法以满足这个要求——可能会有更好的办法？...
 2. `EventEmitter` 还具有 `once`、`addListener`、`off`、`removeListener` 等操作事件发布订阅相关行为的方法，理论上应该也用相同的方式为其补全类型，此处略过不表
 3. 查看示例：[TS Playground](https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzgUQG4FMB2NkmDGdKOAXzgDMoIQ4BydDbAZ1oG4Aodgei7gENMdNFhx58RWnCYBXAEYBjADZ8mTOACp1Ad3wALCNJia46AB5hFwefhON4MAJ5h0ceRExMYUPsGzslKmoAykSoVugAgiamhJgAJmrC2Lj4hMQI7HBZcDwAdPnsJJxuHvB8cAC8cJjoWnAhUGHykQAUAJQc3LxuUFDo8vAMInAAZK58ioqyfPIA1ux8ue4ttGBUAOZ9qrQANHAtzlDN2G2VAHyImdklTBCK6LmKEOsra89bLHuHx-DqcACMAAZAXAANR0ACktA6hRhi2W9F60F2+yIVCgpwqFwy2Vc7lu90ezxWaORe1JUFyIHQqj463Q5KRlM8M1mMJIMK6cGkmBAfBg8l06DitmGY3kEymrK5jmcTHkUGAYHg62AGDUmAgJiZcBgSqYCyWmFeGw+KIORB+mOxVxudweTxeq1NNM+cG+IlyqAm0hc4NoUPZcKNJKZ5op1suWTthMdofRKIpVKY6yDnR4cD5AqFIqG2FG7r4DiefDihvQeBgJverpRgNy-2DFfw8bJ1VqKCZKx5fG9wGUsnu0M5GZ5WcFwtF+bGYCLJbLGdlNIVSpVapp1S1FN1+vLlerzW2ewQpgAXIgHOeEAAvc9AwEkR9N-eIhN7TDSSbHkAp8+0aZxLQHKdFyAhCHYKQEBIUhyAEqgaNoejGGYFhWDYeb2E4LjjrovjrP4yjwQ0TToAAQtEsQJCgEGVmkUbZBmEAYFA85SMA6yYPy0h9FcWRgHIljyHAywYX+bybLWewSpM0xzOeFpHCI54fiAshEJGqAQMAcRtOeMC4UwHC4vxg5WMJxqiXQFIotJUpyaiTLnsgTIaVpOl6QZRkMbwoAWBWIj8sA7hsRxXE8cZAlmSJdjnp4iqYOscAAD5SA4ql3FJkqybM8n5LkfBQOsTDngIDgANoALqudpum6gZ9G4lkfQwNxggyIcIYYZlMmsjCuJFLxOS8ExRCsUw7GcS14XZCZgkmPulnOjWR7upaSnVNIqnqeesgQPaAheXxkVCc2VaLdZjLok5Lk7Xt9wHYNGa+fc1LYIFwXjaFU3oINs1madLSWXFeHJal6WKHseUFUVJWYOVVW3ftgg4o1TXoFNbXSB1ANdXAUOFUwfXZEUA03PAsiVO2dTEeEpHtOm3TQH0AxTvA4pZdKsghktEkrQpVrnA1eIePaRJOuJZpfGt+Z-PeYKQtCHDAewXMIhdDnopGKPRviotxq+bZJtStL0pd0C5Cycxppwo68vyE65nYBa2dlMpYfKirKnAqrqtq6I7mAahCjxqvGjzkv7B6JyCyjMYOsS4eSatinYF6Pp+grHRDbqWF+9AsIcKHrZQOGLkx7auuxgn6tGymWeLrnFIFzbvA4ZOGEFrOxYQKWKu5ADicrfWjaF-3L7qzUdTOei3acX2A5Dm0I68GO9s5qzndzj3C68EuHurt765qNueqB3Awc-VzA8S0nJ5XpeiC3gCwKPsB2dLnnUB9wPE+fhDiA-nWH+ACQEs7v0bkyIAA)
