@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 舒伯特即兴曲 D.946
-link: classical-music-schubert-d946
+link: schubert-impromptus-d946
 date:   2023-07-23 15:28:00 +0800
 categories: life
 ---
