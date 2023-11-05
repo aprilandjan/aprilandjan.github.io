@@ -15,7 +15,7 @@ import v8 from 'v8';
 
 let client: net.Socket | null = null;
 
-const server = net.createSocket((c: net.Socket) => {
+const server = net.createServer((c: net.Socket) => {
   if (client) {
     return;
   }
@@ -76,13 +76,21 @@ function receive(buffer: any) {
 }
 ```
 
-以上代码实现了两个 node.js 进程通过 unix socket 进行彼此通信。通信的双方（Server & Client）使用 `v8.serialize` 序列化需要发送的任意格式的信息序列化为 buffer，并写入 socket，将数据发给对方；对方再通过 `net.Socket` 提供的 `data` 事件接收到该数据，并进行解析、响应。
+以上代码实现了两个 node.js 进程通过 unix socket 进行彼此通信。通信的双方（Server & Client）使用 `v8.serialize` 将需要发送的数据序列化为 buffer，并写入 socket，并发给对方；对方再通过 `net.Socket` 提供的 `data` 事件接收到该数据，并进行解析、响应。
 
-然而，`net.Socket` 本质上是一个全双工的读写流，通过 `data` 事件获取到的 buffer 并没有固有的消息边界：它可能是某个消息的某一部分，也可能是多个消息的组合。如何解析收到的 buffer 并找到找到正确的消息边界，可能是一个棘手的问题。以下我们介绍三种处理消息边界的常用方法，并提供样例代码。
+然而，`net.Socket` 本质上是一个全双工的读写流，通过 `data` 事件获取到的 buffer 并没有固有的消息边界：它可能是某个消息的某一部分，也可能是多个消息的组合：
+
+![overall](../img/2023-07-23/socket-data-message-boundary-1-overall.png)
+
+如何解析收到的 buffer 并找到找到正确的消息边界，可能是一个棘手的问题。以下我们介绍三种处理消息边界的常用方法，并提供样例代码以供参考。
 
 ## 固定长度法
 
-一种最简单的处理方法为固定长度法。发送者和接受者就传输消息的长度达成约定，例如，规定发送者每次发送消息的字节数一定是 1024，不足的填充空字符；接收者在收消息时，每收到 1024 个字节，则进行一次消息解析，读出真正携带的信息。示例：
+一种最简单的处理方法为固定长度法。发送者和接受者就传输消息的长度达成约定，例如，规定发送者每次发送消息的长度一定是 1024 个 uint8，不足的填充空字符；接收者在收消息时，每收到 1024 个 uint8，则进行一次消息解析，读出真正携带的信息。
+
+![fixed size](../img/2023-07-23/socket-data-message-boundary-2-fixed-size.png)
+
+代码样例：
 
 ```ts
 // 约定的消息长度
@@ -135,7 +143,11 @@ function receive(data: Buffer) {
 
 ## 分隔符法
 
-另一种常用的方式为分隔符法。发送者在消息内容末尾增加某个特定的分隔符（字符或字符序列），用来标记消息已结束。接受者在收到消息时，只要找到该分隔符，便提取之前的字节流作为完整的消息内容。示例：
+另一种常用的方式为分隔符法。发送者在消息内容末尾增加某个特定的分隔符（字符或字符序列），用来标记消息已结束。接受者在收到消息时，只要找到该分隔符，便提取之前的字节流作为完整的消息内容。
+
+![delimiter](../img/2023-07-23/socket-data-message-boundary-3-delimiter.png)
+
+代码样例：
 
 ```ts
 const delimiter = [0xff, 0xa0, 0xff];
@@ -200,7 +212,11 @@ function receive(data: Buffer) {
 
 ## 消息长度封装法
 
-这可能是处理消息边界的最佳方式。对于每个消息，我们首先计算出消息内容（body）长度，然后再构造一个固定长度的消息头（header）并写入消息内容长度。接收者收到消息时，先读取该固定长度的消息头，找到接下来需要读取的消息体内容长度，并截取处理。示例：
+这可能是处理消息边界的最佳方式。对于每个消息，我们首先计算出消息内容（body）长度，然后再构造一个固定长度的消息头（header）并写入消息内容长度。接收者收到消息时，先读取该固定长度的消息头，找到接下来需要读取的消息体内容长度，并截取处理。
+
+![header](../img/2023-07-23/socket-data-message-boundary-4-header.png)
+
+代码样例：
 
 ```ts
 
