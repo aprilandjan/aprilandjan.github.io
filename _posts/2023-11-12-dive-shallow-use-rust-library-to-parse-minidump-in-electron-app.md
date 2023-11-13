@@ -1,7 +1,7 @@
 ---
 layout: post
-title: 牛刀小试：electron 中使用 rust 解析崩溃信息
-link: dive-swallow-use-rust-library-to-parse-minidump-in-electron-app
+title: 牛刀小试：electron 中调用 rust 模块解析崩溃文件
+link: dive-shallow-use-rust-library-to-parse-minidump-in-electron-app
 date:   2023-11-12 20:00:00 +0800
 categories: node.js rust
 ---
