@@ -74,12 +74,15 @@ fn main() -> Result<(), Error> {
 Bingo! 程序成功打印出了传入的崩溃文件的真实进程类型，可行性得到了验证。
 接下来我们开始编写在 electron 应用（其实是 node.js 环境）中调用 rust 的拓展程序。
 
-## 编写 node.js->rust 拓展程序
+## 编写 node.js rust 拓展程序
 
-写过 node.js C++ 拓展的小伙伴可能会知道，node.js 官方在 v8.6 版本推出了一套 ABI-Stable 的 [napi](https://nodejs.org/api/n-api.html) 框架，保障其在所有的后续 node.js 版本中向后兼容，彻底终结了以前 node.js 版本变化就不得不重编源生依赖的时代。但在调用 rust 代码方面，并没有一套官方维护或推荐的框架。目前，rust 社区主要有以下两种 node.js rust 拓展，分别是:
+写过 node.js C++ 拓展的小伙伴可能会知道，node.js 官方在 v8.0 版本后推出了 ABI-Stable 的 [napi](https://nodejs.org/api/n-api.html) 框架，保障其在所有的后续 node.js 版本中兼容。自此之后，社区活跃的源生模块纷纷迁往 `napi` 实现，彻底终结了以前 node.js 版本变化就不得不重编源生依赖的时代。但在调用 rust 代码方面，并没有这样的一套由官方维护或推荐的框架。目前，rust 社区主要有以下三种 node.js rust 拓展框架，分别是:
 
-- [neon-binding](https://github.com/neon-bindings/neon)
-- [napi-rs](https://github.com/napi-rs/napi-rs)
+- [neon-binding](https://github.com/neon-bindings/neon): 可能是 rust 社区最早的 node.js rust 拓展框架。我们熟悉的 rust 版的 babel——[swc](https://github.com/swc-project/swc) 早期的版本曾使用过它产出 node.js binding。不过似乎文档和教程都比较简单，上手实际运用门槛稍有点高。
+- [napi-rs](https://github.com/napi-rs/napi-rs): 目前看起来活跃度最高、成熟案例最多的框架，提供了详实的文档和功能超乎强大的脚手架。上面说到的 swc 也是在该框架作者的建议、协助下从 `neon` 迁移到了 `napi-rs`。
+- [node-bindgen](https://github.com/infinyon/node-bindgen): 目前看起来还比较小众。
+
+经过以上对比，我们决定选择使用 `napi-rs` 实现功能。
 
 ...
 
@@ -88,5 +91,4 @@ Bingo! 程序成功打印出了传入的崩溃文件的真实进程类型，可�
 - <https://www.electronjs.org/docs/latest/api/crash-reporter>
 - <https://chromium.googlesource.com/crashpad/crashpad/+/refs/heads/main/README.md>
 - <https://github.com/getsentry/symbolicator>
-- <https://github.com/neon-bindings/neon>
-- <https://github.com/napi-rs/napi-rs>
+- <https://lyn.one/2020/09/11/rust-napi>
