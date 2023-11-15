@@ -8,7 +8,7 @@ categories: node.js rust
 
 > 是🦀，我加了🦀
 
-## 背景
+## 崩溃文件的问题，它也是问题...
 
 对于一个 electron 应用来说，使用框架自带的 `crashReporter` API 捕获应用进程的崩溃实在是太容易不过了：
 
@@ -18,7 +18,7 @@ import { crashReporter } from 'electron';
 crashReporter.start();
 ```
 
-设置后，应用会启动一个独立的监听进程，在应用的其他进程发生崩溃时，该监听进程会捕获到这些进程的崩溃信息，并将转储文件（实际上是 minidump 文件）写入到特定的崩溃目录中。如果应用同时也接入了一些崩溃采集服务（例如 sentry），这些 dump 文件也会被上传到服务器进行解析、符号表映射、分类归档，供开发者分析、排查。（...and more in real user case）
+设置后，应用会启动一个独立的监听进程，在应用的其他进程发生崩溃时，该监听进程会捕获到这些进程的崩溃信息，并将后缀名为 `.dmp` 的转储文件（实际上是 minidump 文件）写入到特定的崩溃目录中。如果应用同时也接入了一些崩溃采集服务（例如 sentry），这些 dump 文件也会被上传到服务器进行解析、符号表映射、分类归档，供开发者分析、排查。（...and more in real user case）
 
 (图片：描述崩溃采集->本地文件->服务端记录)
 （https://chromium.googlesource.com/crashpad/crashpad/+/refs/heads/main/doc/overview_design.md）
@@ -31,7 +31,7 @@ crashReporter.start();
 
 这带给我们以启发：既然 Sentry 能解出这些崩溃文件中的进程信息，那我们是否可以在客户端侧也进行崩溃文件解析，从而在端侧准确的获得客户端的真实崩溃情况，做一些针对性的判断、帮助提示或优化？
 
-## 可行性
+## 客户端侧解析崩溃，能不能行？
 
 electron 中的 `crash-reporter` 实际上使用的是 chromium 开源工程中的 `crashpad`。根据源码及文档，我们可以编译出对应平台的可执行的解析程序。但我们更希望的是一种可供编程式调用的接口，这点官方并未提供。开源社区中虽然有一个 `node-minidump`，但它本质上也只是上述编译产物的套壳，不满足我们的使用预期。好在 Sentry 也是完全开源的，不妨从它入手，看看它是怎么做的：
 
@@ -76,15 +76,54 @@ Bingo! 程序成功打印出了传入的崩溃文件的真实进程类型，可�
 
 ## 编写 node.js rust 拓展程序
 
-写过 node.js C++ 拓展的小伙伴可能会知道，node.js 官方在 v8.0 版本后推出了 ABI-Stable 的 [napi](https://nodejs.org/api/n-api.html) 框架，保障其在所有的后续 node.js 版本中兼容。自此之后，社区活跃的源生模块纷纷迁往 `napi` 实现，彻底终结了以前 node.js 版本变化就不得不重编源生依赖的时代。但在调用 rust 代码方面，并没有这样的一套由官方维护或推荐的框架。目前，rust 社区主要有以下三种 node.js rust 拓展框架，分别是:
+写过 node.js C++ 拓展的小伙伴可能会知道，node.js 官方在 v8.0 版本后推出了 ABI-Stable 的 [napi](https://nodejs.org/api/n-api.html) 框架，保障其在所有的后续 node.js 版本中兼容。自此之后，社区活跃的源生模块纷纷迁往 `napi` 实现，彻底终结了以前 node.js 版本变化就不得不重编源生依赖的时代。但在调用 rust 代码方面，并没有这样的一套由 node.js 官方维护或推荐的框架。目前，rust 社区主要有以下三种 node.js rust 拓展框架，分别是:
 
 - [neon-binding](https://github.com/neon-bindings/neon): 可能是 rust 社区最早的 node.js rust 拓展框架。我们熟悉的 rust 版的 babel——[swc](https://github.com/swc-project/swc) 早期的版本曾使用过它产出 node.js binding。不过似乎文档和教程都比较简单，上手实际运用门槛稍有点高。
-- [napi-rs](https://github.com/napi-rs/napi-rs): 目前看起来活跃度最高、成熟案例最多的框架，提供了详实的文档和功能超乎强大的脚手架。上面说到的 swc 也是在该框架作者的建议、协助下从 `neon` 迁移到了 `napi-rs`。
-- [node-bindgen](https://github.com/infinyon/node-bindgen): 目前看起来还比较小众。
+- [napi-rs](https://github.com/napi-rs/napi-rs): 目前看起来活跃度最高、成熟案例最多的框架，提供了详实的文档和功能超乎强大的脚手架。上面说到的 swc 也于 20 年从 `neon` 迁移到了 `napi-rs`([ref](https://github.com/swc-project/swc/issues/852))。
+- [node-bindgen](https://github.com/infinyon/node-bindgen): 目前看起来还比较小众，没有找到什么案例。
 
-经过以上对比，我们决定选择使用 `napi-rs` 实现功能。
+经过对比，我们决定选用 `napi-rs` 实现功能。`napi-rs` 已提供了一套完善度极高的脚手架工程 [napi-rs/package-template](https://github.com/napi-rs/package-template)，接下来我们利用它实现目标功能。
 
-...
+### 搭建工程模板
+
+首先是准备好工程仓库。可以直接从该模板仓库上直接 clone 到本地：
+
+```bash
+$ git clone git@github.com:napi-rs/package-template.git
+```
+
+或者使用 github 页面上提供的 "Use this template" 创建仓库均可：
+
+![use-repo-template](rs-minidump-repo-use-template.png)
+
+> ⚠ 由于该模板工程使用的 swc 版本以及流水线配置里的运行环境的限制，以下开发过程均要求使用 node.js v18+ 以及 yarn v4+，如果你是 yarn classical 的遗老遗少，请先按需使用 nvm 配置好运行环境 :)。
+
+接下来安装依赖，并且将模板工程中的模板项目名称换成自己的项目名：
+
+```bash
+$ yarn install
+$ npx napi rename -n my-node-rs-lib
+```
+
+`napi` 是模板内提供的脚手架工程辅助工具，负责做将 rust 编译产物最终发布为 npm 包的一些工程化上的琐碎事项，例如读取约定的配置、构建产物移动到特定位置、修改版本号、批量发布各平台预编译的二进制文件等等。此处我们先手动使用它来重命名工程，避免发包时产生包名冲突。
+
+IDE 提示 `<project>/npm/` 目录下很多子目录的文件都出现了 diff：
+
+![alm](rs-minidump-repo-rename.png)
+
+这些目录是做什么的？通过其名称，很容易猜到它们应该是当前工程编译到各个平台的**预编译二进制文件**（prebuilt binary）的发布目录。没错！该工程预配置了几乎所有主流平台架构的编译、发布能力。但目前，鉴于我们只想在 Windows/MacOS 的 electron 应用中使用，实在是不需要这么大而全的配置，可以直接做一些删减。在 `<project>/package.json` 中，修改 `napi` 配置项的值：
+
+![Alt text](rs-minidump-repo-build-target.png)
+
+在此，我们仅保留了 Windows x64/Windows ia32/MacOS Arm64/MacOS x64 这四种平台架构作为构建目标。需要特别注意的是 `defaults` 要调整为 `false` 以阻止其默认的平台产物构建，否则稍后发布过程中会有耗费你一小时 DEBUG 的神秘事件发生。相应的，`<project>/npm/` 目录下那些不需要的目标目录也都可以直接删除了。
+
+> ⚠ 完整的可支持的编译目标平台代号列表，可参看 [rust platform support](https://doc.rust-lang.org/nightly/rustc/platform-support.html)
+
+### 编码 & 验证
+
+
+### 发布 & 使用
+
 
 ## References
 
