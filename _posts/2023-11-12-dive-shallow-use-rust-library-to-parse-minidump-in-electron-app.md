@@ -159,7 +159,7 @@ $ npx napi rename -n my-node-rs-lib
 
 ### 编码 & 验证
 
-接下来开始编码实现。我们的目标是在 node.js 中调用 rust 拓展中暴露的 `getCrashpadInfo` 方法，获取前文样例代码中的 `minidump::MinidumpCrashpadInfo` 数据结构。这个流程大致可以拆解为：
+接下来开始编码实现。我们的目标是在 node.js 中调用 rust 拓展中暴露的 `getCrashpadInfo` 方法，传入文件路径，获取前文样例代码中的 `minidump::MinidumpCrashpadInfo` 数据结构，并交付给 node.js 上下文。这个流程大致可以拆解为：
 
 1. 注册供 node.js 调用的函数；
 2. 将从 node.js 侧得到的函数参数，转换为 rust 的数据类型，例如将 `JsNumber` 转换为 `i32`；
@@ -167,7 +167,7 @@ $ npx napi rename -n my-node-rs-lib
 4. 将上述结果数据结构，转换为 node.js 的数据类型，例如将 `i32` 转化为 `JsNumber`；
 5. 结果返回给 node.js 的函数调用栈。
 
-利用 `napi-rs` 提供的 `#[napi]` 属性提供的便利，我们几乎完全不需要关心 #1, #3, #4, #5 步骤如何实现，基本可以专注于使用 rust 编写业务功能。以下是大致实现：
+利用 `napi-rs` 提供的 `#[napi]` 属性，我们几乎完全不需要关心 #1, #3, #4, #5 步骤如何实现，基本可以专注于使用 rust 编写业务功能。以下是大致实现：
 
 ```rust
 use napi_derive::napi;
@@ -199,7 +199,7 @@ pub fn get_crashpad_info(path: String) -> napi::Result<CrashpadInfo> {
 }
 ```
 
-以上代码中，除了几行 `#[napi]` 属性标注，基本上没有与 node.js 数据类型打交道的胶水代码，与正常的 rust 程序别无二致，`napi-rs` 已帮我们实现了 rust 与 node.js 的绝大多数[数据类型自动转换](https://github.com/napi-rs/napi-rs#features-table)。试着运行编译运行一下，看看效果如何：
+以上代码中，除了几行 `#[napi]` 属性标注，基本上没有与 node.js 数据类型打交道的胶水代码，与正常的 rust 程序别无二致，`napi-rs` 已帮我们实现了 rust 与 node.js 的绝大多数[数据类型自动转换](https://github.com/napi-rs/napi-rs#features-table)。试着编译运行一下，看看效果如何：
 
 ```bash
 $ yarn build
@@ -212,7 +212,7 @@ Run prettier -w /Volumes/workspace/workspace/my-node-rs-lib/index.d.ts
 index.d.ts 215ms
 ```
 
-`napi` 很贴心的帮我们生成了完整的 js 侧判断当前的平台架构以载入正确的 binary 的代码，甚至包含一份精准的类型文件，甚至也把 rust `///` 注释转换成了 jsdoc `/** */` 注释，甚至还把 rust 中以 snake_case 定义的名称全转成了在 TS 中常用的 camelCase，开发体验直接拉满:
+`napi` 很贴心的帮我们生成了完整的 node.js 侧判断当前的平台架构以载入正确 binary 的代码，甚至包含一份精准的类型文件，甚至也把 rust `///` 注释转换成了 jsdoc `/** */` 注释，甚至还把 rust 中以 snake_case 定义的名称全转成了在 TS 中常用的 camelCase，开发体验直接拉满:
 
 ```ts
 /* tslint:disable */
@@ -234,7 +234,7 @@ export interface CrashpadInfo {
 export function getCrashpadInfo(path: string): CrashpadInfo
 ```
 
-现在已可以像一个普通的 commonJs 模块那样直接在 node.js 中调试、验证该 rust 拓展了。不过，更好的做法是添加单元测试。该脚手架工程中，已预配置好了 ava 单测环境。我们在目录中 `<project>/fixtures/` 中，放置了一些预生成的 electron 应用的各类别进程产生的崩溃文件，作为测试目标，并且在 `<project>/__test__/index.spec.ts` 中补几个简单的用例：
+现在已可以像一个普通的 commonJs 模块那样直接在 node.js 中调试、验证该 rust 拓展了。不过，更好的做法是添加单元测试。该脚手架工程中，已准备好了 ava 单测环境。我们在目录中 `<project>/fixtures/` 中，放置了一些预生成的 electron 应用的各类别进程产生的崩溃文件，作为测试目标，再在 `<project>/__test__/index.spec.ts` 中补几个简单的用例：
 
 ```ts
 import path from 'path'
@@ -286,9 +286,9 @@ $ yarn test
 
 ![cicd](../img/2023-11-12/rs-minidump-cicd.png)
 
-如图所示，CI 产出的 artifacts 就是我们需要的各平台的预编译的二进制文件产物。之前我们已添加了单测，这些产物都已在各平台通过单测，质量相当有保障！
+如图所示，CI 产出的 artifacts 就是我们需要的各平台的预编译的二进制文件产物。之前我们已添加了单测，这些产物都已在各平台通过单测，相当可靠！
 
-如果在仓库中配置好了 [npm token](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry)，在 CI 流程的发布阶段，这些构建产物会分别移到前文提到的 `<projects>/npm/` 中的对应的目录中，作为这个 node.js rust 拓展模块的特定构建目标的预编译产物，以 npm 包的形式发布出去。如果没发生什么意外的话，我们可以在 npm 中找到刚刚发布出去的这几个包：
+如果在仓库中配置好了 [npm token](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry)，在 CI 流程的发布阶段，这些构建产物会分别移到前文提到的 `<projects>/npm/` 中的对应目录中，作为该模块在各目标平台下的预编译产物，以 npm 包的形式发布出去。如无意外的话，我们可以在 npm 中找到刚刚发布出去的这几个包：
 
 - my-node-rs-lib-win32-x64-msvc@1.0.0
 - my-node-rs-lib-darwin-x64@1.0.0
