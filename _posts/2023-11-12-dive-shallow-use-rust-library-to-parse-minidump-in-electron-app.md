@@ -8,7 +8,7 @@ categories: node.js rust
 
 > 是🦀，我加了🦀
 
-## 崩溃文件的问题，它也是问题...
+## 捕获崩溃，既简单又困难
 
 对于一个 electron 应用来说，使用框架自带的 `crashReporter` API 捕获应用进程的崩溃实在是太容易不过了：
 
@@ -18,22 +18,22 @@ import { crashReporter } from 'electron';
 crashReporter.start();
 ```
 
-设置后，应用会启动一个独立的监听进程，在应用的其他进程发生崩溃时，该监听进程会捕获到这些进程的崩溃信息，并将后缀名为 `.dmp` 的转储文件（实际上是 minidump 文件）写入到特定的崩溃目录中。如果应用同时也接入了一些崩溃采集服务（例如 Sentry），这些崩溃文件也会被上传到服务器进行解析、符号表映射、分类归档，供开发者分析、排查。（...and more in real user case）
+设置后，应用会启动一个独立的监听进程，当应用的其他进程发生崩溃时，该监听进程会捕获到这些进程的崩溃信息，并将后缀名为 `.dmp` 的转储文件（实际上是 minidump 文件）写入到特定的崩溃目录中。如果应用同时也接入了一些崩溃采集服务（例如 Sentry），这些崩溃文件也会被上传到服务器进行解析、符号表映射、分类归档，供开发者分析、排查。（...and more in real user case）
 
 (图片：描述崩溃采集->本地文件->服务端记录)
 （https://chromium.googlesource.com/crashpad/crashpad/+/refs/heads/main/doc/overview_design.md）
 
-由于 electron 应用的多进程特性，崩溃目录中的文件，既可能是来自于框架的**辅助进程**例如 Network Service、GPU Service（框架会自动重新拉起辅助进程），也可能来自于某个功能的 **node.js 子进程**（业务实现上会做异常处理），而不是用户可感知应用存活所依赖的**主进程**或**窗口进程**——这给我们采集上报、计算应用的真实崩溃率造成了很大的困扰：如何准确的获取这些崩溃文件对应的进程类别？
+由于 electron 应用的多进程特性，崩溃目录中的文件，既可能是来自于框架的**辅助进程**例如 Network Service、GPU Service（框架会自动重新拉起这些辅助进程），也可能来自于某个功能的 **node.js 子进程**（业务实现上会做异常处理），而不是用户可感知应用存活所依赖的**主进程**或**窗口进程**。——这给我们采集上报、计算应用的真实崩溃率造成了很大的困扰：我们希望得到的是后者的详细信息，但所能利用的只有一个个崩溃文件——怎样才能准确的获取到它们对应的进程类别？
 
 在接入了较新版本的 Sentry 服务后，我们发现 Sentry 上的崩溃记录详情中，新增了发生崩溃的进程和系统的相关信息：
 
 ![sentry-issue-detail](../img/2023-11-12/rs-minidump-sentry-issue-detail.png)
 
-这带给我们以启发：既然 Sentry 能解出这些崩溃文件中的进程信息，那我们是否可以在客户端侧也进行崩溃文件解析，从而在端侧准确的获得客户端的真实崩溃情况，做一些针对性的判断、帮助提示或优化？
+这带给我们以启发：既然 Sentry 能解出这些崩溃文件中的进程信息，那我们是否可以在客户端侧也进行崩溃文件解析，从而在**端侧**准确的获得客户端的真实崩溃情况？
 
 ## 客户端侧解析崩溃，能不能行？
 
-electron 中的 `crash-reporter` 实际上使用的是 chromium 开源工程中的 [crashpad](https://chromium.googlesource.com/crashpad/crashpad/+/refs/heads/main/README.md) 项目。根据其文档，我们可以编译出对应平台的可执行的解析程序。但我们更希望的是一种可供编程式调用的接口，这点官方并未提供。好在 Sentry 也是完全开源的，不妨从它入手，看看它是怎么做的：
+electron 中的 `crashReporter` 实际上使用的是 chromium 开源工程中的 [crashpad](https://chromium.googlesource.com/crashpad/crashpad/+/refs/heads/main/README.md) 项目。根据其文档，我们可以编译出对应平台的可执行的解析程序。但我们更希望的是一种可供编程式调用的接口，这点官方并未提供。好在 Sentry 也是完全开源的，不妨从它入手，看看它是怎么做的：
 
 ![sentry-arch](../img/2023-11-12/rs-minidump-sentry-arch.png)
 
@@ -114,7 +114,7 @@ annotation_objects: k = ui_scheduler_async_stack, v = 0x1192B063A 0x1190B041D
 
 Bingo! 程序成功打印出了传入的崩溃文件的真实进程类型，可行性得到了验证。接下来我们需要编写在 electron 应用——其实是 node.js 环境——中调用 rust 的拓展程序。我们熟悉的 rust 版的 babel——[swc](https://github.com/swc-project/swc) 早已在前端生态圈里掀起了一阵 node.js 调用 rust 程序的风潮。既有珠玉在前，想必是问题不大了。
 
-## 编写 node.js rust 拓展程序
+## node.js 中调用 rust，如何实现？
 
 写过 node.js C++ 拓展的小伙伴可能会知道，node.js 官方在 v8.0 版本后推出了 ABI-Stable 的 [napi](https://nodejs.org/api/n-api.html) 框架，保障其在所有的后续 node.js 版本中兼容。自此之后，社区活跃的源生模块纷纷迁往 `napi` 实现，彻底终结了以前 node.js 版本变化就不得不本机环境重编源生依赖的时代，也让**预编译的二进制文件**(prebuilt binary)成了 node 源生模块交付的主流选择。但在调用 rust 代码方面，并没有这样的一套由 node.js 官方维护或推荐的框架。目前，rust 社区主要有以下三种 node.js rust 拓展框架，分别是：
 
@@ -122,11 +122,11 @@ Bingo! 程序成功打印出了传入的崩溃文件的真实进程类型，可�
 - [napi-rs](https://github.com/napi-rs/napi-rs): 目前看起来活跃度最高、成熟案例最多的框架，提供了详实的文档和工程完备的脚手架。`swc` 也在三年前迁移到了 `napi-rs`([ref](https://github.com/swc-project/swc/issues/852))；
 - [node-bindgen](https://github.com/infinyon/node-bindgen): 目前看起来还比较小众，没有找到什么出名的案例。
 
-经过对比，我们决定选用 `napi-rs` 实现功能。`napi-rs` 已提供了一套完善度极高的脚手架工程模版 [napi-rs/package-template](https://github.com/napi-rs/package-template)，接下来我们利用它实现目标功能。
+对比下来，`napi-rs` 在各方面都较突出，且已提供了一套完善度极高的脚手架工程模版 [napi-rs/package-template](https://github.com/napi-rs/package-template)。接下来，我们利用它实现目标功能。
 
 ### 工程搭建
 
-`napi-rs` 已提供了一套完善度极高的脚手架工程 [napi-rs/package-template](https://github.com/napi-rs/package-template)，可以直接从该模板仓库上 clone 到本地：
+首先是仓库工程搭建。可以直接从该模板仓库上 clone 到本地：
 
 ```bash
 $ git clone git@github.com:napi-rs/package-template.git
@@ -149,7 +149,7 @@ $ npx napi rename -n my-node-rs-lib
 
 ![repo-rename](../img/2023-11-12/rs-minidump-repo-rename.png)
 
-这些目录的作用是什么？通过其名称，很容易猜到它们应该是当前工程编译到各个平台的**预编译二进制文件**的发布目录。没错！该工程预配置了几乎所有主流平台架构的编译、发布能力。但目前，鉴于我们只想在 Windows/MacOS 的 electron 应用中使用，实在是不需要这么大而全的配置，可以直接做一些删减。在 `<project>/package.json` 中，修改 `napi` 配置项的值：
+这些目录的作用是什么？通过其名称，很容易猜到它们应该是当前工程编译到各个平台的**预编译二进制文件**的发布目录。没错！该工程预配置了几乎所有主流平台架构的编译、发布能力。但目前，鉴于我们只想在 Windows/MacOS 的 electron 应用中使用，实在是不需要这么大而全的配置，可以直接做一些删减。在 `<project>/package.json` 中，修改 `napi.triples` 配置项的值：
 
 ![build-target](../img/2023-11-12/rs-minidump-repo-build-target.png)
 
@@ -261,8 +261,8 @@ test('should get process type & pid from mac electron main process dump file cor
   const file = resolveDumpFile('mac-electron-browser.dmp')
 
   const result = getCrashpadInfo(file)
-  t.is(result.moduleList[0].annotationObjects['process_type'], 'browser')
-  t.is(result.moduleList[0].annotationObjects['pid'], '11423')
+  t.is(result.moduleList[0].annotationObjects.ptype, 'browser')
+  t.is(result.moduleList[0].annotationObjects.pid, '11423')
 })
 ```
 
@@ -278,7 +278,7 @@ $ yarn test
   2 tests passed
 ```
 
-一切顺利！有了单测，在不同平台上验证就更加有保障了。
+一切顺利！有了单测，在不同平台上的功能验证就更加有保障了。
 
 ### 多平台构建发布
 
@@ -288,7 +288,7 @@ $ yarn test
 
 如图所示，CI 产出的 artifacts 就是我们需要的各平台的预编译的二进制文件产物。之前我们已添加了单测，这些产物都已在各平台通过单测，相当可靠！
 
-如果在仓库中配置好了 [npm token](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry)，在 CI 流程的发布阶段，这些构建产物会分别移到前文提到的 `<projects>/npm/` 中的对应目录中，作为该模块在各目标平台下的预编译产物，以 npm 包的形式发布出去。如无意外的话，我们可以在 npm 中找到刚刚发布出去的这几个包：
+如果在仓库中配置好了 [npm token](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry)，在 CI 流程的 publish 阶段，这些构建产物会分别移到前文提到的 `<projects>/npm/` 中的对应目录中，作为该模块在各目标平台下的预编译产物，以 npm 包的形式发布。如无意外的话，我们可以在 npm 中找到刚刚发布出去的这几个包：
 
 - my-node-rs-lib-win32-x64-msvc@1.0.0
 - my-node-rs-lib-darwin-x64@1.0.0
@@ -296,7 +296,67 @@ $ yarn test
 - my-node-rs-lib-darwin-arm64@1.0.0
 - my-node-rs-lib@1.0.0
 
-注意看最后一个包 `my-node-rs-lib`，它才是我们应该直接使用的模块，而其他的各平台的子模块，都是它的 `optionalDependencies`。
+`my-node-rs-lib` 即是我们的这个源生模块的发行包，也是我们将要直接使用的包。其他各平台的子包，都是它的 `optionalDependencies`。这是否意味着安装时会尽量安装所有的这些子包呢？让我们找一个目录安装一下试试看：
+
+```bash
+$ yarn add my-node-rs-lib
+$ tree -d ./node_modules
+node_modules
+├── my-node-rs-lib
+└── my-node-rs-lib-darwin-x64
+```
+
+可以看到，实际上只安装了一份当前环境（darwin, x64）需要的预编译资源子包。这是怎样做到的呢？查看 `my-node-rs-lib-darwin-x64` 的 `package.json`，可以看到它使用 `os`、`cpu` 字段定义了包的适用环境：
+
+```json
+{
+  "name": "my-node-rs-lib-darwin-x6",
+  "version": "1.0.0",
+  "os": [
+    "darwin"
+  ],
+  "cpu": [
+    "x64"
+  ],
+  //...
+}
+```
+
+在安装 `my-node-rs-lib` 时，包管理工具会根据这些子包的 `package.json` 中定义好的适用环境，结合当前的运行时环境，按需安装匹配的预编译源生拓展包到本地。这套流程无疑比以往常见的需要“通过 postinstall 勾子触发脚本拉取存放在 github 或三方托管服务的资源”的模式方便得多，毕竟不再需要考虑被托管的资源是否可访问的问题了。
+
+> ⚠ 事实上，[esbuild](https://github.com/evanw/esbuild) 和 [swc](https://github.com/swc-project/swc) 均使用了这种利用 `optionalDependencies` 按需分发预编译源生拓展的模式。但你也许会发现，这种模式亦并非完美。
+
+## 最初的问题，解决了吗？
+
+至此，万事俱备，终于可以开始解决最初的问题。由于 `napi` 的后向兼容特性，在目前的 electron 应用中，我们的这个简单的源生模块可以直接作为依赖引入、使用。例如：
+
+```ts
+import { app } from 'electron';
+import path from 'path';
+import fs from 'fs';
+import log from 'log';
+import { getCrashpadInfo } from 'my-node-rs-lib';
+
+app.whenReady().then(() => {
+  const crashDir = app.getPath('crashDumps');
+  const dumpFiles = fs.readdirSync(crashDir);
+  dumpFiles.forEach(filename => {
+    const filepath = path.join(crashDir, filename);
+    const info = getCrashpadInfo(filepath);
+    log.info('crash_dump', {
+      ptype: info.moduleList[0]?.annotationObjects?.ptype,
+    });
+  });
+});
+```
+
+以上代码中，应用在启动时即对崩溃目录中的文件做一轮遍历，解析其真实的进程类型，并写入日志上报。根据应用的架构形态，我们将会把仅 `ptype = 'browser'` 的日志计为发生了应用崩溃。这样一来，就能准确的知道应用是否在上次运行时发生过导致异常退出的崩溃、并得到真实的崩溃率了。
+
+## 欲来小邑试牛刀
+
+我们花费了相当一番功夫，实现了在 electron 中调用 rust 模块解析崩溃文件的功能。虽简单，甚至也不一定非要使用 rust 或源生模块不可，但整个过程的确给我们带来了更多的可能性的思考和启迪。
+
+可以展望一下，除了崩溃的进程类型，后续也可能实现在客户端侧分析前次崩溃的原因的能力，例如某些设备上 GPU 不可用、输入法或某些系统注入的安全软件导致的故障等，以帮助提高应用或用户的自我排障能力。此外，rust 语言及 `napi-rs` 的高效、便捷的接入系统级源生能力的体验也让人颇为惊喜，对比 `node-gyp` + `c++` 的开发感受，有种从绿皮火车直接进化到高铁的飞跃感。相信 rust 这把牛刀，将来会有更广大的发挥空间。
 
 ## References
 
