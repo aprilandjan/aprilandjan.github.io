@@ -6,7 +6,7 @@ date:   2023-11-12 20:00:00 +0800
 categories: node.js rust
 ---
 
-![](../img/2023-11-12/rs-minidump-memes.png)
+![](/img/2023-11-12/rs-minidump-memes.png)
 
 ## 获取崩溃信息，简单又不简单
 
@@ -20,7 +20,7 @@ crashReporter.start();
 
 electron 中的 `crashReporter` 实际上使用的是 chromium 开源工程中的 [crashpad](https://chromium.googlesource.com/crashpad/crashpad/+/refs/heads/main/README.md) 。设置后，应用会启动一个独立的监听进程，当应用的其他进程发生崩溃时，该监听进程会捕获到这些进程的崩溃信息，并将后缀名为 `.dmp` 的转储文件（实际上是 minidump 文件）写入到特定的崩溃目录中。如果应用同时也接入了一些崩溃采集服务（例如 Sentry），这些崩溃文件也会被上传到服务器进行解析、符号表映射、分类归档，供开发者分析、排查。
 
-![crashpad-arch](../img/2023-11-12/rs-minidump-crashpad-arch.png)
+![crashpad-arch](/img/2023-11-12/rs-minidump-crashpad-arch.png)
 
 由于 electron 应用的多进程特性，崩溃目录中的文件，既可能是来自于框架的**辅助进程**例如 Network Service、GPU Service（框架会自动重新拉起这些辅助进程），也可能来自于某个功能的 **node.js 子进程**（业务实现上会做异常处理），而不是用户可感知应用存活所依赖的**主进程**或**窗口进程**。——这给我们采集上报、计算应用的真实崩溃率造成了很大的困扰：我们希望得到的是后者的详细信息，但根据目前仅有得一个个崩溃文件，怎样才能准确的获取到它们对应的进程类别？
 
@@ -28,7 +28,7 @@ electron 中的 `crashReporter` 实际上使用的是 chromium 开源工程中�
 
 在接入了较新版本的 Sentry 服务后，我们发现 Sentry 上的崩溃记录详情中，新增了发生崩溃的进程和系统的相关信息：
 
-![sentry-issue-detail](../img/2023-11-12/rs-minidump-sentry-issue-detail.png)
+![sentry-issue-detail](/img/2023-11-12/rs-minidump-sentry-issue-detail.png)
 
 这带给我们以启发：既然 Sentry 能解出这些崩溃文件中的进程信息，那我们是否可以在客户端侧也进行崩溃文件解析，从而在**端侧**准确的获得客户端的真实崩溃情况？
 
@@ -36,11 +36,11 @@ electron 中的 `crashReporter` 实际上使用的是 chromium 开源工程中�
 
 根据 chromium `crashpad` 文档，我们可以编译出对应平台的可执行的 minidump 文件解析程序。但我们更希望的是一种可供编程式调用的接口，这点官方并未提供。好在 Sentry 也是完全开源的，不妨从它入手，看看它是怎么做的：
 
-![sentry-arch](../img/2023-11-12/rs-minidump-sentry-arch.png)
+![sentry-arch](/img/2023-11-12/rs-minidump-sentry-arch.png)
 
 上图是 Sentry 的[服务部署架构图](https://develop.sentry.dev/architecture/)。显然，图中的 `Symbolicator` 即是负责处理崩溃文件的服务节点。
 
-![sentry-symbolicator](../img/2023-11-12/rs-minidump-sentry-symbolicator.png)
+![sentry-symbolicator](/img/2023-11-12/rs-minidump-sentry-symbolicator.png)
 
 该服务使用了 [symbolic](https://github.com/getsentry/symbolic) 作为解析工具，而 `symbolic` 是 Sentry 团队开发的一个集中解析各种常见应用崩溃文件的 rust 库，它调用 [rust-minidump](https://github.com/rust-minidump/rust-minidump) 解析 electron 等应用产出的 minidump 文件。
 
@@ -135,7 +135,7 @@ $ git clone git@github.com:napi-rs/package-template.git
 
 或者使用 github 页面上提供的 "Use this template" 功能直接创建自己的远端仓库均可：
 
-![use-repo-template](../img/2023-11-12/rs-minidump-repo-use-template.png)
+![use-repo-template](/img/2023-11-12/rs-minidump-repo-use-template.png)
 
 > ⚠️ **Warning:** 由于该模板工程使用的 swc 版本以及流水线配置里的运行环境的限制，以下开发过程均要求使用 node.js v18+ 以及 yarn v4+，如果你是 yarn classical 的遗老遗少，请先按需使用 nvm 配置好运行环境 :)
 
@@ -173,7 +173,7 @@ Changes not staged for commit:
 
 这些目录的作用是什么？通过其名称，很容易猜到它们应该是当前工程编译到各个平台的预编译二进制文件的发布目录。没错！该工程预配置了几乎所有主流平台架构的编译、发布能力。但目前，鉴于我们只想在 Windows/MacOS 的 electron 应用中使用，实在是不需要这么大而全的配置，可以直接做一些删减。在 `<project>/package.json` 中，修改 `napi.triples` 配置项的值：
 
-![build-target](../img/2023-11-12/rs-minidump-repo-build-target.png)
+![build-target](/img/2023-11-12/rs-minidump-repo-build-target.png)
 
 在此，我们仅保留了 Windows x64/Windows ia32/MacOS Arm64/MacOS x64 这四种平台架构作为构建目标。需要特别注意的是 `defaults` 要调整为 `false` 以阻止其默认的平台产物构建，否则稍后发布过程中可能会有耗费你一小时 DEBUG 的神秘事件发生。相应的，`<project>/npm/` 目录下那些不需要的目标目录也都可以直接删除了。
 
@@ -306,7 +306,7 @@ $ yarn test
 
 `napi-rs/package-template` 已配置好了一套使用 Github Actions 的多平台构建发布的完整的 CI/CD 流程。以前，往往需要用不同的机器环境分别拉取代码本地编译好，再将编译产物添加到仓库中，作为预编译的二进制文件发布；但利用 Github Actions 提供的各种环境矩阵，多平台构建变得轻而易举。以下是一次 CI 过程的任务图：
 
-![cicd](../img/2023-11-12/rs-minidump-cicd.png)
+![cicd](/img/2023-11-12/rs-minidump-cicd.png)
 
 如图所示，CI 产出的 artifacts 就是我们需要的各平台的预编译的二进制文件产物。之前我们已添加了单测，这些产物都已在各平台通过单测，相当可靠！
 
