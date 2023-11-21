@@ -50,9 +50,9 @@ fn add2(v: i32): i32 {
 
 这也是一点 rust 和 js 有很大差异的点，从语法规范上就杜绝了语句结束“加不加分号”的争论。这个省掉一个 return 语句的操作，很难说它好还是不好，只能说更加精细化了。
 
-## 鸭子类型
+## 鸭子类型？
 
-对于 TS 来说，一个很显著的特性就是我们可以定义两个不同名的类型，只要它们的满足彼此约束，就可以当成另外一个类型使用，即：有一个东西，它长得像鸭子，叫的像鸭子，会游泳，那它就可以认为是鸭子。
+对于 TS 来说，一个很显著的特性就是我们可以定义两个不同名的类型，只要满足对方的类型约束，就可以当成另外一个类型使用，即：有一个东西，它长得像鸭子，叫的像鸭子，会游泳，那它就可以认为是鸭子。
 
 ```ts
 interface Duck {
@@ -67,6 +67,7 @@ function letDuckSwim(duck: Duck) {
 interface Something {
   name: string;
   swim () {};
+  fly () {};
 }
 
 const sm: Something = {
@@ -74,13 +75,26 @@ const sm: Something = {
   swim () {
     console.log('swimming now!');
   }
+  fly () {
+    console.log('flying now!');
+  }
 }
 
 letDuckSwim(sm);
 // output: swimming now!;
 ```
 
-[结构相同的非同名结构体](https://doc.rust-lang.org/book/ch05-01-defining-structs.html#using-tuple-structs-without-named-fields-to-create-different-types)
+但是在 rust 中，所定义的每个结构体（可以暂时理解为 ts 中 interface）都拥有自己的类型，即便在结构体中的字段拥有完全相同的类型：
+
+```rs
+struct Color(i32, i32, i32);
+struct Point(i32, i32, i32);
+
+let black = Color(0, 0, 0);
+let origin = Point(0, 0, 0);
+```
+
+示例中，`black` 和 `origin` 是不同的类型，它们是不同元组结构体的实例，不能混用。这与 TS 的鸭子类型特性完全相反。
 
 ## References
 
