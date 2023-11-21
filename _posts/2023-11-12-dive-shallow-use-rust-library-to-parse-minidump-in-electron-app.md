@@ -6,7 +6,7 @@ date:   2023-11-12 20:00:00 +0800
 categories: node.js rust
 ---
 
-![](/img/2023-11-12/rs-minidump-memes.png)
+![banner](/img/2023-11-12/rs-minidump-memes.png)
 
 ## 获取崩溃信息，简单又不简单
 
@@ -181,12 +181,12 @@ Changes not staged for commit:
 
 ### 编码 & 验证
 
-接下来开始编码实现。我们的目标是在 node.js 中调用 rust 拓展中暴露的 `getCrashpadInfo` 方法，传入文件路径，获取前文样例代码中的 `minidump::MinidumpCrashpadInfo` 数据结构，并交付给 node.js 上下文。这个流程大致可以拆解为：
+接下来开始编码实现。我们的目标是在 node.js 中调用 rust 拓展中暴露的 `getCrashpadInfo` 方法，传入文件路径 `path`，获取前文样例代码中的 `MinidumpCrashpadInfo` 结构体，并交付给 node.js 上下文。这个流程大致可以拆解为：
 
-1. 注册供 node.js 调用的函数；
-2. 将从 node.js 侧得到的函数参数，转换为 rust 的数据类型，例如将 `JsNumber` 转换为 `i32`；
-3. 使用 rust 完成业务逻辑，产出一份 rust 的结果数据结构，例如某个 `i32`；
-4. 将上述结果数据结构，转换为 node.js 的数据类型，例如将 `i32` 转化为 `JsNumber`；
+1. 注册供 node.js 调用的函数 `get_crashpad_info`；
+2. 将从 node.js 侧得到的函数参数 `path` 的类型由 `JsString` 转换为 rust 里的 `String`；
+3. 使用 rust 完成业务逻辑，产出一份 rust 结构体 `MinidumpCrashpadInfo`；
+4. 将上述结构体 `MinidumpCrashpadInfo`，转换为 node.js 的数据类型 `JsObject`；
 5. 结果返回给 node.js 的函数调用栈。
 
 利用 `napi-rs` 提供的 `#[napi]` 属性，我们几乎完全不需要关心 #1, #3, #4, #5 步骤如何实现，基本可以专注于使用 rust 编写业务功能。以下是大致实现：
@@ -310,7 +310,7 @@ $ yarn test
 
 如图所示，CI 产出的 artifacts 就是我们需要的各平台的预编译的二进制文件产物。之前我们已添加了单测，这些产物都已在各平台通过单测，相当可靠！
 
-如果在仓库中配置好了 [npm token](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry)，在 CI 流程的 publish 阶段，这些构建产物会分别移到前文提到的 `<projects>/npm/` 中的对应目录中，作为该模块在各目标平台下的预编译产物，以 npm 包的形式发布。如无意外的话，我们可以在 npm 中找到刚刚发布出去的这几个包：
+如果在仓库中设置好了 [npm token](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry)，在 CI 流程的发布阶段，这些构建产物会分别移到前文提到的 `<projects>/npm/` 中的对应目录中，作为该模块在各目标平台下的预编译产物，以 npm 包的形式发布出去。如无意外的话，我们可以在 npm 中找到刚刚发布出去的这几个包：
 
 - my-node-rs-lib-win32-x64-msvc@1.0.0
 - my-node-rs-lib-darwin-x64@1.0.0
@@ -378,7 +378,7 @@ app.whenReady().then(() => {
 
 我们花费了相当一番功夫，实现了在 electron 中调用 rust 模块解析崩溃文件的功能。虽简单，甚至也不一定非要使用 rust 或源生模块不可，但整个过程的确给我们带来了更多的应用能力边界、前端工具链建设方面的可能性的思考和启迪。
 
-可以展望一下，除了崩溃的进程类型，后续也可能实现在客户端侧分析前次崩溃的原因的能力，例如某些设备上 GPU 不可用、输入法或某些系统注入的安全软件导致的故障等，以帮助提高应用或用户的自我排障能力。此外，rust 语言及 `napi-rs` 的高效、便捷的接入系统级源生能力的体验也让人颇为惊喜，对比 `node-gyp` + `C++` 的开发感受，有种从绿皮火车直接进化到高铁的飞跃感。相信 rust 这把牛刀，将来会有更广大的发挥空间。
+可以展望一下，除了崩溃的进程类型，后续也可能实现在客户端侧分析前次崩溃的原因的能力，例如某些设备上 GPU 不可用、输入法或某些系统注入的安全软件导致的故障等，以帮助提高应用或用户的自我排障能力。此外，rust 语言及 `napi-rs` 的高效、便捷的接入系统级源生能力的体验也让人颇为惊喜，对比 `node-gyp` + `C++` 的开发感受，有种从绿皮火车直接进化到高铁的飞跃感。相信 rust 语言及其工具链，将来会在前端领域有更广大的发挥空间。
 
 ## References
 
