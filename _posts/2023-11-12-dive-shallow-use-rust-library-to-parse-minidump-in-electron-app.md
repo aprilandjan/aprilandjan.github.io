@@ -189,7 +189,7 @@ Changes not staged for commit:
 4. 将上述结构体 `MinidumpCrashpadInfo`，转换为 node.js 的数据类型 `JsObject`；
 5. 结果返回给 node.js 的函数调用栈。
 
-利用 `napi-rs` 提供的 `#[napi]` 属性，我们几乎完全不需要关心 #1, #3, #4, #5 步骤如何实现，基本可以专注于使用 rust 编写业务功能。以下是大致实现：
+利用 `napi-rs` 提供的 `#[napi]` 属性，我们几乎完全不需要关心 #1, #2, #4, #5 步骤如何实现，基本可以专注于使用 rust 编写业务功能。以下是大致实现：
 
 ```rust
 use napi_derive::napi;
