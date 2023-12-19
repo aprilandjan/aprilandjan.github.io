@@ -6,7 +6,37 @@ date:   2023-11-21 22:58:00 +0800
 categories: rust
 ---
 
-## 临时变量命名困难症
+![banner](/img/2023-11-21/rust-book-cover.jpg)
+
+## 控制流(Control Flow)
+
+<https://doc.rust-lang.org/book/ch06-02-match.html>
+
+## 所有权(Ownership)
+
+<https://doc.rust-lang.org/book/ch04-00-understanding-ownership.html>
+
+## 异常处理(Error Handling)
+
+<https://doc.rust-lang.org/book/ch09-00-error-handling.html>
+
+## 字符串(String)
+
+<https://doc.rust-lang.org/book/ch08-02-strings.html>
+
+## 生命周期(Lifetimes)
+
+<https://doc.rust-lang.org/book/ch10-03-lifetime-syntax.html>
+
+## 面向对象特性(Object Oriented Programming Features)
+
+<https://doc.rust-lang.org/book/ch17-00-oop.html>
+
+## 其他语言特性比较
+
+以下是阅读本书过程中的一些零星的语言特性比较的感悟。
+
+### 临时变量命名
 
 在 js 代码中，经常会遇到需要在作用域中对参数做多轮临时处理的情况，难免会遭遇起名困难：
 
@@ -32,7 +62,7 @@ fn main() {
 
 看起来非常实用，很多时候直接可以单个名字一把梭，再也不用担心怎么为起不一样的名字了。也许，这可能得益于其变量默认 immutable 的设计理念。
 
-## 争论语句结束要不要加分号
+### 语句结束的分号
 
 在 rust 里，很可能需要关注[函数体中的语句(Statement)与表达式(expression)](https://doc.rust-lang.org/book/ch03-03-how-functions-work.html#statements-and-expressions)。语句指那些执行操作、但不返回值的指令，而表达式是指会进行计算、并最终产生一个值作为结果的指令。但，如果我们给表达式结尾添加分号“;”, 其就会变成语句，而不产生任何值：
 
@@ -50,7 +80,7 @@ fn add2(v: i32): i32 {
 
 这也是一点 rust 和 js 有很大差异的点，从语法规范上就杜绝了语句结束“加不加分号”的争论。这个省掉一个 return 语句的操作，很难说它好还是不好，只能说更加精细化了。
 
-## 鸭子类型？
+### 鸭子类型
 
 对于 TS 来说，一个很显著的特性就是我们可以定义两个不同名的类型，只要满足对方的类型约束，就可以当成另外一个类型使用，即：有一个东西，它长得像鸭子，叫的像鸭子，会游泳，那它就可以认为是鸭子。
 
