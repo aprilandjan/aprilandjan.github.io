@@ -6,7 +6,7 @@ date:   2023-12-23 20:46:00 +0800
 categories: career
 ---
 
-<img src="https://img3.doubanio.com/view/photo/l/public/p2430004473.webp" width="300" alt="苏东坡传" referrerpolicy="no-referrer"/>
+<img src="https://img3.doubanio.com/view/photo/l/public/p2430004473.webp" width="300" alt="La La Land" referrerpolicy="no-referrer"/>
 
 最近一段时间，院线实在没有什么看起来还可以的电影。前段时间在楼下影院看了诺兰的新片《奥本海默》，影片本身只能说差强人意，但的确还挺享受一个人在电影院完全放松下来，告别手机和电脑的沉浸式观影体验。这两天，《爱乐之城》重映了。还记得这部电影在国内上映时，我刚入职现在这家公司没多久。团队里的项管妹子是个刚毕业的小姑娘，她负责每个迭代的 Sprint 运作。尽管已时隔多年，我依然能清晰的记得那个 Sprint 被她命名为 La La Land——我已不确定是否是当时她创建的每个 Sprint 都有一个同期电影名作为“代号”，但那的确为单调枯燥的工作添加了一抹活泼浪漫的明亮色彩。这部电影，后来荣获了多项奥斯卡奖项，其主题音乐旋律也流传甚广。我虽然没看过电影，但对其音乐已早已耳熟能详。作为一个还比较喜欢音乐类型影片的人，这次重映不容错过。
 
