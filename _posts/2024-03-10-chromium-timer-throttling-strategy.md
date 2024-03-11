@@ -53,9 +53,9 @@ setInterval(() => {
 
 上例中，我们采用 `performance.now()` 获取高精度时间，便于观察精确的触发间隔。定时器应该以 1ms 的间隔运行，并打印出离上一次运行的时间间隔。运行结果如下：
 
-![minimal throttling](/img/2024-03-10/chromium-timer-throttling-minimal.png)
+![minimal throttling](/img/2024-03-10/chromium-timer-throttling-minimal.jpeg)
 
-定时器的前 4 次触发基本都是接近 1ms；从第 5 次开始，触发间隔被限制为接近 4ms。结合该策略的触发条件，几乎任何激活的页面中的定时器，都会受到影响。因此可以得出结论，即：浏览器中，定时器通常无法以低于 4ms 的间隔稳定、持续运行。
+定时器的前 4 次触发基本都是接近 1ms；从第 5 次开始，触发间隔被限制为接近 4ms。结合该策略的触发条件，几乎任何激活的页面中的定时器，都会受到影响。可以认为：浏览器中，定时器通常无法以低于 4ms 的间隔持续、稳定运行。
 
 ## 常规限流
 
@@ -123,13 +123,14 @@ startTimer('t3', 50_000);
 
 ## 总结
 
-为了节省应用的资源占用，降低 CPU 使用率从而降低能耗、提高电池使用频率，chromium 针对定时器可谓是煞费苦心，设计了以上几种不同的限流触发策略。作为前端开发人员，我们可能会遇到由此带来的一系列问题，例如：基于定时器的动画或业务逻辑无法按预期节奏执行，某一批不同的定时任务总是集中在一个时间点触发、浏览器自动化测试任务出现非预期的结果，等等。
+为了节省应用的资源占用，降低 CPU 使用率从而降低能耗、提高电池使用频率，chromium 针对定时器可谓是煞费苦心，设计了以上几种不同的限流触发策略。作为前端开发人员，我们可能会遇到由此带来的一系列问题，例如：基于定时器的动画或业务逻辑无法按预期节奏执行、某一批不同的定时任务总是集中在一个时间点触发、浏览器自动化测试任务出现非预期的结果，等等。
 
-这种影响，并不仅仅出现在 Web 应用中，同样也出现在使用 chromium 内核的桌面应用中，例如 electron。由于桌面应用的长期运行特性，该限流策略带来的影响往往会放大，变得难以忍受（例如某些尝试通过轮询的场景，不能及时获取到最新消息等等）。在 electron 应用中，我们可以通过给窗口指定 `backgroundThrottling: false` 显式禁掉其的定时器限流策略，或者通过应用全局的参数设置 `--disable-background-timer-throttling` 禁掉所有窗口的该限制。当然，这样做会失去原策略带来的降低系统消耗的收益。如果确实想“既要”“又要”，那可能需要通过针对性的改造以避免连锁定时器式的实现了。
+这种影响，并不仅仅出现在 web 应用中，同样也出现在使用 chromium 内核的桌面应用中，例如 electron。由于桌面应用的长期运行特性，该限流策略带来的影响往往会放大，变得难以忍受（例如某些轮询场景，不能及时获取到最新消息等等）。在 electron 应用中，我们可以通过给窗口指定 `backgroundThrottling: false` 显式禁掉其的定时器限流策略，或者通过应用全局的参数设置 `--disable-background-timer-throttling` 禁掉所有窗口的该限制。当然，这样做会失去原策略带来的降低系统消耗的收益。如果确实想“既要”“又要”，那可能需要做针对性的改造以规避了。
 
 ## References
 
 - <https://kinsta.com/browser-market-share/>
+- <https://developer.chrome.com/blog/background_tabs>
 - <https://developer.chrome.com/blog/timer-throttling-in-chrome-88>
 - <https://www.electronjs.org/docs/latest/api/command-line#commandlineappendswitchswitch-value>
 - <https://www.electronjs.org/docs/latest/api/browser-window#new-browserwindowoptions>
