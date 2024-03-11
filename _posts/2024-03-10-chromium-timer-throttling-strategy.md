@@ -129,7 +129,8 @@ startTimer('t3', 50_000);
 
 ## References
 
-- <https://kinsta.com/browser-market-share/>
+- <https://blog.chromium.org/2020/11/tab-throttling-and-more-performance.html>
+- <https://docs.google.com/document/d/11FhKHRcABGS4SWPFGwoL6g0ALMqrFKapCk5ZTKKupEk/view>
 - <https://developer.chrome.com/blog/background_tabs>
 - <https://developer.chrome.com/blog/timer-throttling-in-chrome-88>
 - <https://www.electronjs.org/docs/latest/api/command-line#commandlineappendswitchswitch-value>
