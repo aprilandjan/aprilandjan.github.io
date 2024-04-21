@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 浅谈 electron 应用的安全风险
+title: 浅谈 electron 应用的面临的安全风险
 link: security-risks-of-electron-app
 date:   2024-03-16 20:30:00 +0800
 categories: electron
@@ -36,7 +36,7 @@ For help, see: https://nodejs.org/en/docs/inspector
 
 毫无疑问，electron 框架的这种特性给我们平常的开发调试乃至生产环境上在某些用户的设备环境上的实机问题排查提供了相当的便利。但毕竟 js 是一门动态脚本语言，如果某个攻击者**控制了**用户的电脑，他就可以利用 electron 应用的可执行程序运行任意的代码；另外，通过启动进程的调试模式，攻击者可以通过 Node.js 的调试协议侵入程序运行的上下文，窃取或修改用户信息。
 
-更进一步，假如用户已授予了原应用以某些特权（例如允许屏幕录制、读取通讯录、操作日历等等），那么这些特权将可以被继承给攻击者通过其实施的任何代码——这也被称为“寄生式攻击([Living of the land](https://www.crowdstrike.com/cybersecurity-101/living-off-the-land-attacks-lotl/))”。
+更进一步，假如用户已授予了原应用以某些特权（例如允许屏幕录制、读取通讯录、操作日历等等），那么这些特权将可以被继承给攻击者通过其实施的任何代码——这也被称为“寄生式攻击([Living off the land](https://www.crowdstrike.com/cybersecurity-101/living-off-the-land-attacks-lotl/))”。
 
 这样看来，electron 应用存在着较大安全风险。
 
