@@ -81,7 +81,7 @@ doSomethingElse();
 
 ## while(!resolved)
 
-首先想到的是用 `while` 循环去填充 js 执行，尝试达到在开启某个异步任务后立即阻塞其他代码执行的效果：
+首先想到的是使用 `while` 循环填充执行，尝试达到在开始某个异步任务后立即阻塞其他代码执行的目的：
 
 ```js
 function wait (t) {
@@ -95,7 +95,7 @@ function test(p) {
     resolved = true;
   })
 
-  // 自旋并等待异步操作 p 结束
+  // 等待异步操作 p 结束
   while(!resolved) {
     // do nothing
   }
@@ -118,7 +118,13 @@ function test(p) {
 
 前文提到的各种异步调用，例如 `setTimeout`，`process.nextTick`，`promise` 等，它们是怎样嵌入到调用栈中工作？在这些异步操作被定义后，本质上是注册了一个回调行为。回调并不是在达到触发条件时直接的添加到当前的调用栈当中去立即执行，而是注册为事件(Event)以先进先出(FIFO, First-In-First-Out) 的形式添加到**任务队列(Task Queue)**中，等待恰当的的触发时机的到来。
 
-可以把 js 的运行时(runtime) 想象成一个时钟，它拥有一个定时周期(tick)并且每个周期都要执行去做以下工作：检查当前的调用栈看是否为空。如果调用栈为空（即当前需要执行的代码都已执行完），则从上面的全局事件队列中找到能满足其触发时机（满足的定时间隔，或者是输入输出等）的事件，并将对应事件的回调添加到调用栈中执行。如果没有满足的事件，那么该周期什么都不执行，等待下一个定时周期来临时再次执行检测。这个过程一直进行下去，就是所谓的事件循环(Event Loop)：
+可以把 js 的运行时(runtime) 想象成一个时钟。它拥有一个定时周期(tick)，并且每个周期都要执行去做以下工作：
+
+1. 检查当前的调用栈是否为空；
+2. 如果调用栈为空（即当前需要执行的代码都已执行完），则从上面的任务队列中找到能满足其触发时机（满足的定时间隔，或者是输入输出等）的事件，并将对应事件的回调添加到调用栈中执行；
+3. 如果没有满足的事件，那么该周期什么都不做，等下一个定时周期来临时再次执行检测。
+
+这个过程一直进行下去，就是所谓的事件循环(Event Loop)：
 
 ```
    ┌───────────────────────────┐
@@ -147,7 +153,7 @@ function test(p) {
 
 ## DeAsync
 
-我们需要一种手段去实现在不阻塞整个线程的情况下，在允许事件循环中的**任务队列**消费的同时，实现对后续代码执行的阻塞——这相当于是改变了 node.js 默认的事件循环流程。万能的 Github 给了我们解决办法：[DeAsync](https://github.com/abbr/deasync) 即可实现异步转同步。快速验证一下：
+我们需要一种手段去实现在不阻塞整个线程的情况下，在允许事件循环中的**任务队列**消费的同时，实现对后续代码执行的阻塞——这相当于是改变了 node.js 默认的事件循环流程。万能的 Github 给了我们解决办法：[DeAsync](https://github.com/abbr/deasync) 。使用它快速验证一下：
 
 ```js
 function wait (t) {
@@ -230,7 +236,7 @@ b
 400 done
 ```
 
-程序输出的结果相当奇怪。但结合上面介绍的实现原理，相信你一定能理解这看起来乱了套的结果的原因。
+程序输出的结果相当奇怪。但结合上面介绍的实现原理，相信你一定能理解这看起来不讲道理的结果的背后的道理。
 
 ## 总结
 
@@ -245,3 +251,5 @@ b
 - <https://hackernoon.com/understanding-js-the-event-loop-959beae3ac40>
 - <https://github.com/abbr/deasync>
 - <https://github.com/laverdet/node-fibers>
+- <https://stackoverflow.com/questions/25915634/difference-between-microtask-and-macrotask-within-an-event-loop-context>
+- <https://nodejs.org/api/fs.html#promises-api>
