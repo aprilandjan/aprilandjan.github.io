@@ -6,7 +6,7 @@ date:   2024-07-21 17:30:00 +0800
 categories: cs
 ---
 
-![banner](https://img9.doubanio.com/view/subject/l/public/s32332106.jpg)
+![banner](/img/2024-07-21/ostep-book-cover.jpg)
 
 很惭愧，虽然在互联网行业从事一线开发已有相当的经验了，但自己本身并不是计算机专业的科班出身，入门及后续的职业技能成长一直都是偏前端方向的软件开发，对计算机软硬件和操作系统如何配合着工作的缺乏体系化的思考和理解。这本由 Remzi 编写的《操作系统导论》(Operating System: Three Easy Pieces)，几年前断断续续看过一小部分，最近一段时间翻出来读完，又有了一些新的理解和感悟。
 

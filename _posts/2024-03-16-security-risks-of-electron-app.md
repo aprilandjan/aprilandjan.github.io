@@ -30,7 +30,7 @@ For help, see: https://nodejs.org/en/docs/inspector
 
 `--inspect-brk` 是启动 Node.js 并自动断点在第一行代码的参数。通过控制台信息，可以看到 vscode 已以调试模式启动。接下来可以直接使用 Chrome Devtools 挂载调试器到该进程并进行调试：
 
-![debug vscode](/img/2024-03-17/electron-fuse-vscode-inspect.png)
+![debug vscode](/img/2024-03-17/electron-security-inspect.png)
 
 ## 便利还是风险
 
