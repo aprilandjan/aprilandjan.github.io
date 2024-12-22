@@ -3,7 +3,7 @@ layout: post
 title: 古典音乐杂谈：Apple Music Classical 与勃拉姆斯钢琴五重奏 op.34
 link: talk-about-classical-music-apple-music-classical-and-brahms-piano-quintet-op34
 date:   2024-04-12 23:30:00 +0800
-categories: life
+categories: classical life
 ---
 
 我发现我这个人真就特别恋旧——或者说是守旧。一直以来，听的古典音乐基本都是在自己电脑上用 foobar2000 听以前上学时整理的无损存货。古典音乐这个东西，总感觉听起来得特别放松特别投入。虽然不至于需要烧香拜佛沐浴更衣，但总归需要有一个相对宁静的时刻。学生时无忧无虑，每一天每一分每一秒都是自己的，这种宁静的时刻相对较多；工作了之后出卖时间赚取薪资，属于自己的时间少之又少，而这些自己的时间还会被形形色色的琐碎的生活、娱乐或消遣的欲念所瓜分，大段的宁静时间实际上已很稀缺。总的来说，听古典音乐，成为了一种奢侈的时间消费。

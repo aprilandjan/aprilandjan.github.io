@@ -3,7 +3,7 @@ layout: post
 title: 读书笔记——《操作系统导论》
 link: book-reading-OSTEP
 date:   2024-07-21 17:30:00 +0800
-categories: cs
+categories: reading cs
 ---
 
 ![banner](/img/2024-07-21/ostep-book-cover.jpg)

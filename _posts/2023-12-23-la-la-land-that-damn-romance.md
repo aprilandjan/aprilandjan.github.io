@@ -3,7 +3,7 @@ layout: post
 title: 爱乐之城：自由、即兴乃至疯狂的浪漫
 link: la-la-land-that-damn-romance
 date:   2023-12-23 20:46:00 +0800
-categories: career
+categories: movie career
 ---
 
 <img src="https://img3.doubanio.com/view/photo/l/public/p2430004473.webp" width="300" alt="La La Land" referrerpolicy="no-referrer"/>

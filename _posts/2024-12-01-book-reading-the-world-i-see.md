@@ -3,7 +3,7 @@ layout: post
 title: 读书感悟：《我看到的世界》
 link: book-reading-the-world-i-see
 date:   2024-12-01 21:25:00 +0800
-categories: career
+categories: reading career
 ---
 
 <img src="https://img9.doubanio.com/view/subject/l/public/s34825536.jpg" width="300" alt="我看见的世界" referrerpolicy="no-referrer"/>

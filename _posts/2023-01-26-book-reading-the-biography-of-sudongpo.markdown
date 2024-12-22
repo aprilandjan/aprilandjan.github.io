@@ -3,7 +3,7 @@ layout: post
 title:  读书感悟：林语堂《苏东坡传》
 link: book-reading-the-biography-of-sudongpo
 date:   2023-01-26 20:40:00 +0800
-categories: career
+categories: reading career
 ---
 
 <img src="https://img9.doubanio.com/view/subject/l/public/s28942595.jpg" width="300" alt="苏东坡传" referrerpolicy="no-referrer"/>
