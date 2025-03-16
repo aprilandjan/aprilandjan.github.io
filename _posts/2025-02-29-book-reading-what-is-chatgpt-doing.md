@@ -1,7 +1,7 @@
 ---
 layout: post
-title: 读书笔记——《这就是 ChatGPT
-link: book-reading-what-is-ChatGPT-doing
+title: 读书笔记——《这就是 ChatGPT》
+link: book-reading-what-is-chatgpt-doing
 date:   2025-02-29 21:25:00 +0800
 categories: reading career
 ---
