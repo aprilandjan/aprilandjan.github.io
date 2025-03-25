@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 肖斯塔科维奇：第五交响曲
+title: rs chrome inspector launcher
 link: rs-chrome-inspector-launcher
 date:   2024-09-30 21:21:00 +0800
 categories: node rust
