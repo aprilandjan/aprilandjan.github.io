@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 读书笔记——《置身室内》
+title: 读书笔记——《置身事内》
 link: book-reading-what-is-chatgpt-doing
 date:   2025-03-25 21:36:00 +0800
 categories: reading career
