@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 读书感悟：《操作系统导论》
+title: 读《操作系统导论》
 link: book-reading-OSTEP
 date:   2024-07-21 17:30:00 +0800
 categories: reading cs

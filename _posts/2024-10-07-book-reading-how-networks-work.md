@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 读书感悟：《网络是怎样连接的》
+title: 读《网络是怎样连接的》
 link: book-reading-how-networks-work
 date:   2024-10-07 14:24:00 +0800
 categories: reading scs
