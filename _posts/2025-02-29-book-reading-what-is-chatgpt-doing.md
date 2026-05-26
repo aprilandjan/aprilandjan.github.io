@@ -6,7 +6,7 @@ date:   2025-02-29 21:25:00 +0800
 categories: reading career
 ---
 
-<img src="https://img1.doubanio.com/view/subject/l/public/s34566250.jpg" width="300" alt="这就是 ChatGPT" referrerpolicy="no-referrer"/>
+![banner](/img/2025-02-29/book-cover-what-is-chatgpt-doing.jpg)
 
 这是最近一段时间里继[《智慧的疆界》](https://book.douban.com/subject/30379536/)、[《我看到的世界》](https://book.douban.com/subject/36672955/)以来看的与人工智能技术相关的第三本书。前两本书以不同的视角描绘了 AI 浪潮的兴起由来，离我们现在业已使用的大语言模型还有段距离；而这本书则尝试以相对简单的逻辑介绍 ChatGPT 的工作原理。
 

@@ -6,7 +6,7 @@ date:   2023-01-26 20:40:00 +0800
 categories: reading career
 ---
 
-<img src="https://img9.doubanio.com/view/subject/l/public/s28942595.jpg" width="300" alt="苏东坡传" referrerpolicy="no-referrer"/>
+![banner](/img/2023-01-26/book-cover-sudongpo.jpg)
 
 春节假期归乡。旅途中无所事事，遂挑了一本最近偶然知晓的书读一读以消磨时间，即林语堂的《苏东坡传》。关于作者林语堂，我并没有太多的了解，仅从有限的近代文学知识里知道有其人而已，此前也没有读过他的任何文章或书籍。此次选择此书，完全是因为大学时曾买过一本较薄的《苏轼传》——那本传记现在想来，写的更像是苏轼的人生不同阶段的部分诗词文的理解感悟——彼时的我，从仅接触到初高中课本上零零散散的苏轼诗文，到了解更多听说过或未听说过的颇为精彩的苏轼诗词文，自然是新世界洞开。那本书曾伴我良久，自己也写过很多记注，颇为爱不释手。从那本书中记忆最深的，当属以下几篇：
 
@@ -33,7 +33,7 @@ categories: reading career
 > ...独韩文公起布衣，谈笑而麾之，天下靡然从公，复归于正，盖三百年于此矣。文起八代之衰，而道济天下之溺，忠犯人主之怒，而勇夺三军之帅。此岂非参天地、关盛衰，浩然而独存者乎？
 > ...
 
-<img src="https://img2.doubanio.com/view/subject/l/public/s33576673.jpg" width="300" alt="苏轼传" referrerpolicy="no-referrer"/>
+![苏轼传](/img/2023-01-26/book-cover-sushi.jpg)
 
 好了，就此打住，还是聊一聊林语堂的这本《苏东坡传》吧！
 
