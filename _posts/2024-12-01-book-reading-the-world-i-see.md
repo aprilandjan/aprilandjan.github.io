@@ -4,6 +4,7 @@ title: 读《我看到的世界》
 link: book-reading-the-world-i-see
 date:   2024-12-01 21:25:00 +0800
 categories: reading career
+career_page: true
 ---
 
 ![banner](/img/2024-12-01/book-cover-the-world-i-see.jpg)
