@@ -1,0 +1,43 @@
+{% assign previous_post = nil %}
+{% assign next_post = nil %}
+
+{% if page.career_page %}
+  {% assign found_current_post = false %}
+  {% assign last_career_post = nil %}
+  {% for post in site.posts %}
+    {% if post.url == page.url %}
+      {% assign previous_post = last_career_post %}
+      {% assign found_current_post = true %}
+    {% elsif found_current_post and post.career_page and next_post == nil %}
+      {% assign next_post = post %}
+    {% endif %}
+    {% if post.career_page and found_current_post == false %}
+      {% assign last_career_post = post %}
+    {% endif %}
+  {% endfor %}
+{% else %}
+  {% assign previous_post = page.previous %}
+  {% assign next_post = page.next %}
+{% endif %}
+
+{% if previous_post or next_post %}
+<nav class="post-navigation" aria-label="Post navigation">
+  {% if previous_post %}
+    <a class="post-navigation-item post-navigation-prev" href="{{ previous_post.url | prepend: site.baseurl }}">
+      <span class="post-navigation-label">上一篇</span>
+      <span class="post-navigation-title">{{ previous_post.title }}</span>
+    </a>
+  {% else %}
+    <span class="post-navigation-item post-navigation-empty"></span>
+  {% endif %}
+
+  {% if next_post %}
+    <a class="post-navigation-item post-navigation-next" href="{{ next_post.url | prepend: site.baseurl }}">
+      <span class="post-navigation-label">下一篇</span>
+      <span class="post-navigation-title">{{ next_post.title }}</span>
+    </a>
+  {% else %}
+    <span class="post-navigation-item post-navigation-empty"></span>
+  {% endif %}
+</nav>
+{% endif %}
