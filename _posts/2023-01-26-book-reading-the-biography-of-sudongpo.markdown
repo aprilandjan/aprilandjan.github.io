@@ -4,7 +4,6 @@ title:  读书感悟：林语堂《苏东坡传》
 link: book-reading-the-biography-of-sudongpo
 date:   2023-01-26 20:40:00 +0800
 categories: reading career
-career_page: true
 ---
 
 ![banner](/img/2023-01-26/book-cover-sudongpo.jpg)

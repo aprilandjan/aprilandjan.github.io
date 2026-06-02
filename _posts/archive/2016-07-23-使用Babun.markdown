@@ -3,7 +3,6 @@ layout: post
 title:  "使用Babun"
 date:   2016-07-23 23:10:16 +0800
 categories: Babun Terminal
-career_page: true
 ---
 
 一直以来使用的是 windows 系统自带的命令行工具。后来接触了一些 linux 的命令，windows terminal 对此并不能很好的兼容。网上搜了一下很多人推荐使用 Babun，做为萌新的我也尝试了一下。

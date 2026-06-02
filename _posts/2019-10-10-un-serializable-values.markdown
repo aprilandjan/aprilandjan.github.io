@@ -4,7 +4,6 @@ title:  不可序列化的值
 link:   un-serializable-values
 date:   2019-10-10 21:20:00 +0800
 categories: javascript
-career_page: true
 ---
 
 最近有用户给我之前写的用于生成目录树的 `vscode` 插件 [ascii-tree-generator](https://github.com/aprilandjan/ascii-tree-generator) 提 [issue](https://github.com/aprilandjan/ascii-tree-generator/issues/2)，反馈某个功能没有响应。在定位调试该问题的过程中，发现一个奇怪的情况：

@@ -3,7 +3,6 @@ layout: post
 title:  webpack with autoprefixer
 date:   2016-11-29 10:30:00 +0800
 categories: webpack
-career_page: true
 ---
 
 一直以来以为 css 自动加浏览器厂商前缀的功能是 vue 的工具提供的, 所以也没怎么注意写兼容性前缀。

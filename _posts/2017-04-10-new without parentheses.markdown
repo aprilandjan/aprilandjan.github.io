@@ -3,7 +3,6 @@ layout: post
 title:  new without parentheses
 date:   2017-04-10 11:06:00 +0800
 categories: javascript
-career_page: true
 ---
 
 看 `koa` 示例的时候，发现创建新日期对象可以这么写：

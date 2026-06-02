@@ -4,7 +4,6 @@ title:  npm 模块的版本冲突
 link:   npm-dependency-version-conflict
 date:   2019-09-06 20:36:00 +0800
 categories: npm
-career_page: true
 ---
 
 在之前的文章里曾提到 npm 是如何处理依赖与依赖冲突的。这里的依赖冲突指的是某个模块的**不同版本**都被当前项目所需要所导致的可能的冗余。由于这种冗余情况不可避免的存在，可能会导致一些值得关注的问题。

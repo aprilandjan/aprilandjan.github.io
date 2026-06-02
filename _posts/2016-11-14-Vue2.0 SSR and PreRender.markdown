@@ -4,7 +4,6 @@ title:  Vue2.0 SSR and PreRender
 link: vue-v2-ssr-and-pre-render
 date:   2016-11-14 10:30:00 +0800
 categories: vue
-career_page: true
 ---
 
 有空研究一下 vue2.0 server-side-rendering 相关的东西, 也许以后会用到。

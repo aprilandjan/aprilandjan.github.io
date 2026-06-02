@@ -4,7 +4,6 @@ title:  复合输入事件
 link:  input-with-composition
 date:   2017-07-18 22:26:00 +0800
 categories: html javascript
-career_page: true
 ---
 
 很久没写东西了。几个月来工作上参与的项目变更，不停的学习、接触了一些新的东西，颇有疲累之感。前端这一块，除了语言号称是 javascript, 换个框架相当于又换了一个天地，得时时刻刻追赶发展的步伐，让人觉得有些浮躁。

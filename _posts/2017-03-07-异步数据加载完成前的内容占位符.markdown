@@ -4,7 +4,6 @@ title:  异步数据加载完成前的内容占位符
 link: placeholder-before-loaded
 date:   2017-03-07 14:57:00 +0800
 categories: css
-career_page: true
 ---
 
 一个在前端通过接口拉取数据再渲染的页面，比如我们用 `vue` + `webpack` 打包做的各种应用，一般来说有两段等待时间：

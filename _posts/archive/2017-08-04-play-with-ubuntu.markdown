@@ -3,7 +3,6 @@ layout: post
 title:  play-with-ubuntu
 date:   2017-08-04 22:11:00 +0800
 categories: linux
-career_page: true
 ---
 
 去年买的一年期域名都快过期了，一直也没怎么好好利用。最近在 DigitalOcean 上开了个VPS，打算再重新整理一下。这次选的系统是 `ubuntu 16`，因为听说对 linux 不熟悉的人，用 `ubuntu` 会是最好的选择。下面记录一下折腾的全过程。

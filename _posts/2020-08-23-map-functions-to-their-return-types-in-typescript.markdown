@@ -4,7 +4,6 @@ title:  map-functions-to-their-return-types-in-typescript
 link: Map functions to their return types in typescript
 date:   2020-08-23 22:27:00 +0800
 categories: typescript
-career_page: true
 ---
 
 When writing redux actions in `typescript`, it's common to obtain all action creators into one object. For example:

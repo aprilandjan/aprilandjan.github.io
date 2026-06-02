@@ -3,7 +3,6 @@ layout: post
 title:  4 - 坐标获取、触碰检测、层级管理
 date:   2016-09-18 16:30:00 +0800
 categories: canvas
-career_page: true
 ---
 
 ### 获取交互坐标

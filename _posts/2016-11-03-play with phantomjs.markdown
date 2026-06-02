@@ -3,7 +3,6 @@ layout: post
 title:  play with phantomjs
 date:   2016-11-03 15:30:00 +0800
 categories: node
-career_page: true
 ---
 
 phantomjs 是一个无界面的webkit浏览器, 可以通过它在服务器端直接用JS代码访问页面中的各种元素、方法和属性, 甚至截取屏幕。

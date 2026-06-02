@@ -3,7 +3,6 @@ layout: post
 title:  ES6 Chained Promise
 date:   2017-02-16 16:47:00 +0800
 categories: javascript
-career_page: true
 ---
 
 Babel 实现的 Promise 串联起来使用 (`chain-calling`) 很简答，在调用 `then(resolve)` 方法的时候，`resolve` 函数返回一个 promise 即可。
