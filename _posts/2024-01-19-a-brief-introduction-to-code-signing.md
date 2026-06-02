@@ -3,7 +3,7 @@ layout: post
 title: 代码签名简介
 link: A brief introduction to code signing
 date:   2023-12-05 22:58:00 +0800
-categories: programming
+categories: career programming
 ---
 
 ## 原理

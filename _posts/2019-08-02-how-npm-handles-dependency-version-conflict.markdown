@@ -3,7 +3,7 @@ layout: post
 title:  npm 如何处理依赖与依赖冲突
 link:   how-npm-handles-dependency-version-conflict
 date:   2019-08-02 20:40:00 +0800
-categories: npm
+categories: career npm
 ---
 
 ## 依赖地狱

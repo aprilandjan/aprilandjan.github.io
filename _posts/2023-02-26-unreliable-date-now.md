@@ -3,7 +3,7 @@ layout: post
 title: 不可靠的 `Date.now()`
 link: unreliable-date-now
 date:   2023-02-26 22:00:00 +0800
-categories: nodejs
+categories: career nodejs
 ---
 
 在 JS 的世界中，获取当前时间是一件轻而易举的事。内置的 `Date.now` 函数可以在任何地方直接调用输出当前的时间戳，例如：

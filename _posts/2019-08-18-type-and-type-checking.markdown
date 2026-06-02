@@ -3,7 +3,7 @@ layout: post
 title:  类型与类型检查
 link:   type-and-type-checking
 date:   2019-08-18 21:15:00 +0800
-categories: typescript javascript
+categories: career typescript javascript
 ---
 
 在编程语言里，”类型“ 通常用来描述某个变量持有的数据结构或特征。

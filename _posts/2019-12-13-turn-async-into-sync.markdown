@@ -3,7 +3,7 @@ layout: post
 title:  没用的知识+1 - 异步转同步
 link:   turn-async-into-sync
 date:   2019-12-13 21:14:00 +0800
-categories: node.js
+categories: career node.js
 ---
 
 在 node.js 中，编写一段异步代码总是很容易的。以下是一些可行的方式方法：

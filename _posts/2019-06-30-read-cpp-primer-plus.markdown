@@ -3,7 +3,7 @@ layout: post
 title:  读《C++ Primer Plus》有感
 link:   read-cpp-primer-plus
 date:   2019-06-30 20:52:00 +0800
-categories: thoughts
+categories: career thoughts
 ---
 
 最近一年里断断续续的把很久前买的《C++ Primer Plus》大致读完了。虽然大学里学过一丁点儿 C 语言，但是疏于实践，早就忘得七七八八，只对当时花了好几天饭钱买的一本红色封皮的厚厚的英文教材，以及书里令人困惑的指针引用还余有一丝丝的朦胧回忆。

@@ -3,7 +3,7 @@ layout: post
 title:  Electron 应用内存占用分析及调优
 link: memory-usage-of-an-electron-app
 date:   2020-07-30 21:47:00 +0800
-categories: nodejs
+categories: career nodejs
 ---
 
 Electron 应用作为浏览器与 node 程序的融合体，其内存模型兼具有两者的特点：

@@ -3,7 +3,7 @@ layout: post
 title:  使用钩子命令检查 npm 客户端
 link:   ensure-npm-client-use-script-hook
 date:   2019-11-17 20:20:00 +0800
-categories: npm
+categories: career npm
 ---
 
 在使用 `npm` 安装一个新的依赖时，`npm` 总是会默认的查找该模块已发布的最新的稳定版本，并写入到项目的 `package.json` 文件中；另外也总是会通过版本标注符 `^` 声明满足该版本约束（在当前主版本下大于或等于该版本号的所有版本）都是可接受的。这种默认的行为带来了一些问题。例如，某项目的 `package.json` 有如下的依赖声明：

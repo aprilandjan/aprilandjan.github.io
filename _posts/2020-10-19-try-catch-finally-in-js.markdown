@@ -3,7 +3,7 @@ layout: post
 title:  Try Catch Finally in JS
 link: try-catch-finally-in-js
 date:   2020-10-19 19:19:00 +0800
-categories: javascript
+categories: career javascript
 ---
 
 在 `javascript` 中，`try` `catch` `finally` 是用来捕获错误的关键字组合。在实际使用时，它们的组合使用方式可能会影响代码的执行顺序。在这篇文章中，我们会讨论几种令人困惑的模式，以更好的理解这些关键字，避免不当使用。

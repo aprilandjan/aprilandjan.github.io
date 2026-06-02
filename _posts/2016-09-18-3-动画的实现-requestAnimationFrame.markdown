@@ -2,7 +2,7 @@
 layout: post
 title:  3 - "动"画的实现：requestAnimationFrame
 date:   2016-09-18 16:30:00 +0800
-categories: canvas
+categories: career canvas
 ---
 
 动画是画面随时间变动的效果。无论是用何种方式的随时间变动(setInterval, setTimeout), 都是可以驱"动"的; 但是在浏览器端, 使用 requestAnimationFrame 获取的定时间隔更平稳可靠。参考: [MDN](https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame)

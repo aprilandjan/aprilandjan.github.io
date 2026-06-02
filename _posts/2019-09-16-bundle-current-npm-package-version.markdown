@@ -3,7 +3,7 @@ layout: post
 title:  注入当前的 npm 包版本信息
 link:   bundle-current-npm-package-version
 date:   2019-09-16 20:57:00 +0800
-categories: npm
+categories: career npm
 ---
 
 很多场景下，需要往代码里注入当前项目的版本号。最简单的，可以通过以下方式获取到：

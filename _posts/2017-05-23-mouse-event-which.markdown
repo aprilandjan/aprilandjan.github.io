@@ -2,7 +2,7 @@
 layout: post
 title:  mouse event which
 date:   2017-05-23 21:21:00 +0800
-categories: javascript
+categories: career javascript
 ---
 
 在开发 `nw` 上的某个页面时，遇到了这么一个问题：

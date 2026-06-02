@@ -3,7 +3,7 @@ layout: post
 title:  npm 模块开发漫谈
 link:   thoughts-on-developing-npm-modules
 date:   2018-12-29 23:40:00 +0800
-categories: npm
+categories: career npm
 ---
 
 开发一个 npm 模块前，通常需考虑以下几个问题：

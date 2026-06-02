@@ -2,7 +2,7 @@
 layout: post
 title:  css animation event
 date:   2016-12-22 21:30:00 +0800
-categories: javascript
+categories: career javascript
 ---
 
 最近做页面, 某个动画可能要监听一段 css animation 动画的完成事件。查了一下相关资料, 发现 animation 相关的事件在不同设备上还是有区别的。下表总结的比较全:

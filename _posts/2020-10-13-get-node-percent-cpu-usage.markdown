@@ -3,7 +3,7 @@ layout: post
 title:  get node percent cpu usage
 link: get-node-percent-cpu-usage
 date:   2020-10-13 22:15:00 +0800
-categories: nodejs
+categories: career nodejs
 ---
 
 ## Reference

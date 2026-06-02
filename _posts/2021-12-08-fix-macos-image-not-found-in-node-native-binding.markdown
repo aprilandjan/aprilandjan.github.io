@@ -3,7 +3,7 @@ layout: post
 title: fix macos image not found in node native binding
 link: fix-macos-image-not-found-in-node-native-binding
 date: 2021-12-08 21:08:00 +0800
-categories: nodejs
+categories: career nodejs
 ---
 
 ## Problem

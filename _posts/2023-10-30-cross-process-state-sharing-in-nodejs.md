@@ -3,7 +3,7 @@ layout: post
 title: node.js 中如何实现跨进程的状态共享
 link: handling-message-boundary-in-nodejs-ipc
 date:   2023-10-30 10:18:00 +0800
-categories: node.js
+categories: career node.js
 ---
 
 ## 背景

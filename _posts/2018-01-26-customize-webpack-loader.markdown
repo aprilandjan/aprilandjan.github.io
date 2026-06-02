@@ -3,7 +3,7 @@ layout: post
 title:  自定义 webpack loader
 link: customize-webpack-loader
 date:   2018-01-26 21:33:00 +0800
-categories: webpack
+categories: career webpack
 ---
 
 对前端开发来说, webpack 可能是目前使用最广泛的一款打包工具了。npm 上有各式各样的 loader 用来处理前端可能用到的各种资源文件，应该也能满足一般业务需求。但有的时候有一些小众的特殊需求，需要对特定的资源文件做处理，这时自己在项目里写自定义的 loader 来处理源文件可能会更方便一些。

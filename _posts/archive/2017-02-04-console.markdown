@@ -2,7 +2,7 @@
 layout: post
 title:  console
 date:   2017-02-04 21:34:00 +0800
-categories: javascript
+categories: career javascript
 ---
 
 JS 里的 console 除了 `log` `warn` `error` 之外，还有很多别的方法， 虽说较少用到，但是如果用的话也会有不少的便利。
