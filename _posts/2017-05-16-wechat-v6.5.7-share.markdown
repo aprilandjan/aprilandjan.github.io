@@ -3,7 +3,8 @@ layout: post
 title:  wechat v6.5.7 share
 link: wechat-share
 date:   2017-05-16 14:16:00 +0800
-categories: career javascript
+categories: javascript
+career_page: true
 ---
 
 被微信分享坑了好几个小时，十分郁闷。

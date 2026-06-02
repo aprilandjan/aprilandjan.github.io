@@ -3,7 +3,8 @@ layout: post
 title:  Node native binding
 link: node-native-binding
 date:   2020-07-07 21:15:00 +0800
-categories: career nodejs
+categories: nodejs
+career_page: true
 ---
 
 Node.js is capable of calling C++ codes directly through a special type of module, which called `node native binding`. In this article, I will try to create such an module from zero, to make it usable in node.js environments.

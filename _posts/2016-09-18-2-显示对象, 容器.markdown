@@ -2,7 +2,8 @@
 layout: post
 title:  2 - 显示对象, 容器
 date:   2016-09-18 12:30:00 +0800
-categories: career canvas
+categories: canvas
+career_page: true
 ---
 
 先做一个简单的绘制: 预载9张图标, 把每个图标按次序排列在 3x3 的空间内。代码如下:

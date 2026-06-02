@@ -3,7 +3,8 @@ layout: post
 title: 浅谈 chromium 的定时器限流策略
 link: chromium-timer-throttling-strategy
 date:   2024-03-10 17:56:00 +0800
-categories: career js
+categories: js
+career_page: true
 ---
 
 使用 web 技术栈开发的应用，往往需要使用定时器实现一些轮询或定时更新之类的操作。也许你思考过，倘若放任页面自身的定时任务自由运行，是否会对用户的系统资源消耗产生不可忽略的开销。事实上，chromium 内核的确具有对 js 定时器的触发限流策略，这些策略或多或少的会对应用本身的运行时序有不容忽视的影响。在此，我们简单的了解下相关机制，以帮助更好的组织、实现页面功能。

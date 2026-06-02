@@ -3,7 +3,8 @@ layout: post
 title:  Definition for JSON
 link: definition-for-json
 date:   2020-01-15 20:46:00 +0800
-categories: career javascript
+categories: javascript
+career_page: true
 ---
 
 在之前的文章中有提到过 `json` 这种数据格式有许多局限。例如：它不支持注释，它不能使用单引号，最后一个对象类型的属性不能有额外的逗号等。另外，编写 JSON 的时候也往往也缺乏对它的结构和字段的代码提示说明；在校验 JSON 的时候，也天然缺乏友好的校验信息——这种感觉就好像是用记事本写 `js` 代码一般，孤独又无助。

@@ -3,7 +3,8 @@ layout: post
 title:  understand cpp build
 link:   understand-cpp-build
 date:   2019-08-25 23:41:00 +0800
-categories: career cpp
+categories: cpp
+career_page: true
 ---
 
 ## create executable

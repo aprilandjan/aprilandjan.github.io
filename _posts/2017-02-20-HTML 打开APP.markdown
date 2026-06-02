@@ -3,7 +3,8 @@ layout: post
 title:  HTML 打开 APP
 link: open-app-in-html
 date:   2017-02-20 11:47:00 +0800
-categories: career javascript
+categories: javascript
+career_page: true
 ---
 
 最近遇到一个需求，给用户发短信，并附带上一串链接，用户点击链接跳转到html页面之后，如果安装了 app，要求`自动`跳转到应用内的对应页面。通过 HTML 打开 APP, 前端通常需要用到 URL Schema。

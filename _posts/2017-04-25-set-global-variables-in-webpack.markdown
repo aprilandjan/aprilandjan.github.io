@@ -2,7 +2,8 @@
 layout: post
 title:  set global variables in webpack
 date:   2017-04-25 17:33:00 +0800
-categories: career git
+categories: git
+career_page: true
 ---
 
 以下简介在 webpack 中定义、使用全局变量的方法。

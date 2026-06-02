@@ -3,7 +3,8 @@ layout: post
 title: difference between node child process stdio inherit and pipe
 link: difference-between-node-child-process-stdio-inherit-and-pipe
 date: 2021-12-09 11:26:00 +0800
-categories: career nodejs
+categories: nodejs
+career_page: true
 ---
 
 在 `nodejs` 中启动子进程时，可以通过参数 `stdio` 设置子进程与父进程间建立的输入输出关系。之前曾写过一些子进程的调用代码，总是习惯性的将这个参数设置为 `inherit`，但是没有仔细去了解其不同参数的区别。以下通过一些试验性质的代码对此进行了解、验证。

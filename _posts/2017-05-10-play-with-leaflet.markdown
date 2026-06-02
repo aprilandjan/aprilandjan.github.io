@@ -3,7 +3,8 @@ layout: post
 title:  Leaflet 使用及开发
 link:  play-with-leaflet
 date:   2017-05-10 17:33:00 +0800
-categories: career javascript
+categories: javascript
+career_page: true
 ---
 
 [`Leaflet`](http://leafletjs.com/) 是一个开源的地图交互框架。这篇文章记录在配合 webpack 接触、使用 leaflet 的过程中的一些要点、心得。

@@ -3,7 +3,8 @@ layout: post
 title: rs chrome inspector launcher
 link: rs-chrome-inspector-launcher
 date:   2024-09-30 21:21:00 +0800
-categories: career node rust
+categories: node rust
+career_page: true
 ---
 
 ## References

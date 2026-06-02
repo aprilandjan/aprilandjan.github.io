@@ -3,7 +3,8 @@ layout: post
 title: 读《这就是 ChatGPT》
 link: book-reading-what-is-chatgpt-doing
 date:   2025-02-29 21:25:00 +0800
-categories: career reading
+categories: reading career
+career_page: true
 ---
 
 ![banner](/img/2025-02-29/book-cover-what-is-chatgpt-doing.jpg)

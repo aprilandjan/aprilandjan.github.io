@@ -3,7 +3,8 @@ layout: post
 title: 读《操作系统导论》
 link: book-reading-OSTEP
 date:   2024-07-21 17:30:00 +0800
-categories: career reading cs
+categories: reading cs
+career_page: true
 ---
 
 ![banner](/img/2024-07-21/ostep-book-cover.jpg)

@@ -2,7 +2,8 @@
 layout: post
 title:  6 - 序列帧：Sprite
 date:   2016-09-19 17:30:00 +0800
-categories: career canvas
+categories: canvas
+career_page: true
 ---
 
 很多时候动画的每帧之间, 不仅仅是变形属性的差异, 更重要的是内容(素材)的变化。一串动画, 往往是通过工具做好的一串序列帧。

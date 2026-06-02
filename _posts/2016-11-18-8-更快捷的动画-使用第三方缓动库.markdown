@@ -2,7 +2,8 @@
 layout: post
 title:  8 - 更快捷的动画：使用第三方缓动库
 date:   2016-11-18 11:30:00 +0800
-categories: career canvas
+categories: canvas
+career_page: true
 ---
 
 网上有许多的缓动库,比较著名的有 [TweenMax](https://github.com/greensock/GreenSock-JS) [createjs/Tweenjs](https://github.com/CreateJS/TweenJS) 等。JQuery/zepto 等也各自有缓动功能。通常它们的作用是内建一个Ticker, 然后把对象的指定属性值朝着目标值每帧逼近。

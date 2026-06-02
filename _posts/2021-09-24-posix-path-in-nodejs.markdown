@@ -3,7 +3,8 @@ layout: post
 title:  nodejs 中对文件路径的兼容处理
 link: posix-path-in-nodejs
 date:   2021-09-24 19:53:00 +0800
-categories: career nodejs
+categories: nodejs
+career_page: true
 ---
 
 最近写的一些单测运行在某些流水线机器上莫名其妙的挂了。查看详情，发现是文件路径处理的方法的用例失败。例如，期望得到的路径是 `/path/to/file.txt`，实际拿到的路径却为 `\path\to\file.txt`，这是为什么呢？

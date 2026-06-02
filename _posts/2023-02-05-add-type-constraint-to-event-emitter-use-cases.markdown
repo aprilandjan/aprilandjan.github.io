@@ -3,7 +3,8 @@ layout: post
 title:  为 EventEmitter 增加事件与响应相匹配的类型约束
 link: add-type-constraint-to-event-emitter-use-cases
 date:   2023-02-05 16:39:00 +0800
-categories: career nodejs
+categories: nodejs
+career_page: true
 ---
 
 ## 先天类型缺陷的 EventEmitter

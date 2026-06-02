@@ -3,7 +3,8 @@ layout: post
 title:  面向类型编程：Typescript 中的高级类型
 link: advanced-types-in-typescript
 date:   2018-12-25 16:24:00 +0800
-categories: career typescript
+categories: typescript
+career_page: true
 ---
 
 > "动态一时爽，重构火葬场"

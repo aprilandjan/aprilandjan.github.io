@@ -3,7 +3,8 @@ layout: post
 title: 读《rust 程序编程语言》
 link: book-reading-the-rust-programming-language
 date:   2023-11-21 22:58:00 +0800
-categories: career reading rust
+categories: reading rust
+career_page: true
 ---
 
 ![banner](/img/2023-11-21/rust-book-cover.jpg)

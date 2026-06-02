@@ -3,7 +3,8 @@ layout: post
 title: 浅谈 electron 应用的面临的安全风险
 link: security-risks-of-electron-app
 date:   2024-03-16 20:30:00 +0800
-categories: career electron
+categories: electron
+career_page: true
 ---
 
 ## 是 electron，也是 node

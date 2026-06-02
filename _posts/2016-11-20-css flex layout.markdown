@@ -2,7 +2,8 @@
 layout: post
 title:  css flex layout
 date:   2016-11-20 13:30:00 +0800
-categories: career css
+categories: css
+career_page: true
 ---
 
 一直以来都没有系统的学习CSS, 只是根据经验做一些常规的排版布局, 大概也就是初略理解了三层盒模型以及relative, absolute定位的关系, 基本上做一些静态的、非响应式的, 这样已经足够了。

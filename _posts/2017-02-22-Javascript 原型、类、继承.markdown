@@ -2,7 +2,8 @@
 layout: post
 title:  Javascript 原型、类、继承
 date:   2017-02-22 11:19:00 +0800
-categories: career javascript
+categories: javascript
+career_page: true
 ---
 
 在 Javascript 里实现类、继承这种面向对象的特性，离不开对象的原型。最早接触 js 的时候，不求甚解，一般是参照网上抄来的方法这样实现的：

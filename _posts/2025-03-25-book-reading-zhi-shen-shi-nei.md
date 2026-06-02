@@ -4,6 +4,7 @@ title: 读《置身事内》
 link: book-reading-what-is-chatgpt-doing
 date:   2025-03-25 21:36:00 +0800
 categories: reading career
+career_page: true
 ---
 
 ![banner](/img/2025-03-25/book-cover-zhi-shen-shi-nei.jpg)

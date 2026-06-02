@@ -3,7 +3,8 @@ layout: post
 title:  Cookie 安全标志
 link:   cookie-security-flags
 date:   2019-04-09 20:06:00 +0800
-categories: career http node
+categories: http node
+career_page: true
 ---
 
 在许多前端系统中，通常使用 cookie 来存储用户登陆凭证。Cookie 是一小段通常由服务端通过 `set-cookie` 响应头设置、由客户端（通常指浏览器）自动解析并存储的数据块。在浏览器里，当打开页面请求资源时，默认地会通过请求头 `Cookie` 携带当前域下的有效 cookie 数据发送到服务器；服务器在收到请求后，通过该请求头的内容确定当前访问者的身份，并给出不同的响应。

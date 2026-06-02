@@ -2,7 +2,8 @@
 layout: post
 title:  5 - 逐帧运动, 注册点, 速度, 边界检测
 date:   2016-09-19 14:30:00 +0800
-categories: career canvas
+categories: canvas
+career_page: true
 ---
 
 这一节来创建一个运动、交互的例子。代码及效果: [JSFiddle](https://jsfiddle.net/aprilandjan/mfja7w7d/)

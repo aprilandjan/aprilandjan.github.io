@@ -2,7 +2,8 @@
 layout: post
 title:  git operations
 date:   2017-04-24 10:51:00 +0800
-categories: career git
+categories: git
+career_page: true
 ---
 
 这篇文章用来记录工作中经常要用到的一些 git 操作。

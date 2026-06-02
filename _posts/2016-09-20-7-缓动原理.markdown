@@ -2,7 +2,8 @@
 layout: post
 title:  7 - 缓动原理
 date:   2016-09-20 15:30:00 +0800
-categories: career canvas
+categories: canvas
+career_page: true
 ---
 
 在 css transition 中, 可以定义 [transition-timing-function](https://developer.mozilla.org/en-US/docs/Web/CSS/transition-timing-function) 使得变化的程度随着时间流逝有着不同的表现。

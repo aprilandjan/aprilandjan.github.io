@@ -3,7 +3,8 @@ layout: post
 title: node.js 中如何处理进程间通信的消息边界
 link: handling-message-boundary-in-nodejs-ipc
 date:   2023-07-23 18:55:00 +0800
-categories: career node.js
+categories: node.js
+career_page: true
 ---
 
 在 node.js 中，可以使用 `net` 模块建立基于 [Unix domain socket](https://en.wikipedia.org/wiki/Unix_domain_socket) 或 [Windows named pipe](https://en.wikipedia.org/wiki/Named_pipe) 的通信渠道，以便同本机系统内的其他进程彼此通信，互相收发消息或指令，实现进程间通信（IPC，Inter Process Communication）。例如：

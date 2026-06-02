@@ -2,7 +2,8 @@
 layout: post
 title:  webpack babel scss template
 date:   2016-08-24 20:58:00 +0800
-categories: career webpack
+categories: webpack
+career_page: true
 ---
 
 自从习惯了使用 es6 以后, 强烈的需求把各个分离的小功能放在不同的文件内, 需要的时候 import 进来, 然后又能自动处理互相的依赖注入关系, 最终便捷的打包发布。于是整理了一份 webpack 配置, 使用 babel/scss

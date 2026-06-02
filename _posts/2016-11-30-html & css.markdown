@@ -3,7 +3,8 @@ layout: post
 title:  html & css & javascript
 link: html-css-javascript
 date:   2016-11-30 10:30:00 +0800
-categories: career html css javascript
+categories: html css javascript
+career_page: true
 ---
 
 此文收集一些 html & css 相关的内容

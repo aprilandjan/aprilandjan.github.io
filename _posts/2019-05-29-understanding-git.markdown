@@ -3,7 +3,8 @@ layout: post
 title:  Git 原理、操作及实践经验
 link:   understanding-git
 date:   2019-05-29 16:18:00 +0800
-categories: career git
+categories: git
+career_page: true
 ---
 
 > - Git 是怎样管理版本的，切分支为什么这么快？

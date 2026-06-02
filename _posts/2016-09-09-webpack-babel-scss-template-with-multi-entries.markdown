@@ -2,7 +2,8 @@
 layout: post
 title:  webpack babel scss template with multi entries
 date:   2016-09-09 22:53:00 +0800
-categories: career webpack
+categories: webpack
+career_page: true
 ---
 
 把之前的单页模版改造了一下, 做成了多页模版, 并且加入了 fontspider & spritesmith。

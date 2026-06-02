@@ -4,6 +4,7 @@ title: 关于“领导力”的若干迷思
 link: thoughts-about-watch-leadership-speech-video
 date:   2023-12-05 22:58:00 +0800
 categories: career
+career_page: true
 ---
 
 ## 丈夫未可轻年少

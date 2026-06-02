@@ -2,7 +2,8 @@
 layout: post
 title:  css gradient border
 date:   2017-03-14 11:10:00 +0800
-categories: career css
+categories: css
+career_page: true
 ---
 
 最近遇到了这样一个需求，制作带有渐变色填充的边框：

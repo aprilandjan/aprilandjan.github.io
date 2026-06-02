@@ -3,7 +3,8 @@ layout: post
 title:  debug in vscode
 link: debug-in-vscode
 date:   2020-02-06 20:00:00 +0800
-categories: career js vscode
+categories: js vscode
+career_page: true
 ---
 
 ## 以调试模式启动 node 进程

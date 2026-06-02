@@ -7,7 +7,7 @@ no_duoshuo: true
 
 <div class="posts">
   {% for post in site.posts %}
-    {% if post.categories contains "career" %}
+    {% if post.career_page %}
       <div class="post">
         <a href="{{ post.url | prepend: site.baseurl }}" class="post-link">
           <p class="post-meta">{{ post.date | date: "%m 月 %d日, %Y" }}</p>

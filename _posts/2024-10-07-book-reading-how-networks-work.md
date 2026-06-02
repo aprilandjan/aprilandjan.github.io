@@ -3,7 +3,8 @@ layout: post
 title: 读《网络是怎样连接的》
 link: book-reading-how-networks-work
 date:   2024-10-07 14:24:00 +0800
-categories: career reading scs
+categories: reading scs
+career_page: true
 ---
 
 ![banner](/img/2024-10-07/book-cover-how-networks-work.jpg)

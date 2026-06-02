@@ -3,7 +3,8 @@ layout: post
 title:  文件句柄
 link: file-handle
 date:   2020-11-17 13:21:00 +0800
-categories: career os
+categories: os
+career_page: true
 ---
 
 ## 文件句柄

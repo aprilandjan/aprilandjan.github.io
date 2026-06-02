@@ -3,7 +3,8 @@ layout: post
 title:  使用 generator 实现 async await
 link:   use-generator-to-implement-async-await
 date:   2019-12-20 22:15:00 +0800
-categories: career javascript
+categories: javascript
+career_page: true
 ---
 
 在之前的文章 `《async 转换为 sync》` 中，提到了几种编写异步代码的模式，其中就有使用 generator 实现的例子：

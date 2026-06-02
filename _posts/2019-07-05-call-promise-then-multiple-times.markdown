@@ -3,7 +3,8 @@ layout: post
 title:  多次调用 promise.then
 link:   call-promise-then-multiple-times
 date:   2019-07-05 21:34:00 +0800
-categories: career javascript
+categories: javascript
+career_page: true
 ---
 
 在实际业务中，可能会遇到这样的场景：已知一系列数据，需要根据这一系列数据去拉取其关联的详细内容并与原数据关联起来。例如：

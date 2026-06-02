@@ -2,7 +2,8 @@
 layout: post
 title:  webpack library starter
 date:   2017-04-18 15:34:00 +0800
-categories: career javascript webpack
+categories: javascript webpack
+career_page: true
 ---
 
 ### 准备工作

@@ -3,7 +3,8 @@ layout: post
 title: node.js 中进程的 argv 与 execArgv 的区别
 link: difference-between-process-argv-and-execArgv-in-nodejs
 date:   2023-11-10 20:00:00 +0800
-categories: career node.js
+categories: node.js
+career_page: true
 ---
 
 一直都以为 process.argv 包含了当前进程的完整命令行参数，child_process 中的 fork 等拉起子进程指定进程参数的方法也同样是可以指定任何命令行参数，例如:

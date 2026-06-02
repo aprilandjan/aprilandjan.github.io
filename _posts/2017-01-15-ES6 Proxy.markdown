@@ -2,7 +2,8 @@
 layout: post
 title:  ES6 Proxy
 date:   2017-01-15 21:34:00 +0800
-categories: career javascript
+categories: javascript
+career_page: true
 ---
 
 ES6使用已有很长一段时间了, 最常用到的大概有以下特性: 箭头函数、模块与类、Promise、模版字符串、解构等。今天了解了一下较少用到的 Proxy, 感觉用好它, 能对对象的操作拥有更大的自由和可能。

@@ -3,7 +3,8 @@ layout: post
 title:  使用 Docker
 link:  working-with-docker
 date:   2018-02-22 15:16:00 +0800
-categories: career docker
+categories: docker
+career_page: true
 ---
 
 在容器越来越流行的今天，了解下如何使用 Docker 将 node 服务容器化部署是很有必要的。关于 docker 的基础命令等内容在此不再赘述，主要是结合实际需求简单介绍如何把容器化配置加入到现有的 node 项目中。

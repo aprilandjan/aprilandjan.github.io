@@ -3,7 +3,8 @@ layout: post
 title:  chrome 中的资源缓存
 link:   resource-caches-in-chrome
 date:   2019-10-18 20:20:00 +0800
-categories: career chrome
+categories: chrome
+career_page: true
 ---
 
 对与静态资源，服务器通常可以设置一些提供[缓存策略](https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching)的请求头以使得浏览器端能够在一定时间内保存这些资源的缓存，减少下次访问资源时实际数据传输的大小，加快用户访问速度。在 Chrome 的开发者工具面板中，可以通过 `Network` 选项卡查看到这些资源的加载状况，例如：
